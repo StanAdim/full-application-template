@@ -1,0 +1,48 @@
+version: '3'
+
+services:
+  tzstartups-api:
+    image: tzstartups-api
+    build:
+      context: .
+      dockerfile: Dockerfile.prod
+    working_dir: /var/www/html
+    container_name: tzstartups-api
+    ports:
+      - 1704:80
+    volumes:
+      - .:/var/www/html
+    environment:
+      - DB_CONNECTION=pgsql
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_DATABASE=tzstartups_api
+      - DB_USERNAME=tzstartups_api
+      - DB_PASSWORD=tzstartups_api
+    networks:
+      - tzstartups-api-network
+    depends_on:
+      - db
+
+  db: #psql -U tzstartups_api -d tzstartups_api
+    image: postgres:15.0
+    container_name: startupstz-db-postgres
+    restart: unless-stopped
+    ports:
+      - 1740:5432
+    environment:
+      POSTGRES_DB: tzstartups_api
+      POSTGRES_USER: tzstartups_api
+      POSTGRES_PASSWORD: tzstartups_api
+    networks:
+      - tzstartups-api-network
+    volumes:
+      - pgdata:/var/lib/postgresql/data   # Persisting data
+
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  tzstartups-api-network:
+    driver: bridge
