@@ -1,0 +1,16 @@
+.appBg{
+    --tw-bg-opacity: 1;
+    background-color: rgb(14 165 233 / var(--tw-bg-opacity));
+}
+.appColor{
+    @apply text-sky-500
+}
+.textB{
+    @apply text-gray-950
+}
+.bg-fade{
+    @apply bg-gray-300/20;
+}
+.bg-fade-1{
+    @apply bg-gray-300/30;
+}

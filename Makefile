@@ -6,7 +6,7 @@
 setup.dev:
 	@make build.dev
 	@make up.dev
-	@make composer-update
+# @make composer-update.dev
 
 build.dev:
 	docker-compose -f ./backend-app/docker-compose.dev.yml build
@@ -14,6 +14,11 @@ stop.dev:
 	docker compose -f ./backend-app/docker-compose.dev.yml stop
 up.dev:
 	docker compose -f ./backend-app/docker-compose.dev.yml up -d
+reload.dev:
+	@make stop.dev
+	@make build.dev
+	@make up.dev
+	@make boost.dev
 
 # Container mgt - Dev
 composer-update.dev:
@@ -28,9 +33,10 @@ start.dev:
 	docker compose restart
 boost.dev:
 	docker exec  tzstartups-dev-api bash -c "php artisan optimize"
+	docker exec  tzstartups-dev-api bash -c "composer update"
 	docker exec  tzstartups-dev-api bash -c "composer dump-autoload"
-	docker exec  tzstartups-dev-api bash -c "chown -R www-data:www-data /var/www/html/storage /var/www/html/public /var/www/html/bootstrap/cache"
-	docker exec  tzstartups-dev-api bash -c "chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache"
+	docker exec  tzstartups-dev-api bash -c "chown -R www-data:www-data /var/www/html/api/storage /var/www/html/api/public /var/www/html/api/bootstrap/cache"
+	docker exec  tzstartups-dev-api bash -c "chmod -R 775 /var/www/html/api/storage /var/www/html/api/bootstrap/cache"
 rmi.dev:
 	docker image rm -f tzstartups-dev-api-tzstartups-dev-api
 logs.dev:
@@ -44,7 +50,7 @@ logs.dev:
 setup.prod:
 	@make build.prod
 	@make up.prod
-	@make composer-update
+	@make composer-update.prod
 
 build.prod:
 	docker-compose -f ./backend-app/docker-compose.prod.yml build

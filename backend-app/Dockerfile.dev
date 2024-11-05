@@ -19,17 +19,20 @@ RUN apt-get update && apt-get install -y \
 # Install PHP extensions
 RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install pdo_pgsql mbstring exif pcntl bcmath gd sockets zip
-
+# Set working directory
+WORKDIR /var/www/html/api
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Set working directory
-WORKDIR /var/www/html
+# Copy application source
+COPY . /var/www/html/api
 
 # Install PHP dependencies
-RUN composer install
+# RUN composer update
 
 # Optimize Laravel application
-RUN php artisan optimize
+# RUN php artisan optimize
 
 CMD ["php", "artisan", "queue:work"]
+EXPOSE 80
+
