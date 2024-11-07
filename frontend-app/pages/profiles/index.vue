@@ -9,8 +9,10 @@ useHead({
 const globalData = useGlobalDataStore()
 </script>
 <template>
-  <div class="">
-    Registered Profiles Page
+  <div class="container mx-auto">
+    <div class="h-[40vh] py-2 mx-2">
+          Registered Profiles
+    </div>
   </div>
 </template>
 

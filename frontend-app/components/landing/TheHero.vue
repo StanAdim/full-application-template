@@ -26,13 +26,18 @@
         </div>
         <!--              btn-->
         <div class="mt-4">
-          <UsableLargeBtn title="Learn more" />
+          <nuxt-link to="/register" >
+            <button type="button" class="sm:w-auto  rounded-full bg-green-600 text-white font-semibold py-4 px-10  hover:bg-green-700">
+              Register Now →
+            </button>
+          </nuxt-link>
         </div>
       </div>
-      <div class="">
-        <div class="w-1/2">
-
-        </div>
+      <div class="md:w-1/2 hidden md:block">
+        <div class="bg-cover h-[60vh] bg-center bg-no-repeat bg-[url('/images/img-opt.png')]" ></div>
+<!--        <div class="flex justify-end max-h-fit">-->
+<!--          <img class="h-[60vh]" src="/images/img(8).png" alt="">-->
+<!--        </div>-->
       </div>
     </div>
   </div>

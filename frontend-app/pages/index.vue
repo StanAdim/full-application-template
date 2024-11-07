@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import TheHero from "~/components/landing/TheHero.vue";
-import TheCategories from "~/components/landing/TheCategories.vue";
-import TheStats from "~/components/landing/TheStats.vue";
-import TheSolutions from "~/components/landing/TheSolutions.vue";
-import TheStakeholdersCall from "~/components/landing/TheStakeholdersCall.vue";
-import CallForAction from "~/components/landing/CallForAction.vue";
+
 
 definePageMeta({
-  layout: 'landing',
+    layout: 'landing',
   // middleware:'guest'
 })
 useHead({
@@ -19,34 +14,34 @@ const globalData = useGlobalDataStore()
   <div class="">
 <!--    section 1-->
     <section class="h-[60vh] bg-fade-1">
-       <TheHero />
+       <LandingTheHero />
     </section>
     <!--    section 2-->
     <section class="section">
-      <TheCategories />
+      <LandingTheCategories />
     </section>
     <!--    section 3-->
     <section class="section">
-        <TheStats />
+        <LandingTheStats />
     </section>
     <!--    section 4-->
     <section class="section">
-       <TheSolutions />
+       <LandingTheSolutions />
     </section>
     <!--    section 5-->
     <section class="section">
-        <TheStakeholdersCall />
+        <LandingTheStakeholdersCall />
     </section>
     <!--    section 6-->
     <section class="section">
-       <CallForAction />
+       <LandingCallForAction />
     </section>
   </div>
 </template>
 
 <style scoped>
 .section {
-  height: 80vh;
+ @apply pt-8
 }
 
 
