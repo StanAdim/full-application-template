@@ -18,7 +18,8 @@ export const useAuthStore = defineStore('auth', ()=> {
         const {data,error} = await useApiFetch('/api/v1/user');
         if(data.value){
             user.value = data.value as LoggedUser
-            if(getLoggedUser.value?.hasInfo == 0)globalStore.toggleUserInfoDialogStatus('on') //close Extra infoDialog
+            if(getLoggedUser.value?.hasInfo == 0)
+                globalStore.toggleUserInfoDialogStatus('on') //close Extra infoDialog
         }
         if (error.value){
             console.log(error.value.message, 'error')
@@ -67,7 +68,7 @@ export const useAuthStore = defineStore('auth', ()=> {
             // globalStore.toggleBtnLoadingState(false)
             globalStore.assignAlertMessage('Welcome back!!','success')
         if (user.value){
-            navigateTo('/crm/');
+            navigateTo('/profile/');
         }
         }else {
             authErrors.value = loginResponse.error.value
