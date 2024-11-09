@@ -3,7 +3,7 @@
     <div class="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-3 gap-8">
       <!-- Logo Section -->
       <div class="flex items-center space-x-2">
-<!--        <img src="path/to/ict-logo.png" alt="ICT Commission Logo" class="h-10 w-auto">-->
+        <img src="/images/ictc-logo-white-opt.png" alt="ICT Commission Logo" class="h-24 w-auto">
       </div>
 
       <!-- Contact Information -->

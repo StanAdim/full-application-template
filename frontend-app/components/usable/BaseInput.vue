@@ -6,7 +6,8 @@
         :placeholder="placeholder"
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
+        :class="{'md:w-72 w-full':props.isFull, 'w-full': !props.isFull}"
+        class=" border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-blue-500"
     />
   </div>
 </template>
@@ -16,6 +17,7 @@ import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
   label: { type: String, default: '' },
+  isFull: { type: String, default: true },
   type: { type: String, default: 'text' },
   placeholder: { type: String, default: '' },
   modelValue: { type: String, default: '' },

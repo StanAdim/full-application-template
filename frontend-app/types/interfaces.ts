@@ -4,29 +4,17 @@ export interface ApiResponse {
     message: string
 }
 
-export interface ConferenceData {
-    action:string,
-    year: number,
-    name: string,
-    startDate: string,
-    endDate: string,
-    venue: string,
-    theme: string,
-    aboutConference: string,
-    defaultFee: number,
-    foreignerFee:number,
-    guestFee: number,
-}
-// export interface UserDataArray extends Array<User> {}
-
-export interface DocumentMaterial {
-    id:string,
+export interface StartupData {
     name:string,
-    path:string,
-    conference_id:string,
-    user_id:string,
-    status:string,
+    founders: string,
+    region: string,
+    email: string,
+    phone_number: string,
+    website: string,
+    industry: string,
+    dateOfEstablishment: number,
 }
+
 export interface BoothData {
     id?: string;  // Optional for creating new booths
     name: string;
@@ -42,19 +30,7 @@ export interface User {
     email:string,
 
 }
-export interface  SpeakerData {
-    id: string,
-    name:string,
-    email:string,
-    designation:string,
-    institution:string,
-    linkedinLink:string,
-    twitterLink:string,
-    isMain:string,
-    conference_id:string,
-    imageFileName:string,
-    is_visible:boolean
-}
+
 export interface Credential {
     email:string,
     password:string,

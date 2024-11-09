@@ -7,13 +7,16 @@ useHead({
   title: 'Login',
 })
 const globalData = useGlobalDataStore()
+const auth = useAuthStore()
 const form_data = reactive({
-  email: '',
-  password: '',
+  email: 'test@example.com',
+  password: 'password',
   rememberMe: ''
 })
-const handleLogin = ()=> {
-  console.log(form_data)
+const handleLogin = async ()=> {
+  // console.log(form_data)
+  await auth.login(form_data)
+
 }
 const IsNotFilled = computed(() => !(form_data.email.length > 0 && form_data.password.length > 0) )
 </script>

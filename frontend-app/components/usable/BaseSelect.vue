@@ -4,7 +4,7 @@
     <select
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        class="w-full border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:border-blue-500">
+        class="md:w-72 w-full border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:border-blue-500">
       <option selected value="0">Select {{props.label}}</option>
       <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
     </select>

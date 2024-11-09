@@ -34,12 +34,15 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      appName:  'Tanzania Startups - ICT Commission',
+      appName:  'ICT Commission - Tanzania Startups',
       apiBaseUlr: process.env.API_URL ,
       baseUrl: process.env.BASE_URL,
     }
   },
   css:[
     "~/assets/css/app.css",
+    "~/assets/fontawesome/css/fontawesome.min.css",
+    "~/assets/fontawesome/css/solid.min.css",
+    "~/assets/fontawesome/css/brands.min.css",
   ]
 })

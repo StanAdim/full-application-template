@@ -6,12 +6,12 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    working_dir: /var/www/html/api
+    working_dir: /var/www/html
     container_name: tzstartups-dev-api
     ports:
       - 1704:80
     volumes:
-      - .:/var/www/html/api
+      - .:/var/www/html/
     environment:
       - DB_CONNECTION=pgsql
       - DB_HOST=db

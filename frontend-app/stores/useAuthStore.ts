@@ -20,7 +20,7 @@ export const useAuthStore = defineStore('auth', ()=> {
         return  user.value?.role?.permissions.map(obj => obj.code)})
     //Fetch Logout
     async function fetchUser(){
-        const {data,error} = await useApiFetch('/api/auth/user');
+        const {data,error} = await useApiFetch('/api/v1/user');
         if(data.value){
             globalStore.toggleLoadingState('off')
             user.value = data.value as LoggedUser
