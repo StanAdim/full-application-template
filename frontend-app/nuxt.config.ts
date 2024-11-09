@@ -11,7 +11,6 @@ export default defineNuxtConfig({
       title: 'Tanzania Startups - ICT Commission', // Set the default title for your application
       meta: [
         { charset: 'utf-8' },
-        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
         { 'http-equiv': 'pragma', content: 'no-cache' },
         { 'http-equiv': 'cache-control', content: 'no-cache' },
         { 'http-equiv': 'expires', content: '0' },
@@ -35,8 +34,7 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      instName: 'ICT Commission',
-      appName:  'Tanzania Startups',
+      appName:  'ICT Commission - Tanzania Startups',
       apiBaseUlr: process.env.API_URL ,
       baseUrl: process.env.BASE_URL,
     }
