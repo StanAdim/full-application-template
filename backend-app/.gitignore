@@ -1,0 +1,9 @@
+vendor/
+.env
+/storage/logs
+.idea
+/storage/api-docs/swagger.yaml
+data/
+/http-requests/
+.vscode/
+.data/
