@@ -9,7 +9,7 @@
     <ul class="text-xs whitespace-nowrap">
       <li class="sidebar-link">
         <i class="fa-solid fa-user icon"></i>
-        <nuxt-link to="/profile/">Dashboard</nuxt-link>
+        <nuxt-link to="/profile/dashboard">Dashboard</nuxt-link>
       </li>
       <!-- Projects with child links -->
       <li class="sidebar-link" @click="toggleMenu('projects')">
@@ -18,14 +18,12 @@
       </li>
       <ul v-if="activeMenu === 'projects'" class="pl-6">
         <li class="sidebar-sublink">
-          <nuxt-link to="/profile/project-1">Project 1</nuxt-link>
+          <nuxt-link to="/profile/projects">My Projects</nuxt-link>
         </li>
         <li class="sidebar-sublink">
-          <nuxt-link to="/profile/project-2">Project 2</nuxt-link>
+          <nuxt-link to="/profile/projects/create">New Project</nuxt-link>
         </li>
-        <li class="sidebar-sublink">
-          <nuxt-link to="/profile/project-3">Project 3</nuxt-link>
-        </li>
+
       </ul>
       <!-- Products with child links -->
       <li class="sidebar-link" @click="toggleMenu('products')">
@@ -34,22 +32,19 @@
       </li>
       <ul v-if="activeMenu === 'products'" class="pl-6">
         <li class="sidebar-sublink">
-          <nuxt-link to="/profile/product-1">Product 1</nuxt-link>
+          <nuxt-link to="/profile/products">My Products</nuxt-link>
         </li>
         <li class="sidebar-sublink">
-          <nuxt-link to="/profile/product-2">Product 2</nuxt-link>
-        </li>
-        <li class="sidebar-sublink">
-          <nuxt-link to="/profile/product-3">Product 3</nuxt-link>
+          <nuxt-link to="/profile/products/create">New Products</nuxt-link>
         </li>
       </ul>
       <li class="sidebar-link">
         <i class="fa-solid fa-circle-info icon"></i>
-        <nuxt-link to="/profile/">Details</nuxt-link>
+        <nuxt-link to="/profile/1">Profile Info</nuxt-link>
       </li>
       <li class="sidebar-link">
         <i class="fa-solid fa-gear icon"></i>
-        <nuxt-link to="/profile/">Setting</nuxt-link>
+        <nuxt-link to="/profile/1">Setting</nuxt-link>
       </li>
     </ul>
   </nav>

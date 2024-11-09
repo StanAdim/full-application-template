@@ -1,10 +1,20 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ClickOutside as vClickOutside } from 'element-plus'
+
+const popoverRef = ref()
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.()
+}
 const config = useRuntimeConfig()
+const gData = useGlobalDataStore()
+const auth = useAuthStore()
 const isSidebarOpen = ref(true)
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
+}
+const logout = async  ()=> {
+  await auth.logout()
 }
 </script>
 
@@ -27,10 +37,27 @@ const toggleSidebar = () => {
         <!-- Right section with profile -->
         <div class="flex items-center">
           <div class="flex items-center space-x-3 mx-4">
-            <span class="text-sm hidden md:block">John Doe</span>
-            <button class="rounded-full h-8 w-8 flex items-center justify-center bg-sky-100 hover:bg-sky-200 focus:outline-none">
-              <i class="fa-solid fa-user"></i>
-            </button>
+
+              <div  class="flex items-center" v-popover="popoverRef" v-click-outside="onClickOutside">
+                <div class="text-sm hidden md:block mx-4">{{ auth.getLoggedUser?.first_name }} {{auth.getLoggedUser?.last_name }}</div>
+                <button class="rounded-full h-8 w-8 flex items-center justify-center bg-sky-100 hover:bg-sky-200 focus:outline-none">
+                  <i class="fa-solid fa-user"></i>
+                </button>
+              </div>
+
+              <el-popover
+                  ref="popoverRef"
+                  trigger="click"
+                  title="Profile Setting"
+                  virtual-triggering
+                  persistent
+              >
+                <nuxt-link to="/profile/setting/my-account">
+                  <div class="hover:bg-sky-100 p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-user-gear"></i>My Account</div>
+                </nuxt-link>
+                <div @click.prevent="logout" class="hover:bg-sky-100 hover:text-red-500 p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-arrow-left"></i>Logout</div>
+              </el-popover>
+
           </div>
         </div>
       </header>
@@ -43,7 +70,12 @@ const toggleSidebar = () => {
         >
           <div class="leading-10">
             <!-- Your Lorem Ipsum content -->
-            <slot />
+            <div class="bg-white rounded-lg shadow p-6">
+              <h2 class="text-xl font-semibold mb-4">{{ gData.getPageTitle }}</h2>
+              <div class="text-gray-600">
+                <slot />
+              </div>
+            </div>
           </div>
         </main>
         <!-- Modified sidebar nav -->

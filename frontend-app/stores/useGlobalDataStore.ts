@@ -3,6 +3,8 @@ export const useGlobalDataStore = defineStore('globalData', () => {
     const authStore = useAuthStore()
     const localLoader = ref<boolean>(false);
     const alertMessage = ref<string>('');
+    const pageTitle = ref<string>('');
+
     const isContentLoading = ref<boolean>(false)
     const isLoading = ref<boolean>(false);
     const longName = ref<string>('Tanzania Startups')
@@ -16,6 +18,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
     const getAlertMessage = computed(() => {return alertMessage.value})
     const getAppName = computed(()=> longName.value)
     const getAppRoute = computed(() => {return appRoutes.value})
+    const getPageTitle = computed(() => {return pageTitle.value})
     const getContentLoadingState = computed(() => {return isContentLoading.value})
 
 
@@ -24,6 +27,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
     const toggleLoadingState = (state : boolean) :boolean => isLoading.value = state
     const toggleContentLoaderState = (state : boolean) : boolean => isContentLoading.value = state
     const toggleLocalLoaderStatus = (state : boolean) : boolean =>  localLoader.value = state
+    const assignPageTitle = (title : string) : string =>  pageTitle.value = title
 
 
     const assignAlertMessage = (message,type)=> {
@@ -75,6 +79,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
         shortenText,separateNumber,
         assignAlertMessage,
         toggleLoadingState, toggleContentLoaderState, toggleLocalLoaderStatus,
+        assignPageTitle,getPageTitle
 
     }
 })

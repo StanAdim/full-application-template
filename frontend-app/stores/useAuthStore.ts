@@ -5,11 +5,9 @@ export const useAuthStore = defineStore('auth', ()=> {
     const  user = ref<User | null>(null)
     const isLoggedIn = computed(()=> !!user.value)
     const globalStore = useGlobalDataStore()
-    const authErrors = ref <any | null>(null)
 
-    const getLoggedUser = computed(()=>{return user.value?.user})
+    const getLoggedUser = computed(()=>{return user.value})
     const getLoggedUserInfo = computed(()=>{return user.value?.userInfo})
-    const getAuthErrors = computed(()=>{return authErrors.value})
     const getUserRole = computed(()=>{return user.value?.role?.name})
     const getUserPermissions = computed(()=>{
         return  user.value?.role?.permissions.map(obj => obj.code)})
@@ -68,7 +66,7 @@ export const useAuthStore = defineStore('auth', ()=> {
             // globalStore.toggleBtnLoadingState(false)
             globalStore.assignAlertMessage('Welcome back!!','success')
         if (user.value){
-            navigateTo('/profile/');
+            navigateTo('/profile/dashboard');
         }
         }else {
             authErrors.value = loginResponse.error.value
@@ -85,7 +83,7 @@ export const useAuthStore = defineStore('auth', ()=> {
             globalStore.toggleLoadingState('off')
             globalStore.assignAlertMessage('You are logged out', 'warning')
             user.value = null;
-            navigateTo('/')
+            navigateTo('/login')
             location.reload()
         }
     }
@@ -162,7 +160,7 @@ export const useAuthStore = defineStore('auth', ()=> {
         }
     }
     return {
-        user,login,isLoggedIn,getAuthErrors,
+        user,login,isLoggedIn,
         logout,fetchUser,register,getLoggedUser,getUserRole
         ,getUserPermissions,getLoggedUserInfo,
 
