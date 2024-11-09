@@ -34,7 +34,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig:{
     public:{
-      appName:  'ICT Commission - Tanzania Startups',
+      appName:  'Tanzania Startups',
+      instNam:  'ICT Commission',
       apiBaseUlr: process.env.API_URL ,
       baseUrl: process.env.BASE_URL,
     }
