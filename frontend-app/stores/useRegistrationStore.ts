@@ -17,6 +17,5 @@ export const useRegistrationStore = defineStore('registrationStore', () => {
         startupData,
         getStartupData,
         assignStartupData,
-
     }
 })

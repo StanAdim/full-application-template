@@ -88,20 +88,18 @@ export const useAuthStore = defineStore('auth', ()=> {
         }
     }
     //Register
-    async function register(userInfo : RegistrationInfo){
+    async function register(passed_data : RegistrationInfo){
         await useApiFetch("/sanctum/csrf-cookie");
-        const registrationResponse = await useApiFetch("/register", {
+        const {data, error} = await useApiFetch("/api/register-user-with-profile", {
             method: "POST",
-            body: userInfo,
+            body: passed_data,
         });
-        if(registrationResponse?.data.value?.code == 200){
-            globalStore.assignAlertMessage('Registration Success: Check your Email','success')
-            globalStore.toggleRegistrationForm()
-        }else{
-            authErrors.value = registrationResponse?.error.value?.data
-            globalStore.assignAlertMessage(authErrors.value?.message, 'error')
+        if(data.value){
+            globalStore.assignAlertMessage(data.value?.message,'success')
+        }else {
+            globalStore.assignAlertMessage(error.value?.statusMessage,'error')
         }
-        return registrationResponse;
+        console.log(data.value,error.value?.statusMessage)
     }
     async function sendPasswordResetLink(userEmail : string) : Promise {
         await useApiFetch("/sanctum/csrf-cookie");

@@ -35,7 +35,7 @@ class RegisteredUserController extends Controller
             'last_name' => $request->last_name,
             'phone' => $request->phone,
             'email' => $request->email,
-            'rank' => '[profiled]',
+            'rank' => '[`profiled`]',
             // 'institution_id' =>  $institution->id,
             'password' => bcrypt($request->password),
             'password_changed_at' => Carbon::now(),

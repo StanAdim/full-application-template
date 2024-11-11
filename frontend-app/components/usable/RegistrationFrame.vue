@@ -5,6 +5,8 @@ const props = defineProps({
     type: String
   }
 })
+const auth = useAuthStore()
+const regStore = useRegistrationStore()
 
 const activeTab = ref(1)
 const handleTabClick = (index) => {
@@ -14,37 +16,41 @@ const user_data = reactive({
   first_name: '',
   middle_name: '',
   last_name: '',
-  email: '',
-  phone_number: '',
+  user_email: '',
+  user_phone: '',
   region: '',
   password: '',
-  confirm_password: ''
 })
 
-const handleSubmit = () => {
+const handleSubmit = async () =>  {
   // Handle form submission here
-  if (activeTab.value ==1 ){activeTab.value = 2 }
+  if (activeTab.value ==  1 ){activeTab.value = 2 }
   else {
-    console.log(user_data)
+    // console.log(user_data)
   }
-  const regStore = useRegistrationStore()
+  let reg_data = {}
   switch (props.headerTitle) {
     case 'ICT Startup':
-      console.log(regStore.getStartupData)
+        reg_data.profile_type = 'startup'
+        reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
       break;
     case 'Incubation Hub':
-      console.log('Hubs')
+      reg_data.profile_type = 'hub'
+      reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
       break;
     case 'Digital Accelerator':
-      console.log('Accelerators')
+      reg_data.profile_type = 'accelerator'
+      reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
       break;
     case 'Grassroot Program':
-      console.log('Grassroot')
+      reg_data.profile_type = 'grassroot'
+      reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
       break;
     default:
       console.log("No profile Selected")
   }
-
+  await auth.register(reg_data)
+  // console.log(reg_data)
 }
 </script>
 
@@ -87,11 +93,9 @@ const handleSubmit = () => {
           <UsableBaseInput v-model="user_data.first_name"  placeholder="first name" label="First Name" />
           <UsableBaseInput v-model="user_data.middle_name"  placeholder="middle name" label="Middle Name" />
           <UsableBaseInput v-model="user_data.last_name"  placeholder="last name" label="Last Name" />
-          <UsableBaseInput v-model="user_data.email" type="email"  placeholder="youremail@domain" label="Email" />
-          <UsableBaseInput v-model="user_data.phone_number" label="Phone Number" placeholder="+255.." />
-          <UsableBaseSelect v-model="user_data.region"  label="Region" :options="regions" />
+          <UsableBaseInput v-model="user_data.user_email" type="email"  placeholder="youremail@domain" label="Email" />
+          <UsableBaseInput v-model="user_data.user_phone" label="Phone Number" placeholder="+255.." />
           <UsableBaseInput v-model="user_data.password" type="password"  placeholder="*************" label="Password" />
-          <UsableBaseInput v-model="user_data.confirm_password" type="password"  placeholder="*************" label="Confirm Password" />
         </div>
 
 
@@ -101,9 +105,12 @@ const handleSubmit = () => {
             <span>&larr;</span>
             <span>Go back</span>
           </button>
-          <button @click="handleSubmit" class="bg-blue-500 text-white font-semibold py-2 px-6 rounded-md flex items-center space-x-2 hover:bg-blue-600">
-            <span v-if="activeTab === 1">Continue</span>
-            <span v-if="activeTab === 2">Submit</span>
+          <button v-if="activeTab === 1" @click="handleTabClick(2)" class="bg-blue-500 text-white font-semibold py-2 px-6 rounded-md flex items-center space-x-2 hover:bg-blue-600">
+            <span >Continue</span>
+            <span>&rarr;</span>
+          </button>
+          <button v-else @click="handleSubmit" class="bg-sky-500 text-white font-semibold py-2 px-6 rounded-md flex items-center space-x-2 hover:bg-sky-600">
+            <span >Submit</span>
             <span>&rarr;</span>
           </button>
         </div>

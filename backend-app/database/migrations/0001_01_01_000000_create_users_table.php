@@ -21,7 +21,6 @@ return new class extends Migration
             $table->string('email')->unique();
             $table->string('password');
             $table->enum('rank', ['profiled', 'internal']);
-            // $table->unsignedBigInteger('institution_id')->nullable();
             $table->boolean('status')->default(true);
             $table->dateTime('email_verified_at')->nullable();
             $table->dateTime('last_login')->nullable();

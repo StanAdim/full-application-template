@@ -23,12 +23,11 @@ export interface BoothData {
     description?: string;
 }
 export interface User {
-    id:number,
+    uid:string,
     firstName: string,
     middleName: string,
     lastName: string,
     email:string,
-
 }
 
 export interface Credential {
@@ -36,7 +35,7 @@ export interface Credential {
     password:string,
 }
 export interface LoggedUser{
-    id:number,
+    uid:string,
     firstName:string,
     middleName:string,
     lastName:string,
@@ -54,4 +53,40 @@ export interface RegistrationInfo {
     email: string,
     password: string;
     password_confirmation: string;
+}
+
+export interface Profile {
+    id: number
+    user: User
+    commonField1: string
+    commonField2: string
+}
+
+export interface StartupProfile implements Profile {
+    id: number,
+    user: User,
+    commonField1: string,
+    commonField2: string,
+    startupSpecificField1: string
+}
+
+export interface HubProfile implements Profile {
+    id: number,
+    user: User,
+    commonField1: string,
+    commonField2: string,
+    hubSpecificField1: string,
+}
+
+export interface AcceleratorProfile implements Profile {
+    id: number
+    user: User,
+    commonField1: string
+    commonField2: string
+    acceleratorSpecificField1: string
+}
+
+export interface Query {
+    profiles(type: string): [Profile]
+    profile(id: number): Profile
 }

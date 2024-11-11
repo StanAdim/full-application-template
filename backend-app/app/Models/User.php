@@ -3,6 +3,8 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+
+use App\Models\Categories\Profile;
 use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,11 +12,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
-
+use Laravel\Sanctum\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasFactory, Notifiable, HasUid, SoftDeletes;
+    use HasFactory, Notifiable, HasUid, SoftDeletes, HasApiTokens, HasRoles;
 
     /**
      * The attributes that are mass assignable.
@@ -32,7 +35,6 @@ class User extends Authenticatable
         'email',
         'password',
         'rank',
-        'institution_id',
         'password_changed_at',
     ];
     /**
@@ -63,8 +65,10 @@ class User extends Authenticatable
             get: fn (mixed $value, $attributes) => $attributes['first_name']. ' '. $attributes['last_name'],
         );
     }
-    public function institution(){
-        // return $this->belongsTo(Institution::class, 'institution_id');
+    // Define relationship to Profile
+    public function profile()
+    {
+        return $this->hasOne(Profile::class);
     }
 }
 
