@@ -33,30 +33,27 @@ const logout = async  ()=> {
           </button>
           <span class="ml-4 font-extrabold ">{{ config.public.appName}}</span>
         </div>
-
         <!-- Right section with profile -->
         <div class="flex items-center">
-          <div class="flex items-center space-x-3 mx-4">
-
-              <div  class="flex items-center" v-popover="popoverRef" v-click-outside="onClickOutside">
-                <div class="text-sm hidden md:block mx-4">{{ auth.getLoggedUser?.first_name }} {{auth.getLoggedUser?.last_name }}</div>
-                <button class="rounded-full h-8 w-8 flex items-center justify-center bg-sky-100 hover:bg-sky-200 focus:outline-none">
-                  <i class="fa-solid fa-user"></i>
-                </button>
+          <div class="">
+            <el-dropdown placement="bottom-start">
+              <div class="flex items-center space-x-3 mx-4">
+                <div class="text-black/80">{{ auth.getLoggedUser?.name }} </div>
+                <button class="rounded-full h-8 w-8 flex items-center justify-center bg-sky-100 hover:bg-sky-200 focus:outline-none"><i class="fa-solid fa-user"></i></button>
               </div>
-
-              <el-popover
-                  ref="popoverRef"
-                  trigger="click"
-                  title="Profile Setting"
-                  virtual-triggering
-                  persistent
-              >
-                <nuxt-link to="/profile/setting/my-account">
-                  <div class="hover:bg-sky-100 p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-user-gear"></i>My Account</div>
-                </nuxt-link>
-                <div @click.prevent="logout" class="hover:bg-sky-100 hover:text-red-500 p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-arrow-left"></i>Logout</div>
-              </el-popover>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>
+                    <nuxt-link to="/profile/setting/my-account">
+                      <div class="hover:bg-sky-100 p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-user-gear"></i>My Account</div>
+                    </nuxt-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <div @click.prevent="logout" class="hover:bg-sky-100 hover:text-red-500 p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-arrow-left"></i>Logout</div>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
 
           </div>
         </div>

@@ -10,8 +10,9 @@ const globalData = useGlobalDataStore()
 </script>
 <template>
   <div class="container mx-auto">
-    <div class="h-[40vh] py-2 mx-2">
+    <div class="h-[100vh] py-2 mx-2">
           Registered Profiles
+      <sample />
     </div>
   </div>
 </template>

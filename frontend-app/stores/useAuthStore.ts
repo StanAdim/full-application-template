@@ -6,8 +6,9 @@ export const useAuthStore = defineStore('auth', ()=> {
     const isLoggedIn = computed(()=> !!user.value)
     const globalStore = useGlobalDataStore()
 
-    const getLoggedUser = computed(()=>{return user.value})
-    const getLoggedUserInfo = computed(()=>{return user.value?.userInfo})
+    const getLoggedUser = computed(()=>{return user.value?.user})
+    const getLoggedUserProfile = computed(()=>{return user.value?.profile})
+    const getUserProfileable = computed(()=>{return user.value?.profileable})
     const getUserRole = computed(()=>{return user.value?.role?.name})
     const getUserPermissions = computed(()=>{
         return  user.value?.role?.permissions.map(obj => obj.code)})
@@ -56,6 +57,7 @@ export const useAuthStore = defineStore('auth', ()=> {
     }
     // Login
     async function login(credentials: Credential) : Promise{
+        globalStore.toggleBtnLoadingState(true)
         await useApiFetch("/sanctum/csrf-cookie");
         const loginResponse = await useApiFetch('/login',{
             method: 'POST',
@@ -63,16 +65,14 @@ export const useAuthStore = defineStore('auth', ()=> {
         });
         if (loginResponse.status.value === 'success'){
             await fetchUser();
-            // globalStore.toggleBtnLoadingState(false)
+            globalStore.toggleBtnLoadingState(false)
             globalStore.assignAlertMessage('Welcome back!!','success')
         if (user.value){
             navigateTo('/profile/dashboard');
         }
         }else {
-            authErrors.value = loginResponse.error.value
-            globalStore.toggleLoadingState('off')
-            // globalStore.toggleBtnLoadingState(false)
-            globalStore.assignAlertMessage(authErrors.value?.data?.message, 'error')
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage(loginResponse.error.value?.data?.message, 'error')
         }
         return loginResponse;
     }
@@ -160,7 +160,8 @@ export const useAuthStore = defineStore('auth', ()=> {
     return {
         user,login,isLoggedIn,
         logout,fetchUser,register,getLoggedUser,getUserRole
-        ,getUserPermissions,getLoggedUserInfo,
+        ,getUserPermissions,getLoggedUserProfile,
+        getUserProfileable,
 
     }
 })

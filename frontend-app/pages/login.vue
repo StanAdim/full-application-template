@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TheBtnLoader from "~/components/usable/TheBtnLoader.vue";
+
 definePageMeta({
   layout: 'guest',
   middleware: 'guest'
@@ -9,8 +11,8 @@ useHead({
 const globalData = useGlobalDataStore()
 const auth = useAuthStore()
 const form_data = reactive({
-  email: 'test@example.com',
-  password: 'password',
+  email: 'startup@test.com',
+  password: 'Pa$$w0rd!',
   rememberMe: ''
 })
 const handleLogin = async ()=> {
@@ -35,7 +37,10 @@ const IsNotFilled = computed(() => !(form_data.email.length > 0 && form_data.pas
         </label>
         <nuxt-link to="/forgot-password" class="text-sm text-blue-500 hover:underline">Forgot Password?</nuxt-link>
       </div>
-      <UsableBaseButton :disabled="IsNotFilled" type="submit" color="blue">Login</UsableBaseButton>
+      <UsableBaseButton :disabled="IsNotFilled" type="submit" color="blue">Login <TheBtnLoader /></UsableBaseButton>
+      <div class="mt-2 text-sm">
+        <p >Not registered?, <nuxt-link class="appColor hover:text-sky-700 hover:cursor-pointer" to="/register">Create  Account</nuxt-link></p>
+      </div>
     </form>
   </div>
 </template>

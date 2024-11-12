@@ -21,6 +21,7 @@ return new class extends Migration
             $table->longText('description')->nullable();
             $table->json('founders')->nullable(); // JSON column for founders
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

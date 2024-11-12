@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
+use App\Http\Resources\ProfileResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -16,8 +18,8 @@ Route::post('/register-user-with-profile', [ProfileController::class, 'registerU
 Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function () {
     Route::get('/user', function (Request $request) { return [
         'message' => 'Login Success.',
-        'user' => Auth::user(),
-        'profile' => Auth::user()->profile,
+        'user' => new UserResource(Auth::user()),
+        'profile' => new ProfileResource(Auth::user()->profile),
         'profileable' => $request->user()->profileable,
     ];}
 );

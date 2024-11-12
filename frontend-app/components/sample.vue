@@ -1,103 +1,75 @@
-<!-- components/DynamicInputs.vue -->
 <template>
-  <div class="dynamic-inputs">
-    <h2>Dynamic Inputs</h2>
+  <div class="profile-view-container p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md">
+    <h1 class="text-2xl font-bold text-gray-900">{{ profileType }} Profile</h1>
 
-    <div v-for="(input, index) in inputs" :key="index" class="input-group">
-      <input
-          v-model="input.value"
-          type="text"
-          :placeholder="'Input ' + (index + 1)"
-          class="form-input"
-      >
-      <button
-          @click="removeInput(index)"
-          class="remove-btn"
-      >
-        Remove
-      </button>
-    </div>
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Basic Information -->
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Basic Information</h2>
+        <div class="mt-2">
+          <p><strong>Name:</strong> {{ profile.name }}</p>
+          <p><strong>Email:</strong> {{ profile.email }}</p>
+          <p><strong>Phone:</strong> {{ profile.phone }}</p>
+          <p><strong>Website:</strong> <a :href="profile.website" class="text-blue-500">{{ profile.website }}</a></p>
+        </div>
+      </div>
 
-    <button @click="addInput" class="add-btn">
-      Add New Input
-    </button>
+      <!-- Location Information -->
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Location</h2>
+        <div class="mt-2">
+          <p><strong>Address:</strong> {{ profile.address }}</p>
+          <p><strong>City:</strong> {{ profile.city }}</p>
+          <p><strong>Country:</strong> {{ profile.country }}</p>
+        </div>
+      </div>
 
-    <!-- Display values for demonstration -->
-    <div class="values-display">
-      <h3>Current Values:</h3>
-      <pre>{{ JSON.stringify(inputValues, null, 2) }}</pre>
+      <!-- Additional Information (for Startups, Hubs, etc.) -->
+      <div v-if="profileType === 'Startup'" class="md:col-span-2">
+        <h2 class="text-lg font-semibold text-gray-800">Founders</h2>
+        <ul class="mt-2 list-disc list-inside">
+          <li v-for="founder in profile.founders" :key="founder">{{ founder }}</li>
+        </ul>
+      </div>
+
+      <div v-if="profileType === 'Hub'" class="md:col-span-2">
+        <h2 class="text-lg font-semibold text-gray-800">Supported Programs</h2>
+        <ul class="mt-2 list-disc list-inside">
+          <li v-for="program in profile.programs" :key="program">{{ program }}</li>
+        </ul>
+      </div>
+
+      <div v-if="profileType === 'Accelerator'" class="md:col-span-2">
+        <h2 class="text-lg font-semibold text-gray-800">Mentorship Areas</h2>
+        <ul class="mt-2 list-disc list-inside">
+          <li v-for="area in profile.mentorshipAreas" :key="area">{{ area }}</li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-const inputs = ref([{ value: '' }])
+import { ref } from 'vue';
 
-const inputValues = computed(() => {
-  return inputs.value.map(input => input.value)
-})
-
-const addInput = () => {
-  inputs.value.push({ value: '' })
-}
-
-const removeInput = (index) => {
-  inputs.value.splice(index, 1)
-  // Ensure at least one input remains
-  if (inputs.value.length === 0) {
-    inputs.value.push({ value: '' })
-  }
-}
+// Sample data (replace with actual data)
+const profileType = 'Startup'; // can be 'Startup', 'Hub', or 'Accelerator'
+const profile = ref({
+  name: 'Tech Innovators Ltd.',
+  email: 'info@techinnovators.com',
+  phone: '+123 456 7890',
+  website: 'https://techinnovators.com',
+  address: '123 Innovation Ave',
+  city: 'Dar es Salaam',
+  country: 'Tanzania',
+  founders: ['Jane Doe', 'John Smith'],
+  programs: ['Youth Empowerment', 'Digital Literacy'], // For 'Hub'
+  mentorshipAreas: ['Business Strategy', 'Product Development'], // For 'Accelerator'
+});
 </script>
 
 <style scoped>
-.dynamic-inputs {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-.input-group {
-  display: flex;
-  gap: 10px;
-  margin-bottom: 10px;
-}
-
-.form-input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-
-.add-btn,
-.remove-btn {
-  padding: 8px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.add-btn {
-  background-color: #4CAF50;
-  color: white;
-  margin-top: 10px;
-}
-
-.remove-btn {
-  background-color: #f44336;
-  color: white;
-}
-
-.values-display {
-  margin-top: 20px;
-  padding: 10px;
-  background-color: #f5f5f5;
-  border-radius: 4px;
-}
-
-pre {
-  white-space: pre-wrap;
-  word-wrap: break-word;
+.profile-view-container {
+  background-color: #f9fafb; /* Light background */
 }
 </style>
