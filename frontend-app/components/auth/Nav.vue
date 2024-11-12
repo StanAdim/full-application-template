@@ -46,6 +46,10 @@
         <i class="fa-solid fa-gear icon"></i>
         <nuxt-link to="/profile/1">Setting</nuxt-link>
       </li>
+      <li class="sidebar-link">
+        <i class="fa-solid fa-file-contract"></i>
+        <nuxt-link to="/profile/1">Documents</nuxt-link>
+      </li>
     </ul>
   </nav>
 </template>
