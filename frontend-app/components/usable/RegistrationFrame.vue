@@ -20,7 +20,6 @@ const user_data = reactive({
   last_name: '',
   user_email: '',
   user_phone: '',
-  region: '',
   password: '',
 })
 
@@ -43,7 +42,7 @@ const handleSubmit = async () =>  {
       break;
     case 'Digital Accelerator':
       reg_data.profile_type = 'accelerator'
-      reg_data = {profile_type : 'accelerator',...regStore.getStartupData, ...user_data}
+      reg_data = {profile_type : 'accelerator',...regStore.getAcceleratorData, ...user_data}
       break;
     case 'Grassroot Program':
       reg_data.profile_type = 'grassroot'

@@ -2,7 +2,7 @@
 import RegistrationFrame from "~/components/usable/RegistrationFrame.vue";
 
 definePageMeta({
-  title: 'Register',
+  title: 'Innovation Hub Registration',
       layout: 'guest',
 })
 const globalData = useGlobalDataStore()
@@ -16,7 +16,6 @@ const program_options = [
   {  label : 'Mentorship', value: 'Mentorship'},
   {  label : 'Networking events', value: 'Networking events'},
 ]
-const activeTab = ref(1)
 const entity_data = reactive({
   hub_name: '',
   total_members: '',

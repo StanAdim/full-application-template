@@ -26,14 +26,16 @@ export interface HubData {
     available_programs: string,
     brief: string,
 }
-
-export interface BoothData {
-    id?: string;  // Optional for creating new booths
-    name: string;
-    location: string;
-    capacity: number;
-    description?: string;
+export interface AcceleratorData {
+    accelerator_name: string,
+    uid: number,
+    focus_area: number,
+    brief_description: string,
+    region_location: string,
+    phone_number: string,
+    email: string,
 }
+
 export interface User {
     uid:string,
     firstName: string,

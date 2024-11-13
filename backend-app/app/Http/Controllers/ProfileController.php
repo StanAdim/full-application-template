@@ -54,7 +54,9 @@ class ProfileController extends Controller{
 
         // Accelerator
         'accelerator_name' => 'required_if:profile_type,accelerator|string|max:255',
-        'focus_area' => 'required_if:profile_type,accelerator|string|max:255',
+        'brief_description' => 'required_if:profile_type,accelerator|string|max:500',
+        'focus_area' => 'required_if:profile_type,accelerator|array', // Validate founders as an array
+
     ]);
 
     DB::beginTransaction();
@@ -102,7 +104,7 @@ class ProfileController extends Controller{
                 $profileCategory = AcceleratorProfile::create([
                     'accelerator_name' => $validated['accelerator_name'],
                     'focus_area' => $validated['focus_area'],
-                    'description' => $request->input('description', ''),
+                    'brief_description' => $validated['brief_description'],
                 ]);
                 break;
         }

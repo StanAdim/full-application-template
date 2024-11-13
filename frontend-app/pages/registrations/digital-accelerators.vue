@@ -2,41 +2,30 @@
 import RegistrationFrame from "~/components/usable/RegistrationFrame.vue";
 
 definePageMeta({
-  title: 'Register',
+  title: 'Digital Accelerator Registration',
       layout: 'guest',
 })
 const globalData = useGlobalDataStore()
-const regions = [{  label : 'Arusha', value: '1'}, ]
-const activeTab = ref(1)
-const user_data = reactive({
-  first_name: '',
-  middle_name: '',
-  last_name: '',
-  email: '',
-  phone_number: '',
-  region: '',
-  password: '',
-  confirm_password: ''
-})
+const regStore = useRegistrationStore()
+
+const regionsOptions = [{  label : 'Arusha', value: '1'}, {  label : 'Mwanza', value: '2'}, ]
+const focus_area_options = [
+  {  label : 'AI', value: 'AI'},
+  {  label : 'Fin Tech', value: 'Fin Tech'},
+  {  label : 'EduTech', value: 'EduTech'},
+  {  label : 'Health Tech', value: 'Health Tech'},
+]
 const entity_data = reactive({
-  name: '',
-  founders: '',
-  email: '',
+  accelerator_name: '',
+  focus_area: '',
+  brief_description: '',
+  region_location: '',
+  date_establishment: '',
   phone_number: '',
-  website: '',
-  industry: ''
+  email: '',
 })
-
-const handleTabClick = (index) => {
-  activeTab.value = index
-}
-
-const handleSubmit = () => {
-  // Handle form submission here
-  if (activeTab.value ==1 ){activeTab.value = 2 }
-  else {
-    console.log(user_data, entity_data)
-  }
+const captureValue = () => {
+  regStore.assignAcceleratorData(entity_data)
 }
 </script>
 
@@ -44,14 +33,38 @@ const handleSubmit = () => {
     <RegistrationFrame header-title="Digital Accelerator">
 
       <template #form>
-         <!-- Tabs Section -->
-          <UsableBaseInput v-model="entity_data.name" label="Startup Name" />
-          <UsableBaseInput v-model="entity_data.founders" label="Founders" />
-          <UsableBaseInput v-model="entity_data.email" label="Email" />
-          <UsableBaseInput v-model="entity_data.phone_number" label="Phone Number" />
-          <UsableBaseInput v-model="entity_data.website" label="Website" />
-          <UsableBaseInput v-model="entity_data.industry" label="Industry | Sector" />
-       </template>
+          <UsableBaseInput :is-full="false" @change="captureValue" placeholder="..." v-model="entity_data.accelerator_name" label="Digital Accelerator Name" />
+
+        <div class="form-groups">
+          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.phone_number" label="Phone Number" />
+          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.email" label="Email" />
+        </div>
+        <div class="form-groups">
+          <UsableBaseInput @change="captureValue" type="date" placeholder="..." v-model="entity_data.date_establishment" label="Date Of Establishment" />
+          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.region_location"  label="Region" :options="regionsOptions" />
+        </div>
+        <div class="form-groups my-2">
+          <p class="block text-gray-600 text-sm font-semibold mb-1" >Focus Areas | Sectors</p>
+          <el-select
+              v-model="entity_data.focus_area"
+              multiple
+              collapse-tags
+              size="large"
+              placeholder="Select Area of Focus"
+              style="width: 300px"
+          >
+            <el-option
+                v-for="item in focus_area_options"
+                :key="item?.value"
+                :label="item?.label"
+                :value="item?.value"
+            />
+          </el-select>
+        </div>
+        <UsableBaseTextArea @change="captureValue" placeholder="..." v-model="entity_data.brief_description"  label="Business Brief Description"  />
+
+      </template>
+
     </RegistrationFrame>
 </template>
 
