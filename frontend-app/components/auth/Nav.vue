@@ -47,8 +47,8 @@
         <nuxt-link to="/profile/1">Setting</nuxt-link>
       </li>
       <li class="sidebar-link">
-        <i class="fa-solid fa-file-contract"></i>
-        <nuxt-link to="/profile/1">Documents</nuxt-link>
+        <i class="fa-solid fa-file-contract icon"></i>
+        <nuxt-link to="/profile/documents/">Documents</nuxt-link>
       </li>
     </ul>
   </nav>

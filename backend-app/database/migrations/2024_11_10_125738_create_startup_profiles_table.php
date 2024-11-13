@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('uid');
             $table->string('funding_stage');
             $table->integer('team_size');
+            $table->longText('website')->nullable();
             $table->longText('description')->nullable();
             $table->json('founders')->nullable(); // JSON column for founders
             $table->timestamps();

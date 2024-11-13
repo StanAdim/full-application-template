@@ -16,3 +16,7 @@
 .bg-fade-1{
     @apply bg-gray-300/30;
 }
+
+.form-groups {
+    @apply flex md:flex-row flex-col justify-between my-0 py-0
+}

@@ -14,6 +14,18 @@ export interface StartupData {
     industry: string,
     dateOfEstablishment: number,
 }
+export interface HubData {
+    hub_name: string,
+    total_members: number,
+    number_female: number,
+    membership_option: string,
+    date_establishment: string,
+    region_location: string,
+    phone_number: string,
+    email: string,
+    available_programs: string,
+    brief: string,
+}
 
 export interface BoothData {
     id?: string;  // Optional for creating new booths
@@ -68,14 +80,6 @@ export interface StartupProfile implements Profile {
     commonField1: string,
     commonField2: string,
     startupSpecificField1: string
-}
-
-export interface HubProfile implements Profile {
-    id: number,
-    user: User,
-    commonField1: string,
-    commonField2: string,
-    hubSpecificField1: string,
 }
 
 export interface AcceleratorProfile implements Profile {

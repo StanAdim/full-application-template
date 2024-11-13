@@ -14,9 +14,17 @@ return new class extends Migration
         Schema::create('hub_profiles', function (Blueprint $table) {
             $table->id();
             $table->string('hub_name');
-            $table->string('location');
-            $table->text('description')->nullable();
+            $table->string('uid');
+            $table->string('total_members');
+            $table->string('number_female');
+            $table->string('membership_option');
+            $table->json('available_programs')->nullable(); // JSON column for founders
+            $table->boolean('status')->default(false);
+            $table->longText('brief')->nullable();
+            $table->longText('partnerships')->nullable();
             $table->timestamps();
+            $table->softDeletes();
+
         });
     }
 

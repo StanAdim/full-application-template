@@ -90,7 +90,5 @@ const removeInput = (index) => {
 </template>
 
 <style scoped>
-.form-groups {
-  @apply flex md:flex-row flex-col justify-between my-0 py-0
-}
+
 </style>

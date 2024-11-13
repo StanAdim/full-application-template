@@ -19,6 +19,7 @@ class StartupProfile extends Model
         'funding_stage' ,
         'team_size',
         'founders',
+        'website',
     ];
     protected $casts = [
         'founders' => 'array', // Cast founders as an array

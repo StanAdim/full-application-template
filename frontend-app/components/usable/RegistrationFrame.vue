@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import TheBtnLoader from "~/components/usable/TheBtnLoader.vue";
+
 const props = defineProps({
   headerTitle : {
     default: "Registration",
@@ -23,6 +25,7 @@ const user_data = reactive({
 })
 
 const handleSubmit = async () =>  {
+  console.log(props.headerTitle)
   // Handle form submission here
   if (activeTab.value ==  1 ){activeTab.value = 2 }
   else {
@@ -34,17 +37,17 @@ const handleSubmit = async () =>  {
         reg_data.profile_type = 'startup'
         reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
       break;
-    case 'Incubation Hub':
+    case 'Innovation Hub':
       reg_data.profile_type = 'hub'
-      reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
+      reg_data = {profile_type : 'hub',...regStore.getHubData, ...user_data}
       break;
     case 'Digital Accelerator':
       reg_data.profile_type = 'accelerator'
-      reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
+      reg_data = {profile_type : 'accelerator',...regStore.getStartupData, ...user_data}
       break;
     case 'Grassroot Program':
       reg_data.profile_type = 'grassroot'
-      reg_data = {profile_type : 'startup',...regStore.getStartupData, ...user_data}
+      reg_data = {profile_type : 'grassroot',...regStore.getStartupData, ...user_data}
       break;
     default:
       console.log("No profile Selected")
@@ -98,7 +101,6 @@ const handleSubmit = async () =>  {
           <UsableBaseInput v-model="user_data.password" type="password"  placeholder="*************" label="Password" />
         </div>
 
-
         <!-- Navigation Buttons -->
         <div class="flex justify-between items-center mt-6">
           <button @click="activeTab = 1" class="text-gray-500 font-semibold flex items-center space-x-2 hover:text-gray-700">
@@ -110,7 +112,7 @@ const handleSubmit = async () =>  {
             <span>&rarr;</span>
           </button>
           <button v-else @click="handleSubmit" class="bg-sky-500 text-white font-semibold py-2 px-6 rounded-md flex items-center space-x-2 hover:bg-sky-600">
-            <span >Submit</span>
+            <span >Submit <TheBtnLoader /></span>
             <span>&rarr;</span>
           </button>
         </div>

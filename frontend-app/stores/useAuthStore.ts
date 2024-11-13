@@ -8,7 +8,7 @@ export const useAuthStore = defineStore('auth', ()=> {
 
     const getLoggedUser = computed(()=>{return user.value?.user})
     const getLoggedUserProfile = computed(()=>{return user.value?.profile})
-    const getUserProfileable = computed(()=>{return user.value?.profileable})
+    const getUserProfileable = computed(()=>{return user.value?.profile?.profileable?.data})
     const getUserRole = computed(()=>{return user.value?.role?.name})
     const getUserPermissions = computed(()=>{
         return  user.value?.role?.permissions.map(obj => obj.code)})
@@ -89,14 +89,17 @@ export const useAuthStore = defineStore('auth', ()=> {
     }
     //Register
     async function register(passed_data : RegistrationInfo){
+        globalStore.toggleBtnLoadingState(true)
         await useApiFetch("/sanctum/csrf-cookie");
         const {data, error} = await useApiFetch("/api/register-user-with-profile", {
             method: "POST",
             body: passed_data,
         });
         if(data.value){
+            globalStore.toggleBtnLoadingState(false)
             globalStore.assignAlertMessage(data.value?.message,'success')
         }else {
+            globalStore.toggleBtnLoadingState(false)
             globalStore.assignAlertMessage(error.value?.statusMessage,'error')
         }
         console.log(data.value,error.value?.statusMessage)

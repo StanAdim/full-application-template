@@ -13,9 +13,12 @@ return new class extends Migration
     {
         Schema::create('accelerator_profiles', function (Blueprint $table) {
             $table->id();
+            $table->string('uid');
             $table->string('accelerator_name');
-            $table->string('focus_area');
-            $table->text('description')->nullable();
+            $table->json('focus_area');
+            $table->boolean('status')->default(false);
+            $table->longText('brief_description')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

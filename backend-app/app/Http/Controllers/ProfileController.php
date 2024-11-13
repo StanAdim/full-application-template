@@ -37,13 +37,20 @@ class ProfileController extends Controller{
         // Starups
         'startup_name' => 'required_if:profile_type,startup|string|max:255',
         'industry' => 'required_if:profile_type,startup|string|max:255',
-        'description' => 'required_if:profile_type,startup|string|max:255',
+        'description' => 'required_if:profile_type,startup|string|max:500',
+        'website' => '',
         'funding_stage' => 'required_if:profile_type,startup|string|max:255',
         'team_size' => 'required_if:profile_type,startup|string|max:255',
-        'founders' => 'required|array', // Validate founders as an array
+        'founders' => 'required_if:profile_type,startup|array', // Validate founders as an array
         // Hubs
         'hub_name' => 'required_if:profile_type,hub|string|max:255',
-        'location_address' => 'required_if:profile_type,hub|string|max:255',
+        'brief' => 'required_if:profile_type,hub|string|max:500',
+        'membership_option' => 'required_if:profile_type,hub|string|max:255',
+        // 'partnerships' => 'required_if:profile_type,hub|string|max:255',
+        'number_female' => 'required_if:profile_type,hub|integer',
+        'total_members' => 'required_if:profile_type,hub|integer',
+        'available_programs' => 'required_if:profile_type,hub|array', // Validate founders as an array
+
 
         // Accelerator
         'accelerator_name' => 'required_if:profile_type,accelerator|string|max:255',
@@ -75,14 +82,19 @@ class ProfileController extends Controller{
                     'funding_stage' => $validated['funding_stage'],
                     'team_size' => $validated['team_size'],
                     'founders' => $validated['founders'],
+                    'website' => $validated['website'],
                 ]);
                 break;
 
             case 'hub':
                 $profileCategory = HubProfile::create([
                     'hub_name' => $validated['hub_name'],
-                    'location_address' => $validated['location_address'],
-                    'description' => $request->input('description', ''),
+                    'total_members' => $validated['total_members'],
+                    'number_female' => $validated['number_female'],
+                    // 'partnerships' => $validated['partnerships'],
+                    'membership_option' => $validated['membership_option'], // free or paid
+                    'available_programs' => $validated['available_programs'],
+                    'brief' => $request->input('brief', ''),
                 ]);
                 break;
 

@@ -22,20 +22,20 @@ class ProfileResource extends JsonResource
         // Customize the response based on the `profileable` type
         if ($this->profileable_type === 'App\Models\StartupProfile') {
             $data['profileable'] = [
-                'type' => 'Startup',
+                'type' => 'ICT Startup',
                 'founders' => $this->profileable->founders, // Include startup-specific data
                 'industry' => $this->profileable->industry,
                 'funding_stage' => $this->profileable->funding_stage,
             ];
         } elseif ($this->profileable_type === 'App\Models\HubProfile') {
             $data['profileable'] = [
-                'type' => 'Hub',
+                'type' => 'Innovation Hub',
                 'facilities' => $this->profileable->facilities,
                 'programs_offered' => $this->profileable->programs_offered,
             ];
         } elseif ($this->profileable_type === 'App\Models\AcceleratorProfile') {
             $data['profileable'] = [
-                'type' => 'Accelerator',
+                'type' => 'Digital Accelerator Accelerator',
                 'cohort_size' => $this->profileable->cohort_size,
                 'duration' => $this->profileable->duration,
             ];

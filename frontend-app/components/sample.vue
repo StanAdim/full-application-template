@@ -1,75 +1,51 @@
+
 <template>
-  <div class="profile-view-container p-6 max-w-4xl mx-auto bg-white rounded-lg shadow-md">
-    <h1 class="text-2xl font-bold text-gray-900">{{ profileType }} Profile</h1>
+  <el-steps style="max-width: 100%" :active="active" finish-status="success" align-center>
+    <el-step title="Step 1" description="Description of Step 1" />
+    <el-step title="Step 2" description="Description of Step 2" />
+    <el-step title="Step 3" description="Description of Step 3" />
+  </el-steps>
 
-    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
-      <!-- Basic Information -->
-      <div>
-        <h2 class="text-lg font-semibold text-gray-800">Basic Information</h2>
-        <div class="mt-2">
-          <p><strong>Name:</strong> {{ profile.name }}</p>
-          <p><strong>Email:</strong> {{ profile.email }}</p>
-          <p><strong>Phone:</strong> {{ profile.phone }}</p>
-          <p><strong>Website:</strong> <a :href="profile.website" class="text-blue-500">{{ profile.website }}</a></p>
-        </div>
+  <div class="flex justify-center items-center w-full">
+    <div class="py-4">
+      <div v-if="active === 0">
+        <h3>Details for Step 1</h3>
+        <p>Here you can add any content relevant to Step 1.</p>
       </div>
-
-      <!-- Location Information -->
-      <div>
-        <h2 class="text-lg font-semibold text-gray-800">Location</h2>
-        <div class="mt-2">
-          <p><strong>Address:</strong> {{ profile.address }}</p>
-          <p><strong>City:</strong> {{ profile.city }}</p>
-          <p><strong>Country:</strong> {{ profile.country }}</p>
-        </div>
+      <div v-else-if="active === 1">
+        <h3>Details for Step 2</h3>
+        <p>Here you can add any content relevant to Step 2.</p>
       </div>
-
-      <!-- Additional Information (for Startups, Hubs, etc.) -->
-      <div v-if="profileType === 'Startup'" class="md:col-span-2">
-        <h2 class="text-lg font-semibold text-gray-800">Founders</h2>
-        <ul class="mt-2 list-disc list-inside">
-          <li v-for="founder in profile.founders" :key="founder">{{ founder }}</li>
-        </ul>
+      <div v-else-if="active === 2">
+        <h3>Details for Step 3</h3>
+        <p>Here you can add any content relevant to Step 3.</p>
       </div>
-
-      <div v-if="profileType === 'Hub'" class="md:col-span-2">
-        <h2 class="text-lg font-semibold text-gray-800">Supported Programs</h2>
-        <ul class="mt-2 list-disc list-inside">
-          <li v-for="program in profile.programs" :key="program">{{ program }}</li>
-        </ul>
+      <div v-else>
+        <h3>Process Complete</h3>
+        <p>You have completed all the steps.</p>
       </div>
-
-      <div v-if="profileType === 'Accelerator'" class="md:col-span-2">
-        <h2 class="text-lg font-semibold text-gray-800">Mentorship Areas</h2>
-        <ul class="mt-2 list-disc list-inside">
-          <li v-for="area in profile.mentorshipAreas" :key="area">{{ area }}</li>
-        </ul>
-      </div>
+      <el-button style="margin-top: 12px; margin-right: 8px" @click="back" :disabled="active === 0">Back</el-button>
+      <el-button style="margin-top: 12px" @click="next">Next step</el-button>
     </div>
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script lang="ts" setup>
+import { ref } from 'vue'
 
-// Sample data (replace with actual data)
-const profileType = 'Startup'; // can be 'Startup', 'Hub', or 'Accelerator'
-const profile = ref({
-  name: 'Tech Innovators Ltd.',
-  email: 'info@techinnovators.com',
-  phone: '+123 456 7890',
-  website: 'https://techinnovators.com',
-  address: '123 Innovation Ave',
-  city: 'Dar es Salaam',
-  country: 'Tanzania',
-  founders: ['Jane Doe', 'John Smith'],
-  programs: ['Youth Empowerment', 'Digital Literacy'], // For 'Hub'
-  mentorshipAreas: ['Business Strategy', 'Product Development'], // For 'Accelerator'
-});
-</script>
+const active = ref(0)
 
-<style scoped>
-.profile-view-container {
-  background-color: #f9fafb; /* Light background */
+const next = () => {
+  if (active.value < 3) {
+    active.value++
+  } else {
+    active.value = 0
+  }
 }
-</style>
+
+const back = () => {
+  if (active.value > 0) {
+    active.value--
+  }
+}
+</script>
