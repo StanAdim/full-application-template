@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Categories\AcceleratorProfile;
+use App\Models\Categories\GrassrootProgramProfile;
 use App\Models\Categories\HubProfile;
 use App\Models\Categories\Profile;
 use App\Models\Categories\StartupProfile;
@@ -28,7 +29,7 @@ class ProfileController extends Controller{
         'phone_number' => 'required|string|max:255',
         'email' => 'required|email|max:255',
         'password' => 'required|string|min:8',
-        'profile_type' => 'required|string|in:startup,hub,accelerator,grassroot_programme',
+        'profile_type' => 'required|string|in:startup,hub,accelerator,grassroot',
         // Include additional fields based on profile type
         'phone_number' => 'required|string|max:255',
         'email' => 'required|email|max:255',
@@ -56,6 +57,11 @@ class ProfileController extends Controller{
         'accelerator_name' => 'required_if:profile_type,accelerator|string|max:255',
         'brief_description' => 'required_if:profile_type,accelerator|string|max:500',
         'focus_area' => 'required_if:profile_type,accelerator|array', // Validate founders as an array
+
+         // Accelerator
+         'grassroot_name' => 'required_if:profile_type,grassroot|string|max:255',
+         'brief_description' => 'required_if:profile_type,grassroot|string|max:500',
+         'focus_area' => 'required_if:profile_type,grassroot|array', // Validate founders as an array
 
     ]);
 
@@ -103,6 +109,14 @@ class ProfileController extends Controller{
             case 'accelerator':
                 $profileCategory = AcceleratorProfile::create([
                     'accelerator_name' => $validated['accelerator_name'],
+                    'focus_area' => $validated['focus_area'],
+                    'brief_description' => $validated['brief_description'],
+                ]);
+                break;
+
+            case 'grassroot':
+                $profileCategory = GrassrootProgramProfile::create([
+                    'grassroot_name' => $validated['grassroot_name'],
                     'focus_area' => $validated['focus_area'],
                     'brief_description' => $validated['brief_description'],
                 ]);

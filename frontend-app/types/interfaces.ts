@@ -35,6 +35,15 @@ export interface AcceleratorData {
     phone_number: string,
     email: string,
 }
+export interface GrassrootProgramsData {
+    grassroot_name: string,
+    uid: number,
+    focus_area: number,
+    brief_description: string,
+    region_location: string,
+    phone_number: string,
+    email: string,
+}
 
 export interface User {
     uid:string,

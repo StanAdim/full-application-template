@@ -46,7 +46,7 @@ const handleSubmit = async () =>  {
       break;
     case 'Grassroot Program':
       reg_data.profile_type = 'grassroot'
-      reg_data = {profile_type : 'grassroot',...regStore.getStartupData, ...user_data}
+      reg_data = {profile_type : 'grassroot',...regStore.getGrassrootProgramData, ...user_data}
       break;
     default:
       console.log("No profile Selected")
