@@ -32,11 +32,11 @@ class ProfileController extends Controller{
         'profile_type' => 'required|string|in:startup,hub,accelerator,grassroot',
         // Include additional fields based on profile type
         'phone_number' => 'required|string|max:255',
-        'email' => 'required|email|max:255',
+        'email' => 'required|email|max:255|unique:profiles',
         'region_location' => 'string|max:255',
         'date_establishment' => 'required|string|max:255',
         // Starups
-        'startup_name' => 'required_if:profile_type,startup|string|max:255',
+        'startup_name' => 'required_if:profile_type,startup|string|max:255|unique:startup_profiles',
         'industry' => 'required_if:profile_type,startup|string|max:255',
         'description' => 'required_if:profile_type,startup|string|max:500',
         'website' => '',
@@ -44,7 +44,7 @@ class ProfileController extends Controller{
         'team_size' => 'required_if:profile_type,startup|string|max:255',
         'founders' => 'required_if:profile_type,startup|array', // Validate founders as an array
         // Hubs
-        'hub_name' => 'required_if:profile_type,hub|string|max:255',
+        'hub_name' => 'required_if:profile_type,hub|string|max:255|unique:hub_profiles',
         'brief' => 'required_if:profile_type,hub|string|max:500',
         'membership_option' => 'required_if:profile_type,hub|string|max:255',
         // 'partnerships' => 'required_if:profile_type,hub|string|max:255',
@@ -54,12 +54,12 @@ class ProfileController extends Controller{
 
 
         // Accelerator
-        'accelerator_name' => 'required_if:profile_type,accelerator|string|max:255',
+        'accelerator_name' => 'required_if:profile_type,accelerator|string|max:255|unique:accelerator_profiles',
         'brief_description' => 'required_if:profile_type,accelerator|string|max:500',
         'focus_area' => 'required_if:profile_type,accelerator|array', // Validate founders as an array
 
          // Accelerator
-         'grassroot_name' => 'required_if:profile_type,grassroot|string|max:255',
+         'grassroot_name' => 'required_if:profile_type,grassroot|string|max:255|unique:grassroot_program_profiles',
          'brief_description' => 'required_if:profile_type,grassroot|string|max:500',
          'focus_area' => 'required_if:profile_type,grassroot|array', // Validate founders as an array
 
@@ -134,7 +134,7 @@ class ProfileController extends Controller{
         $profile->save();
         DB::commit();
         return response()->json([
-            'message' => 'Registration Success.',
+            'message' => 'Registration Success. Login Now',
             // 'user' => $user,
             // 'profile' => $profile,
             // 'profileable' => $profileCategory,

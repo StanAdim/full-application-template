@@ -64,17 +64,17 @@ const handleSubmit = async () =>  {
         <p class="appColor font font-bold text-xl md:text-3xl">{{ props.headerTitle }} Registration</p>
       </div>
       <!-- Tabs Section -->
-      <div class="flex justify-center mb-4 border-b border-gray-300 w-full max-w-2xl">
+      <div class="flex justify-center mb-4 border-b-2 border-sky-400 w-full max-w-2xl">
         <button
             class="flex-1 py-2 font-semibold"
-            :class="[activeTab === 1 ? 'active-tab' : 'text-gray-400']"
+            :class="[activeTab === 2 ? 'active-tab' : 'text-sky-400']"
             @click="handleTabClick(1)"
         >
           Business Details
         </button>
         <button
             class="flex-1 py-2 font-semibold"
-            :class="[activeTab === 2 ? 'active-tab' : 'text-gray-400']"
+            :class="[activeTab === 1 ? 'active-tab' : 'text-sky-400']"
             @click="handleTabClick(2)"
         >
           Personal Details

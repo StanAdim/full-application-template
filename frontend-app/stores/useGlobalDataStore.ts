@@ -23,6 +23,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
     const getContentLoadingState = computed(() => {return isContentLoading.value})
     const getBtnLoadingState = computed(() => {return btnLoadingState.value})
 
+
     // Actions
     const toggleLoadingState = (state : boolean) :boolean => isLoading.value = state
     const toggleContentLoaderState = (state : boolean) : boolean => isContentLoading.value = state
@@ -31,6 +32,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
     const assignPageTitle = (title : string) : string =>  pageTitle.value = title
 
 
+    // Extra functionalities
     const assignAlertMessage = (message,type)=> {
         alertMessage.value = message
         const elementNotify = () => {
@@ -40,26 +42,19 @@ export const useGlobalDataStore = defineStore('globalData', () => {
                 offset: 5,
                 message: message,
                 type: type,
-                position: 'bottom-right',
+                // position: 'bottom-right',
             })
         }
         elementNotify()
     }
     function separateNumber(passedNum) {
-        if (passedNum === undefined || passedNum === null) {
-            throw new TypeError("Input number is undefined or null");
-        }
-
-        if (typeof passedNum !== 'number' && typeof passedNum !== 'string') {
-            throw new TypeError("Input must be a number or a string representing a number");
-        }
-
+        if (passedNum === undefined || passedNum === null) throw new TypeError("Input number is undefined or null");
+        if (typeof passedNum !== 'number' && typeof passedNum !== 'string')  throw new TypeError("Input must be a number or a string representing a number");
         // Convert to number first if it's a string representing a number
         let num = Number(passedNum);
         if (isNaN(num)) {
             throw new TypeError("Input is not a valid number");
         }
-
         let numStr = num.toString();
         numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         return numStr;
@@ -72,6 +67,15 @@ export const useGlobalDataStore = defineStore('globalData', () => {
         }
         return text;  // Return original text if it's already short enough
     }
+
+    const getYearsArray = computed(() => {
+        const startYear = 2002;
+        const yearsArray = [];
+        for (let year = startYear; year <= new Date().getFullYear(); year++) {
+            yearsArray.push({ label: year.toString(), value: year });
+        }
+        return yearsArray;
+    });
     return {
         getAppName,
         getLoadingState, getAlertMessage,
@@ -82,7 +86,6 @@ export const useGlobalDataStore = defineStore('globalData', () => {
         assignAlertMessage,
         toggleLoadingState, toggleContentLoaderState,
         toggleLocalLoaderStatus, toggleBtnLoadingState,
-        assignPageTitle,getPageTitle
-
+        assignPageTitle,getPageTitle,getYearsArray
     }
 })

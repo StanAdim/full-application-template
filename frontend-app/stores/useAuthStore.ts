@@ -1,19 +1,43 @@
 import type {Credential, LoggedUser, User} from "~/types/interfaces";
 import {defineStore} from "pinia";
 import {useApiFetch} from "~/composables/useApiFetch";
+import type {ComputedRef} from "vue";
 export const useAuthStore = defineStore('auth', ()=> {
     const  user = ref<User | null>(null)
     const isLoggedIn = computed(()=> !!user.value)
     const globalStore = useGlobalDataStore()
+    const regStore = useRegistrationStore()
 
     const getLoggedUser = computed(()=>{return user.value?.user})
     const getLoggedUserProfile = computed(()=>{return user.value?.profile})
     const getUserProfileable = computed(()=>{return user.value?.profile?.profileable?.data})
-    const getUserRole = computed(()=>{return user.value?.role?.name})
-    const getUserPermissions = computed(()=>{
-        return  user.value?.role?.permissions.map(obj => obj.code)})
-    //Fetch Logout
-    async function fetchUser(){
+    const getUserRoles = computed(()=>{return user.value?.user?.roles})
+    const getUserPermissions = computed(()=>{ return  user.value?.role?.permissions.map(obj => obj.code)})
+
+    //Register
+    async function register(passed_data : RegistrationInfo) : Promise <void> {
+        globalStore.toggleBtnLoadingState(true)
+        await useApiFetch("/sanctum/csrf-cookie");
+        const response = await useApiFetch("/api/register-user-with-profile", {
+            method: "POST",
+            body: passed_data,
+        });
+        if(response?.data.value){
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage(response?.data.value?.message,'success')
+            regStore.assignStartupData(null)
+            regStore.assignHubData(null)
+            regStore.assignAcceleratorData(null)
+            regStore.assignGrassrootProgramData(null)
+            navigateTo('/login')
+        }else {
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage(response?.error.value?.data?.message,'error')
+            // console.log(response)
+        }
+    }
+    //Fetch User
+    async function fetchUser() : Promise {
         const {data,error} = await useApiFetch('/api/v1/user');
         if(data.value){
             user.value = data.value as LoggedUser
@@ -25,6 +49,70 @@ export const useAuthStore = defineStore('auth', ()=> {
         }
         return {data,error}
     }
+    // Login
+    async function login(credentials: Credential) : Promise {
+        globalStore.toggleBtnLoadingState(true)
+        await useApiFetch("/sanctum/csrf-cookie");
+        const loginResponse = await useApiFetch('/login',{
+            method: 'POST',
+            body : credentials
+        });
+        if (loginResponse.status.value === 'success'){
+            await fetchUser();
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage('Welcome back!!','success')
+        if (user.value){
+            //navigate base on rank
+            getLoggedUser.value.rank === 'internal' ?
+                navigateTo('/admin/dashboard') :
+                navigateTo('/profile/dashboard');
+        }
+        }else {
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage(loginResponse.error.value?.data?.message, 'error')
+        }
+        return loginResponse;
+    }
+    //Logout
+    async function logout() : Promise <void>{
+        globalStore.toggleBtnLoadingState(true)
+        const logout =  await useApiFetch('/logout', {method: 'POST'});
+        if (logout.status.value === 'success'){
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage('You are logged out', 'warning')
+            navigateTo('/login')
+            user.value = null;
+        }
+        globalStore.toggleBtnLoadingState(false)
+    }
+    // Return profile type
+    const getProfileCategoryName : ComputedRef<string> = computed(()=>{
+        const match = getLoggedUserProfile.value?.profileable?.type.match(/Categories\\(\w+)/);
+        let res = match ? match[1] : null
+        switch ( res) {
+            case 'StartupProfile':{
+                res = "ICT Startup"
+                break;
+            }
+            case 'AcceleratorProfile':{
+                res = "Digital Accelerator"
+                break;
+            }
+            case 'HubProfile':{
+                res = "Innovation Hub"
+                break;
+            }
+            case 'GrassrootProgramProfile':{
+                res = "Grassroot Program"
+                break;
+            }
+            default: {
+                res = null
+            }
+
+        }
+        return res;
+    })
     // resend Verification
     async function resendEmailVerification() : Promise{
         await useApiFetch("/sanctum/csrf-cookie");
@@ -54,55 +142,6 @@ export const useAuthStore = defineStore('auth', ()=> {
 
         }
         globalStore.toggleContentLoaderState('off')
-    }
-    // Login
-    async function login(credentials: Credential) : Promise{
-        globalStore.toggleBtnLoadingState(true)
-        await useApiFetch("/sanctum/csrf-cookie");
-        const loginResponse = await useApiFetch('/login',{
-            method: 'POST',
-            body : credentials
-        });
-        if (loginResponse.status.value === 'success'){
-            await fetchUser();
-            globalStore.toggleBtnLoadingState(false)
-            globalStore.assignAlertMessage('Welcome back!!','success')
-        if (user.value){
-            navigateTo('/profile/dashboard');
-        }
-        }else {
-            globalStore.toggleBtnLoadingState(false)
-            globalStore.assignAlertMessage(loginResponse.error.value?.data?.message, 'error')
-        }
-        return loginResponse;
-    }
-    //Logout
-    async function logout(){
-        const logout =  await useApiFetch('/logout', {method: 'POST'});
-        if (logout.status.value === 'success'){
-            globalStore.toggleLoadingState('off')
-            globalStore.assignAlertMessage('You are logged out', 'warning')
-            user.value = null;
-            navigateTo('/login')
-            location.reload()
-        }
-    }
-    //Register
-    async function register(passed_data : RegistrationInfo){
-        globalStore.toggleBtnLoadingState(true)
-        await useApiFetch("/sanctum/csrf-cookie");
-        const {data, error} = await useApiFetch("/api/register-user-with-profile", {
-            method: "POST",
-            body: passed_data,
-        });
-        if(data.value){
-            globalStore.toggleBtnLoadingState(false)
-            globalStore.assignAlertMessage(data.value?.message,'success')
-        }else {
-            globalStore.toggleBtnLoadingState(false)
-            globalStore.assignAlertMessage(error.value?.statusMessage,'error')
-        }
-        console.log(data.value,error.value?.statusMessage)
     }
     async function sendPasswordResetLink(userEmail : string) : Promise {
         await useApiFetch("/sanctum/csrf-cookie");
@@ -162,9 +201,9 @@ export const useAuthStore = defineStore('auth', ()=> {
     }
     return {
         user,login,isLoggedIn,
-        logout,fetchUser,register,getLoggedUser,getUserRole
+        logout,fetchUser,register,getLoggedUser,getUserRoles
         ,getUserPermissions,getLoggedUserProfile,
         getUserProfileable,
-
+        getProfileCategoryName,
     }
 })

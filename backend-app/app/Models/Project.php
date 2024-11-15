@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
@@ -9,14 +10,14 @@ use App\Traits\UUID;
 
 class Project extends Model
 {
-    use UUID;
-    use HasFactory;
+    use HasFactory, HasUid;
     protected $table = 'projects';
     protected $fillable = [
         'user_id',
         'category',
         'title',
         'year',
+        'uid',
         'brief',
         'comment',
         'verify'

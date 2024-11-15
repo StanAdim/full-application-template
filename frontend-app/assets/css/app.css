@@ -20,3 +20,6 @@
 .form-groups {
     @apply flex md:flex-row flex-col justify-between my-0 py-0
 }
+.forms {
+    @apply w-full max-w-2xl bg-fade rounded-lg shadow-md p-6
+}

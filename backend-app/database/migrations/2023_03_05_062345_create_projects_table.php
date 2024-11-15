@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('uid');
-            $table->json('category');
+            $table->string('category');
             $table->string('title');
             $table->string('year');
             $table->longText('brief');

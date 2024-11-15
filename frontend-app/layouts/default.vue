@@ -32,13 +32,14 @@ const logout = async  ()=> {
             <i v-else class="fa-solid fa-angles-left"></i>
           </button>
           <span class="ml-4 font-extrabold ">{{ config.public.appName}}</span>
+          <sub class="mx-2 text-xs text-sky-800 mt-3">{{auth.getProfileCategoryName}}</sub>
         </div>
         <!-- Right section with profile -->
         <div class="flex items-center">
-          <div class="">
-            <el-dropdown placement="bottom-start">
-              <div class="flex items-center space-x-3 mx-4">
+          <div class="flex items-center space-x-3 mx-4">
                 <div class="text-black/80">{{ auth.getLoggedUser?.name }} </div>
+            <el-dropdown placement="bottom-start">
+              <div class="">
                 <button class="rounded-full h-8 w-8 flex items-center justify-center bg-sky-100 hover:bg-sky-200 focus:outline-none"><i class="fa-solid fa-user"></i></button>
               </div>
               <template #dropdown>
@@ -49,7 +50,8 @@ const logout = async  ()=> {
                     </nuxt-link>
                   </el-dropdown-item>
                   <el-dropdown-item>
-                    <div @click.prevent="logout" class="hover:bg-sky-100 hover:text-red-500 p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-arrow-left"></i>Logout</div>
+                    <div @click.prevent="logout" class="hover:bg-sky-100 hover:text-red-500 p-0.5 my-0.5 rounded-md px-1">
+                      <i class="pr-2 fa-solid fa-arrow-left"></i>Logout <UsableTheBtnLoader /></div>
                   </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
@@ -68,7 +70,10 @@ const logout = async  ()=> {
           <div class="leading-10">
             <!-- Your Lorem Ipsum content -->
             <div class="bg-white rounded-lg shadow p-6">
-              <h2 class="text-xl font-semibold mb-4">{{ gData.getPageTitle }}</h2>
+              <div class="flex flex-row gap-4">
+                <div class="text-xl font-semibold mb-4">{{ gData.getPageTitle }}</div>
+                <div class=""><UsableContentLoader  color=""/></div>
+              </div>              <hr class="bg-sky-600 py-[1px] rounded-md">
               <div class="text-gray-600">
                 <slot />
               </div>

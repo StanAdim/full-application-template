@@ -1,10 +1,19 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+
+const popoverRef = ref()
+const onClickOutside = () => {
+  unref(popoverRef).popperRef?.delayHide?.()
+}
 const config = useRuntimeConfig()
+const gData = useGlobalDataStore()
+const auth = useAuthStore()
 const isSidebarOpen = ref(true)
 
 const toggleSidebar = () => {
   isSidebarOpen.value = !isSidebarOpen.value
+}
+const logout = async  ()=> {
+  await auth.logout()
 }
 </script>
 
@@ -23,14 +32,29 @@ const toggleSidebar = () => {
           </button>
           <span class="ml-4 font-extrabold ">{{ config.public.appName}}</span>
         </div>
-
         <!-- Right section with profile -->
         <div class="flex items-center">
           <div class="flex items-center space-x-3 mx-4">
-            <span class="text-sm hidden md:block">John Doe</span>
-            <button class="rounded-full h-8 w-8 flex items-center justify-center bg-sky-100 hover:bg-sky-200 focus:outline-none">
-              <i class="fa-solid fa-user"></i>
-            </button>
+                <div class="text-black/80">{{ auth.getLoggedUser?.name }} </div>
+            <el-dropdown placement="bottom-start">
+              <div class="">
+                <button class="rounded-full h-8 w-8 flex items-center text-white justify-center bg-sky-800 hover:bg-sky-00 focus:outline-none"><i class="fa-solid fa-user"></i></button>
+              </div>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>
+                    <nuxt-link to="/admin/dashboard">
+                      <div class=" p-0.5 my-0.5 rounded-md px-1"><i class="pr-2 fa-solid fa-user-gear"></i>My Account</div>
+                    </nuxt-link>
+                  </el-dropdown-item>
+                  <el-dropdown-item>
+                    <div @click.prevent="logout" class=" hover:text-red-500 p-0.5 my-0.5 rounded-md px-1">
+                      <i class="pr-2 fa-solid fa-arrow-left"></i>Logout <UsableTheBtnLoader /></div>
+                  </el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown>
+
           </div>
         </div>
       </header>
@@ -43,11 +67,19 @@ const toggleSidebar = () => {
         >
           <div class="leading-10">
             <!-- Your Lorem Ipsum content -->
-            <slot />
+            <div class="bg-white rounded-lg shadow p-6">
+              <div class="flex flex-row gap-4">
+                <div class="text-xl font-semibold mb-4">{{ gData.getPageTitle }}</div>
+                <div class=""><UsableContentLoader  color=""/></div>
+              </div>
+              <div class="text-gray-600">
+                <slot />
+              </div>
+            </div>
           </div>
         </main>
         <!-- Modified sidebar nav -->
-        <AuthNav :is-sidebar-open="isSidebarOpen" />
+        <AdminNav :is-sidebar-open="isSidebarOpen" />
       </div>
     </div>
     <footer class="bg-sky-50 border-t border-sky-300 p-2 text-center">{{config.public.instName}} @ 2024</footer>

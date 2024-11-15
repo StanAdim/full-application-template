@@ -45,6 +45,13 @@ export interface GrassrootProgramsData {
     email: string,
 }
 
+export interface Project {
+    uid:string,
+    category: string,
+    title: string,
+    year: string,
+    verify:boolean,
+}
 export interface User {
     uid:string,
     firstName: string,

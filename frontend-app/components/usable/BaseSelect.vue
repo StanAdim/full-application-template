@@ -4,8 +4,9 @@
     <select
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
-        class="md:w-72 w-full border border-gray-300 rounded-lg px-4 py-2  focus:outline-none focus:border-blue-500">
-      <option selected value="0">Select {{props.label}}</option>
+        :class="{'md:w-72 w-full':props.isFull, 'w-full': !props.isFull}"
+        class=" border border-gray-300 rounded-lg px-4 py-4 focus:outline-none focus:border-blue-500">
+      <option selected value="0" disabled>Select {{props.label}}</option>
       <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
     </select>
   </div>
@@ -16,6 +17,7 @@ import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
   label: { type: String, default: 'Select' },
+  isFull: { type: String, default: true },
   modelValue: { type: [String, Number], required: true },
   options: { type: Array, default: () => [] },
 });
