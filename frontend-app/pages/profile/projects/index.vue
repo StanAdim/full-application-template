@@ -1,16 +1,19 @@
 <script setup lang="ts">
 import TheBtnLoader from "~/components/usable/TheBtnLoader.vue";
+import {toKeyAlias} from "@babel/types";
+import uid = toKeyAlias.uid;
 
 definePageMeta({
   title: 'Profile - Profile Name',
   layout: 'default',
   middleware:'auth',
 })
+
 const globalData = useGlobalDataStore()
 const projectStore = useProjectStore()
 
 const currentPage = ref <number>(1)
-const per_page = ref <number>(30)
+const per_page = ref <number>(10)
 const searchQuery = ref('')
 const pageSwitchValue = ref(1)
 const movePage = async (type:number) => {
@@ -31,21 +34,47 @@ const  updateData = async () => {
 const  searchUserData = async () => {
   await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
 }
-const headers = ref(['Sn', 'Title', "Category" , "Year" , 'Approved', 'Actions'])
+const headers = ref(['Sn', 'Title', "Category" , "Year" , 'Approved', 'Registration Date', 'Actions'])
+const OpenConfirmDialog = async (uid) => {
+  await ElMessageBox.confirm(
+      'This project will be permanently deleted. Continue?',
+      'Warning',
 
+      {
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+        distinguishCancelAndClose:true
+      }
+  )
+      await globalData.deleteItemInDB( uid, 'project')
+      .then(() => {
+        ElMessage({
+          type: 'success',
+          message: 'Delete completed',
+        })
+        console.log("Deleted")
+      })
+      .catch(() => {
+        ElMessage({
+          type: 'info',
+          message: 'Delete canceled',
+        })
+      })
+}
 const handleAction = async  (type, uid) => {
-  console.log(type,uid)
   switch (type){
     case 1: {
-      console.log('View')
+      navigateTo(`/profile/projects/project/${uid}`)
       break;
     }
     case 2: {
-      console.log('Edit')
+      await projectStore.retrieveSingleProfile(uid)
+      navigateTo(`/profile/projects/create`)
       break;
     }
     case 3: {
-      console.log('Delete')
+      await  OpenConfirmDialog(uid)
       break;
     }
   }
@@ -55,6 +84,7 @@ const handleAction = async  (type, uid) => {
 const init = async () =>  {
   globalData.assignPageTitle('Registered Projects List')
   await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
+  console.log(projectStore.getAllProjects.length)
 }
 onNuxtReady(()=> {
   init()
@@ -92,18 +122,21 @@ onNuxtReady(()=> {
           </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-          <tr
+          <tr v-if="projectStore.getAllProjects?.length != 0"
               v-for="(item, index) in projectStore.getAllProjects"
-              :key="item.id"
+              :key="item.uid"
               class="hover:bg-sky-100">
             <td class="table-data">{{ index + 1 }}</td>
             <td class="table-data">{{ item?.title }}</td>
             <td class="table-data">{{ item?.category }}</td>
             <td class="table-data">{{ item?.year }}</td>
             <td class="table-data">
-              <span  class="text-green-600 px-2" v-if="item.verify"><i class="fa-regular fa-circle-dot"></i></span>
-              <span class="text-red-600 px-2" v-else><i class="fa-regular fa-circle-dot"></i></span>
+              <span class="mx-2 text-lg">
+              <i v-if="item?.status" class="fa-solid fa-circle-check text-green-500"></i>
+              <i v-else class="fa-regular fa-circle-xmark text-red-500"></i>
+            </span>
             </td>
+            <td class="table-data">{{ item?.registrationDate }}</td>
             <td class="table-data">
               <el-dropdown size="default" type="primary" placement="bottom-start">
                 <el-button><i class="fa-solid fa-prescription-bottle mr-1"></i> Action </el-button>
@@ -117,6 +150,7 @@ onNuxtReady(()=> {
               </el-dropdown>
             </td>
           </tr>
+          <tr v-else class="text-center font-bold">No Data Found</tr>
           </tbody>
         </table>
       </div>
@@ -141,7 +175,7 @@ onNuxtReady(()=> {
                       v-model="per_page"
                       @blur="toggleEditing"
                       @keyup.enter="updateData"
-                      class="text-sky-800 w-16 text-center border-b-2 border-sky-500 rounded-sm px-0.5 outline-none"
+                      class="text-sky-800 w-12 h-8 text-center border rounded-lg border-sky-400 px-0.5 py-0 outline-none"
                   />
                 </div>
               </div>
@@ -165,11 +199,9 @@ onNuxtReady(()=> {
 .table-data {
   @apply px-4 py-1.5 whitespace-nowrap text-sm text-gray-700
 }
-.btn{
-  @apply px-2 py-0.5 mx-0.5 text-sm border border-sky-500 hover:border-sky-700
-}
+
 .search-input{
-  @apply border border-gray-300 rounded-md px-4 py-0 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
+  @apply border border-gray-300 rounded-md px-4 h-8 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
 }
 .action-btn {
   @apply px-3 py-2 border border-sky-300 rounded-md text-sm font-medium text-gray-500 hover:bg-sky-100

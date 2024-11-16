@@ -1,6 +1,7 @@
 
 export const useGlobalDataStore = defineStore('globalData', () => {
     const authStore = useAuthStore()
+    const projectStore = useProjectStore()
     const localLoader = ref<boolean>(false);
     const alertMessage = ref<string>('');
     const pageTitle = ref<string>('');
@@ -25,12 +26,40 @@ export const useGlobalDataStore = defineStore('globalData', () => {
 
 
     // Actions
+
     const toggleLoadingState = (state : boolean) :boolean => isLoading.value = state
     const toggleContentLoaderState = (state : boolean) : boolean => isContentLoading.value = state
     const toggleBtnLoadingState = (state : boolean) : boolean =>  btnLoadingState.value = state
     const toggleLocalLoaderStatus = (state : boolean) : boolean =>  localLoader.value = state
     const assignPageTitle = (title : string) : string =>  pageTitle.value = title
-
+    function handleApiError(error: any, alertType: "error" | "success" = "error") {
+        console.error(error);
+        toggleBtnLoadingState(false)
+        toggleLoadingState(false)
+        toggleContentLoaderState(false)
+        if (error) {
+            assignAlertMessage(error?.data?.message,'error')
+v        }
+    }
+    const deleteItemInDB = async (uid: string, item:string) : Promise < void> => {
+        toggleContentLoaderState(true)
+        const {data, error} = await useApiFetch(`/api/${item}-delete/${uid}`,
+            { method: 'DELETE'});
+        if(data.value ){
+            toggleContentLoaderState(false)
+           switch (item){
+               case  'project':{
+                   await projectStore.retrieveAllProjects()
+                   break;
+               }
+           }
+        }
+        else{
+            console.log(error.value?.data)
+            toggleContentLoaderState(false)
+            globalStore.assignAlertMessage(error.value?.message,'error')
+        }
+    }
 
     // Extra functionalities
     const assignAlertMessage = (message,type)=> {
@@ -86,6 +115,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
         assignAlertMessage,
         toggleLoadingState, toggleContentLoaderState,
         toggleLocalLoaderStatus, toggleBtnLoadingState,
-        assignPageTitle,getPageTitle,getYearsArray
+        assignPageTitle,getPageTitle,getYearsArray,
+        deleteItemInDB, handleApiError
     }
 })

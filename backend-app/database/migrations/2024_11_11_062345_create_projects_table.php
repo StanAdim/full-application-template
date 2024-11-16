@@ -22,7 +22,8 @@ return new class extends Migration
             $table->longText('brief');
             $table->string('comment')->nullable();
             $table->boolean('verify')->default(0);
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('profile_id')->constrained()->onDelete('cascade');
             $table->rememberToken();
             $table->timestamps();
         });

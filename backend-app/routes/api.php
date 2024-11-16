@@ -42,23 +42,23 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:sanctum'] ], function (
 
 // ================================ Projects Api ===========================================
 Route::post('/project/create', [ProjectController::class, 'projectStore']);
+Route::patch('/project/update', [ProjectController::class, 'projectUpdate']);
 Route::get('/projects', [ProjectController::class, 'index']); //get all projects
 Route::get('/project/exportExcel',[ProjectController::class, 'projectExport']);
 
-Route::get('/project/getProject/{UUID}',[ProjectController::class,'getProject']);
-Route::patch('/project/update-project/{UUID}', [ProjectController::class, 'projectUpdate']);
+Route::get('/projects/project/{uid}',[ProjectController::class,'getProject']);
 Route::post('/project/add-comment/{UUID}',[ProjectController::class, 'storeComment']);
 Route::post('/project/verify-project/{project}',[ProjectController::class, 'verifyProject']);
-Route::delete('/project/delete/{UUID}', [ProjectController::class, 'projectDelete']);
+Route::delete('/project-delete/{UUID}', [ProjectController::class, 'projectDelete']);
 
 // ================================ ICT Product Api ===========================================
 Route::get('/product/all', [IctProductController::class, 'index']); //get all products
+Route::get('/products/product/{UUID}',[IctProductController::class,'getproduct']);
 Route::get('/product/exportExcel',[IctProductController::class, 'productExport']);
-Route::get('/product/getproduct/{UUID}',[IctProductController::class,'getproduct']);
+Route::delete('/product/delete/{UUID}', [IctProductController::class, 'productDelete']);
 Route::post('/product/create-product', [IctProductController::class, 'productStore']);
 Route::patch('/product/update-product/{UUID}', [IctProductController::class, 'productUpdate']);
 Route::post('/product/verify-product/{product}',[IctProductController::class, 'verifyproduct']);
-Route::delete('/product/delete/{UUID}', [IctProductController::class, 'productDelete']);
 
 // ================================ Programmes =================================
 Route::get('/programmes', [ProgrammeController::class, 'index']);    //get all programmes

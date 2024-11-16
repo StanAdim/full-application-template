@@ -15,19 +15,45 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ProjectController extends Controller
 {
+    
     public function index(Request $request){
+        // Fetch the search term from the request (optional)
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // Default items per page is 12
+        // Build the query for fetching users
         $user_id = Auth::id();
-           $projects = ProjectResource::collection(Project::where('user_id', $user_id)->get());
+        $query = Project::where('user_id', $user_id)->orderBy('id', 'desc');
+        // Apply search if there is a search term
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
+                ->orWhere('year', 'like', "%{$search}%")
+                ->orWhere('category', 'like', "%{$search}%")
+                ->orWhere('brief', 'like', "%{$search}%");
+                // Add other fields for search if needed
+            });
+        }
+        // Paginate the results
+        $items = $query->paginate($perPage);
+        if ($items->isNotEmpty()) {
             return response()->json([
-                'message' => 'All Projects',
-                'data' => $projects
-            ],200);
-        // } else {
-        //     return response()->json([
-        //         'message' => 'User Projects',
-        //         'data' => ProjectResource::collection($user->projects)
-        //     ],200);
-        // }
+                'message' => "Registered projects",
+                'data' => ProjectResource::collection($items),
+                'pagination' => [
+                    'current_page' => $items->currentPage(),
+                    'last_page' => $items->lastPage(),
+                    'per_page' => $items->perPage(),
+                    'total' => $items->total(),
+                    'next_page_url' => $items->nextPageUrl(),
+                    'prev_page_url' => $items->previousPageUrl(),
+                ],
+                'code' => 200,
+            ]);
+        }
+        return response()->json([
+            'message' => "No project found",
+            'code' => 300,
+        ]);
     }
     public function guestViewProjects (){
         $projects = ProjectResource::collection(Project::all());
@@ -36,22 +62,14 @@ class ProjectController extends Controller
                 'data' => $projects
             ],200);
     }
-    public function getProject($uuid)
-    {
-        if (true) {
-        $project = Project::where('id',$uuid)->first();
-        if ($project) {
+    public function getProject($uid){
+        $project = Project::where('uid',$uid)->first();
+        if ($project->exists) {
             return response()->json([
                  'message' => 'Project',
                  'data' => $project
              ],200);
-
-        } else {
-            return response()->json([
-                'message' => 'No such Project',
-            ],404);
-        }
-    }
+        } 
    }
 
     public function get_categories(){
@@ -63,20 +81,20 @@ class ProjectController extends Controller
        }
 
     public function projectStore(Request $request){
-        $id = Auth::id();
-       $validatedData = $request->validate([
+        $user= Auth::user();
+        $profile_id = $user->profile->id;
+        $validatedData = $request->validate([
             'title' => ['required','min:3', 'max:255'],
             'year' => ['required','max:255'],
             'brief' => ['required', 'max:255'],
             'category' => ['required']
          ]);
-        $validatedData = $validatedData + ['user_id' => $id];
+        $validatedData = $validatedData + ['user_id' => $user->id,'profile_id' => $profile_id];
         $project = Project::create($validatedData);
         return response()->json([
             'data' => $project,
-            'message' => 'Project Detailed Stored',
+            'message' => 'New Project registed',
         ], 200);
-   
    }
 
     public function storeComment($uuid, Request $request){
@@ -122,20 +140,18 @@ class ProjectController extends Controller
         }
     }
 
-    public function projectUpdate($UUID , Request $request){
-        $accessPermissions = ["can_edit_project"];
-        if (true) {
-        $proje = Project::where('id', $UUID)->first();
+    public function projectUpdate(Request $request){
+        $proje = Project::where('uid', $request->input('uid'))->first();
                 $validator = Validator::make($request->all(),
                 [
                     'title' => ['max:255'],
                     'year' => [ 'max:255'],
                     'brief' => [ 'min:25'],
-                    'requiredSupport' => ['max:255'],
-                    'comment' => ['max:255'],
-                    'verify' => ['boolean'],
-                    'isNominated' => ['boolean'],
-                    'category' => ['array']
+                    // 'requiredSupport' => ['max:255'],
+                    // 'comment' => ['max:255'],
+                    // 'verify' => ['boolean'],
+                    // 'isNominated' => ['boolean'],
+                    'category' => ['']
                 ]);
 
                 $validator->validate();
@@ -146,32 +162,15 @@ class ProjectController extends Controller
                     'data' => $save,
                     'message' => 'Project Updated!',
                 ], 200);
-        }
-           else {
-            return response()->json([
-                'message' => 'No Access',
-            ],200);
-           }
+         
       }
 
         public function projectDelete($UUID){
-            $accessPermissions = ["can_delete_project"];
-            // $user = $request->user();
-            if (true) {
-
-                $project = Project::findOrFail($UUID);
-
-             $project->delete();
-
+            $project = Project::where('uid',$UUID)->first();
+            $project->delete();
              return response()->json([
                 'message' => 'Project Deleted!',
             ], 200);
-        }
-        else {
-            return response()->json([
-                'message' => 'No Access',
-            ],200);
-           }
         }
 
         public function projectExport() 

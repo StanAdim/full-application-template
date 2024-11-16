@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Categories\Profile;
 use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,6 +15,7 @@ class Project extends Model
     protected $table = 'projects';
     protected $fillable = [
         'user_id',
+        'profile_id',
         'category',
         'title',
         'year',
@@ -38,6 +40,11 @@ class Project extends Model
     public function user(){
         return $this->belongsTo(User::class);
     }
+    
+    public function profile(){
+        return $this->belongsTo(Profile::class);
+    }
     //Accessor
+    
  
 }

@@ -5,16 +5,16 @@ export const useProjectStore = defineStore('projectStore', () => {
 
     // States
     const projects = ref([])
-    const singleProject = ref<ConferenceData | null>(null)
+    const singleProject = ref< Project>(null)
 
     //Computed
     const getAllProjects = computed(() => {return projects.value?.data})
     const getSingleProject = computed(() => {return singleProject.value})
 
     // Mutations
-    async function retrieveAllProjects() : Promise <void>{
+    async function retrieveAllProjects(per_page: number = 12, page : number = 1, search : string = '') : Promise <void>{
         globalStore.toggleContentLoaderState(true)
-        const {data, error} = await useApiFetch(`/api/projects`);
+        const {data, error} = await useApiFetch(`/api/projects?per_page=${per_page}&page=${page}&search=${search}`);
         const response = data.value as ApiResponse
         if(data.value){
             globalStore.toggleLoadingState(false)
@@ -22,28 +22,35 @@ export const useProjectStore = defineStore('projectStore', () => {
             projects.value = data.value
         }
         else{
+            globalStore.handleApiError(error.value);
+        }
+    }
+    async function retrieveSingleProfile(uid:string) : Promise <void>{
+        globalStore.toggleContentLoaderState(true)
+        const {data, error} = await useApiFetch(`/api/projects/project/${uid}`);
+        if(data.value){
             globalStore.toggleLoadingState(false)
-            console.log(error.value)
             globalStore.toggleContentLoaderState(false)
+            singleProject.value = data.value?.data
+        }
+        else{
+            globalStore.handleApiError(error.value);
         }
     }
     async function createUpdateProject(passed_data: Project) : Promise <void>{
         globalStore.toggleBtnLoadingState(true)
         const action = passed_data?.action
         const {data, error} = await useApiFetch(`/api/project/${action}`,{
-            method: 'POST',
+            method: action === 'create' ? 'POST': 'PATCH',
             body : passed_data
         });
         if(data.value){
             globalStore.toggleBtnLoadingState(false)
             globalStore.assignAlertMessage(data.value?.message,'success')
             navigateTo('/profile/projects')
-            await retrieveAllProjects()
         }
         else {
-            globalStore.toggleBtnLoadingState(false)
-            globalStore.assignAlertMessage(error.value?.data?.message,'error')
-            console.log(error.value)
+            globalStore.handleApiError(error.value);
         }
     }
     async function handleProjectApproval (passId: string){
@@ -55,23 +62,16 @@ export const useProjectStore = defineStore('projectStore', () => {
             globalStore.toggleContentLoaderState(false)
             await retrieveAllProjects()
         }
+        else  globalStore.handleApiError(error.value);
+
     }
-    async function fetchSingleProject(uid: string){
-        globalStore.toggleContentLoaderState(true)
-        const {data, error} = await useApiFetch(`/api/conference-data/${uid}`);
-        const dataResponse = data.value as ApiResponse
-        if(dataResponse?.code === 200){
-            singleEventDetail.value = dataResponse.data
-            globalStore.toggleContentLoaderState(false)
-        }
-        return {data, error};
-    }
+
     return {
         retrieveAllProjects,
         getAllProjects,
         createUpdateProject,
         getSingleProject,
-        fetchSingleProject,
+        retrieveSingleProfile,
         handleProjectApproval
     }
 })

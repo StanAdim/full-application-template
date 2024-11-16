@@ -42,7 +42,6 @@ class AdminUserController extends Controller
                 'code' => 200,
             ]);
         }
-
         return response()->json([
             'message' => "No users found",
             'code' => 300,
