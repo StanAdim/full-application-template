@@ -1,18 +1,18 @@
 <script setup lang="ts">
-import {useProjectStore} from "~/stores/useProjectStore";
+import {useProductStore} from "~/stores/useProductStore";
 
 definePageMeta({
-  title: 'Project Details - Project',
+  title: 'Product Details - Product',
   layout: 'default',
   middleware:'auth',
 })
 const globalData = useGlobalDataStore()
-const projectStore = useProjectStore()
+const productStore = useProductStore()
 const auth = useAuthStore()
 const route = useRoute()
 const init = () => {
-  globalData.assignPageTitle('Registered Project Details')
-  projectStore.retrieveSingleProfile(route.params.uid)
+  globalData.assignPageTitle('Product Details')
+  productStore.retrieveSingleProduct(route.params.uid)
 }
 onNuxtReady(()=> {
   init()
@@ -27,16 +27,21 @@ onNuxtReady(()=> {
     <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Basic Information -->
       <div>
-        <h2 class="text-lg font-semibold text-gray-800">{{ projectStore.getSingleProject?.title }}</h2>
+        <h2 class="text-lg font-semibold text-gray-800">{{ productStore.getSingleProduct?.name }}</h2>
         <div class="mt-2">
-          <p><strong>Year:</strong> {{ projectStore.getSingleProject?.year }}</p>
-          <p><strong>Category:</strong> {{ projectStore.getSingleProject?.category }}</p>
+          <p><strong>Category:</strong></p>
+          <ul>
+            <li v-for="item in productStore.getSingleProduct?.category" :key="item">
+              {{ item }}
+            </li>
+          </ul>
           <p><strong>Is Verified:</strong>
             <span class="mx-2 text-lg">
-              <i v-if="projectStore.getSingleProject?.verify" class="fa-solid fa-circle-check text-green-500"></i>
+              <i v-if="productStore.getSingleProduct?.status" class="fa-solid fa-circle-check text-green-500"></i>
             <i v-else class="fa-regular fa-circle-xmark text-red-500"></i>
             </span>
           </p>
+          <p><strong>Compliance Details:</strong> <br class="p-0 m-0" /> {{ productStore.getSingleProduct?.compliance_details }}</p>
         </div>
       </div>
 
@@ -44,7 +49,7 @@ onNuxtReady(()=> {
       <div>
         <h2 class="text-lg font-semibold text-gray-800">Description</h2>
         <div class="mt-2">
-          <p>{{ projectStore.getSingleProject?.brief }}</p>
+          <p>{{ productStore.getSingleProduct?.description }}</p>
         </div>
       </div>
 

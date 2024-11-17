@@ -1,7 +1,10 @@
+import {useProductStore} from "~/stores/useProductStore";
+import type {Integer} from "type-fest";
 
 export const useGlobalDataStore = defineStore('globalData', () => {
     const authStore = useAuthStore()
     const projectStore = useProjectStore()
+    const productStore = useProductStore()
     const localLoader = ref<boolean>(false);
     const alertMessage = ref<string>('');
     const pageTitle = ref<string>('');
@@ -24,9 +27,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
     const getContentLoadingState = computed(() => {return isContentLoading.value})
     const getBtnLoadingState = computed(() => {return btnLoadingState.value})
 
-
     // Actions
-
     const toggleLoadingState = (state : boolean) :boolean => isLoading.value = state
     const toggleContentLoaderState = (state : boolean) : boolean => isContentLoading.value = state
     const toggleBtnLoadingState = (state : boolean) : boolean =>  btnLoadingState.value = state
@@ -37,9 +38,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
         toggleBtnLoadingState(false)
         toggleLoadingState(false)
         toggleContentLoaderState(false)
-        if (error) {
-            assignAlertMessage(error?.data?.message,'error')
-v        }
+        if (error) { assignAlertMessage(error?.data?.message,'error')}
     }
     const deleteItemInDB = async (uid: string, item:string) : Promise < void> => {
         toggleContentLoaderState(true)
@@ -52,6 +51,10 @@ v        }
                    await projectStore.retrieveAllProjects()
                    break;
                }
+               case  'product':{
+                   await productStore.retrieveAllProducts()
+                   break;
+               }
            }
         }
         else{
@@ -59,6 +62,38 @@ v        }
             toggleContentLoaderState(false)
             globalStore.assignAlertMessage(error.value?.message,'error')
         }
+    }
+    const statsOfItem = async (item:string) : Promise < Integer > => {
+        toggleContentLoaderState(true)
+        const {data, error} = await useApiFetch(`/api/${item}-count`);
+        if(data.value ){
+            toggleContentLoaderState(false)
+           return data.value?.count
+        }
+        else{
+            console.log(error.value?.data)
+            toggleContentLoaderState(false)
+            globalStore.assignAlertMessage(error.value?.message,'error')
+        }
+    }
+    async function switchApprovalStatus (passId: string, item: string){
+        toggleContentLoaderState(true)
+        const {data, error} = await useApiFetch(`/api/${item}/change-status/${passId}`);
+        if(data.value){
+            assignAlertMessage(data.value?.message, 'success')
+            toggleContentLoaderState(false)
+            switch (item){
+                case  'project':{
+                    await projectStore.retrieveAllProjects()
+                    break;
+                }
+                case  'product':{
+                    await productStore.retrieveAllProducts()
+                    break;
+                }
+            }
+        }
+        else  handleApiError(error.value);
     }
 
     // Extra functionalities
@@ -116,6 +151,7 @@ v        }
         toggleLoadingState, toggleContentLoaderState,
         toggleLocalLoaderStatus, toggleBtnLoadingState,
         assignPageTitle,getPageTitle,getYearsArray,
-        deleteItemInDB, handleApiError
+        deleteItemInDB, handleApiError, statsOfItem,
+        switchApprovalStatus
     }
 })

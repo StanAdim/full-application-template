@@ -25,8 +25,8 @@ class SystemUserResource extends JsonResource
             'name'=> $this->first_name.' '. $this->middle_name. ' '. $this->last_name,
             // 'roles'=> $this->roles,
             'isVerified'=> $this->email_verified_at? 1: 0,
-            'registrationDate'=> Carbon::parse($this->created_at)->format('M j, Y, H:i'),
-            'last_login'=> Carbon::parse($this->last_login)->format('M j, Y, H:i'),
+            'registrationDate'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),
+            'last_login'=> Carbon::parse($this->last_login)->format('j M, Y, H:i'),
         ];  
     }
 }

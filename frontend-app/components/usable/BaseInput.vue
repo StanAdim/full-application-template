@@ -7,7 +7,7 @@
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :class="{'md:w-72 w-full':props.isFull, 'w-full': !props.isFull}"
-        class=" border border-gray-300 rounded-lg px-4 py-1 focus:outline-none focus:border-blue-500"
+        class=" border h-10 border-gray-300 rounded-lg px-4 py-0 focus:outline-none focus:border-blue-500"
     />
   </div>
 </template>

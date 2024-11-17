@@ -71,9 +71,10 @@ const logout = async  ()=> {
             <!-- Your Lorem Ipsum content -->
             <div class="bg-white rounded-lg shadow p-6">
               <div class="flex flex-row gap-4">
-                <div class="text-xl font-semibold mb-4">{{ gData.getPageTitle }}</div>
+                <div class="text-xl text-sky-600 font-semibold mb-4">{{ gData.getPageTitle }}</div>
                 <div class=""><UsableContentLoader  color=""/></div>
-              </div>              <hr class="bg-sky-600 py-[1px] rounded-md">
+              </div>
+              <hr class="bg-sky-600 py-[1px] rounded-md">
               <div class="text-gray-600">
                 <slot />
               </div>

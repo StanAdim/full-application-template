@@ -53,18 +53,6 @@ export const useProjectStore = defineStore('projectStore', () => {
             globalStore.handleApiError(error.value);
         }
     }
-    async function handleProjectApproval (passId: string){
-        globalStore.toggleContentLoaderState(true)
-        const {data, error} = await useApiFetch(`/api/conference/change-status/${passId}`);
-        const dataResponse = data.value as ApiResponse
-        if(data.value){
-            globalStore.assignAlertMessage(dataResponse?.message, 'success')
-            globalStore.toggleContentLoaderState(false)
-            await retrieveAllProjects()
-        }
-        else  globalStore.handleApiError(error.value);
-
-    }
 
     return {
         retrieveAllProjects,
@@ -72,6 +60,5 @@ export const useProjectStore = defineStore('projectStore', () => {
         createUpdateProject,
         getSingleProject,
         retrieveSingleProfile,
-        handleProjectApproval
     }
 })

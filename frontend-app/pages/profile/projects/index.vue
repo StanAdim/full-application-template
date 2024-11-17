@@ -1,8 +1,5 @@
 <script setup lang="ts">
 import TheBtnLoader from "~/components/usable/TheBtnLoader.vue";
-import {toKeyAlias} from "@babel/types";
-import uid = toKeyAlias.uid;
-
 definePageMeta({
   title: 'Profile - Profile Name',
   layout: 'default',
@@ -82,7 +79,7 @@ const handleAction = async  (type, uid) => {
 }
 // initialize
 const init = async () =>  {
-  globalData.assignPageTitle('Registered Projects List')
+  globalData.assignPageTitle('Projects registered')
   await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
   console.log(projectStore.getAllProjects.length)
 }

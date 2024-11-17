@@ -62,6 +62,16 @@ class ProjectController extends Controller
                 'data' => $projects
             ],200);
     }
+    public function count(){
+        $user_id = Auth::id();
+        $Items = Project::where('user_id', $user_id)->get();
+        if ($Items) {
+            return response()->json([
+                'message' => 'Projects count',
+                'count' => $Items->count()
+            ],200);
+        } 
+   }
     public function getProject($uid){
         $project = Project::where('uid',$uid)->first();
         if ($project->exists) {
@@ -93,7 +103,7 @@ class ProjectController extends Controller
         $project = Project::create($validatedData);
         return response()->json([
             'data' => $project,
-            'message' => 'New Project registed',
+            'message' => 'New Project registered',
         ], 200);
    }
 
@@ -142,8 +152,7 @@ class ProjectController extends Controller
 
     public function projectUpdate(Request $request){
         $proje = Project::where('uid', $request->input('uid'))->first();
-                $validator = Validator::make($request->all(),
-                [
+                $validator = Validator::make($request->all(),[
                     'title' => ['max:255'],
                     'year' => [ 'max:255'],
                     'brief' => [ 'min:25'],

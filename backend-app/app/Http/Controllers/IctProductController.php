@@ -2,168 +2,150 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\ProductResourceController;
+use App\Http\Resources\ICTProductResource;
 use App\Models\IctProduct;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class IctProductController extends Controller
 {
+    // List all ICT Products
     public function index(Request $request){
-        $accessPermissions = ["can_view_all_products"];
-        $user = $request->user();
-        if ($this->hasUserAccess($accessPermissions)) { // checking if logged in users has any permission in the passed array
-           $products = ProductResourceController::collection(IctProduct::all());
-            return response()->json([
-                'message' => 'All Products',
-                'data' => $products
-            ],200);
-        } else {
-            return response()->json([
-                'message' => 'User products',
-                'data' => ProductResourceController::collection($user->products)
-            ],200);
+        // Fetch the search term from the request (optional)
+        $search = $request->input('search');
+        $perPage = $request->input('per_page', 10); // Default items per page is 12
+        // Build the query for fetching item
+        $user_id = Auth::id();
+        $query = IctProduct::where('user_id', $user_id)->orderBy('id', 'desc');
+        // Apply search if there is a search term
+        if ($search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'like', "%{$search}%")
+                ->orWhere('category', 'like', "%{$search}%")
+                ->orWhere('description', 'like', "%{$search}%");
+                // Add other fields for search if needed
+            });
         }
-    }
-    public function guestViewProducts (){
-        $products = ProductResourceController::collection(IctProduct::all());
+        // Paginate the results
+        $items = $query->paginate($perPage);
+        if ($items->isNotEmpty()) {
             return response()->json([
-                'message' => 'All products',
-                'data' => $products
-            ],200);
-    }
-    public function getProduct($uuid)
-    {
-        $accessPermissions = ["can_view_product"];
-        if ($this->hasUserAccess($accessPermissions)) {
-        $product = IctProduct::where('id',$uuid)->first();
-        if ($product) {
-            return response()->json([
-                 'message' => 'ICT Product',
-                 'data' => $product
-             ],200);
-
-        } else {
-            return response()->json([
-                'message' => 'No such Product',
-            ],404);
+                'message' => "Registered projects",
+                'data' => ICTProductResource::collection($items),
+                'pagination' => [
+                    'current_page' => $items->currentPage(),
+                    'last_page' => $items->lastPage(),
+                    'per_page' => $items->perPage(),
+                    'total' => $items->total(),
+                    'next_page_url' => $items->nextPageUrl(),
+                    'prev_page_url' => $items->previousPageUrl(),
+                ],
+                'code' => 200,
+            ]);
         }
-    }
-   }
-
-    // public function get_categories(){
-    //     $category = projectcategoryResource::collection(ProjectCategory::all());
-    //     return response()->json([
-    //         'message' => 'Project Categories',
-    //         'data' => $category
-    //     ],200);
-    //    }
-
-    public function productStore(Request $request)
-     {
-        $accessPermissions = ["can_create_product"];
-       if ($this->hasUserAccess($accessPermissions)) {
-       $validatedData = $request->validate([
-                     'user_id' => ['required'],
-                     'name' => ['required','min:3', 'max:255'],
-                     'brief' => ['required', 'max:255'],
-                     'category' => ['required']
-         ]);
-
-        $product = IctProduct::create($validatedData);
-        $product->save();
-
         return response()->json([
+            'message' => "No project found",
+            'code' => 300,
+        ]);
+    }
+
+    // Store a new ICT Product
+    public function store(Request $request)
+    {
+
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'category' => 'required|array',
+            'is_launched' => 'required|boolean',
+            'launched_date' => 'nullable|date|before_or_equal:today',
+            'description' => 'required|string|max:1000',
+            // 'technicalSpecs' => 'nullable|string|max:1000',
+            // 'targetAudience' => 'nullable|string|max:1000',
+            // 'intellectualProp' => 'nullable|string|max:1000',
+            // 'supportingMedia' => 'nullable|array',
+            // 'supportingMedia.*' => 'nullable|url',
+            'users_impression' => 'nullable|integer',
+            'compliance_details' => 'nullable|string|max:1000',
+         ]);
+         $user= Auth::user();
+        $profile_id = $user->profile->id;
+        $validatedData = $validatedData + ['user_id' => $user->id,'profile_id' => $profile_id];
+        $product = IctProduct::create($validatedData);
+        return response()->json([
+            'success' => true,
+            'message' => 'Registration success!',
             'data' => $product,
-            'message' => 'product Detailed Stored',
+        ], 201);
+    }
+
+    public function count(){
+        $user_id = Auth::id();
+        $Items = IctProduct::where('user_id', $user_id)->get();
+        if ($Items) {
+            return response()->json([
+                'message' => 'Products count',
+                'count' => $Items->count()
+            ],200);
+        } 
+   }
+    // Show a single ICT Product
+    public function show($uid){
+        $product = IctProduct::where('uid',$uid)->first();
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found!',
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => $product,
+        ]);
+    }
+
+    // Update an existing ICT Product
+    public function update(Request $request)
+    {
+        $product = IctProduct::where($request->input('uid'))->first();
+
+        $validator = Validator::make($request->all(),[
+           'name' => 'max:255',
+            'category' => 'array',
+            'is_launched' => 'boolean',
+            'launched_date' => 'nullable|date|before_or_equal:today',
+            'description' => 'string|max:1000',
+            // 'technicalSpecs' => 'nullable|string|max:1000',
+            // 'targetAudience' => 'nullable|string|max:1000',
+            // 'intellectualProp' => 'nullable|string|max:1000',
+            // 'supportingMedia' => 'nullable|array',
+            // 'supportingMedia.*' => 'nullable|url',
+            'users_impression' => 'nullable|integer',
+            'compliance_details' => 'nullable|string|max:1000',
+        ]);
+        $validator->validate();
+        if($validator->valid()){
+            $save = $product->update($validator->validated());
+        }
+        return response()->json([
+            'data' => $save,
+            'message' => 'Product Updated!',
         ], 200);
     }
-    else {
+
+    // Delete an ICT Product
+    public function destroy($uid){
+        $product = IctProduct::where( 'uid', $uid)->first();
+        if (!$product) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Product not found!',
+            ], 404);
+        }
+        $product->delete();
         return response()->json([
-            'message' => 'No Access',
-        ],200);
+            'success' => true,
+            'message' => 'Product deleted successfully!',
+        ]);
     }
-   }
-
-
-    public function verifyProduct(Request $request, IctProduct $product)
-    {
-        $accessPermissions = ["can_verify_product"];
-        if ($this->hasUserAccess($accessPermissions)) {
-            $product->update([
-                "verify" => !$product->verify ? true : false
-            ]);
-            return response()->json([
-                'data' => $product,
-                'message' => 'Product Verified',
-                ], 200);
-        }
-        else {
-            return response()->json([
-                'message' => 'No Access',
-            ],200);
-        }
-    }
-
-    public function productUpdate($UUID , Request $request){
-        $accessPermissions = ["can_edit_project"];
-        if ($this->hasUserAccess($accessPermissions)) {
-        $proje = IctProduct::where('id', $UUID)->first();
-                $validator = Validator::make($request->all(),
-                [
-                    'name' => ['max:255'],
-                    'category' => [ 'max:255'],
-                    'brief' => [ 'min:10'],
-                ]);
-
-                $validator->validate();
-                if($validator->valid()){
-                    $save = $proje->update($validator->validated());
-                }
-                return response()->json([
-                    'data' => $save,
-                    'message' => 'Product Updated!',
-                ], 200);
-        }
-           else {
-            return response()->json([
-                'message' => 'No Access',
-            ],200);
-           }
-      }
-
-        public function productDelete($UUID){
-            $accessPermissions = ["can_delete_product"];
-            // $user = $request->user();
-            if ($this->hasUserAccess($accessPermissions)) {
-
-                $product = IctProduct::findOrFail($UUID);
-
-             $product->delete();
-
-             return response()->json([
-                'message' => 'Product Deleted!',
-            ], 200);
-        }
-        else {
-            return response()->json([
-                'message' => 'No Access',
-            ],200);
-           }
-        }
-
-        public function productExport() 
-        {
-        $accessPermissions = ["can_view_all_products"];
-        // $user = $request->user();
-        if ($this->hasUserAccess($accessPermissions)) {
-            // return Excel::download(new ProjectExport, 'Projects.xlsx');
-        }
-        else {
-            return response()->json([
-                'message' => 'No Access',
-            ],200);
-           }
-        }
-   
 }

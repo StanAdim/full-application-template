@@ -17,11 +17,21 @@ return new class extends Migration
             $table->id();
             $table->string('uid');
             $table->string('name');
-            $table->string('category');
-            $table->longText('brief');
+            $table->json('category');
+            $table->boolean('is_launched');
+            $table->string('launched_date');
+            $table->longText('description');
+            $table->longText('compliance_details');
+            
+            $table->json('technicalSpecs')->nullable();
+            $table->json('targetAudience')->nullable();
+            $table->json('intellectualProp')->nullable();
+            $table->json('supportingMedia')->nullable();
+
+            $table->string('users_impression');
             $table->boolean('verify')->default(0);
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
-            $table->rememberToken();
+            $table->foreignId('user_id')->constrained();
+            $table->foreignId('profile_id')->constrained()->onDelete('cascade');           
             $table->timestamps();
         });
     }

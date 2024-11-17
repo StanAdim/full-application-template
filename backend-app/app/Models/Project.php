@@ -7,12 +7,10 @@ use App\Traits\HasUid;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Casts\Attribute;
-use App\Traits\UUID;
 
 class Project extends Model
 {
     use HasFactory, HasUid;
-    protected $table = 'projects';
     protected $fillable = [
         'user_id',
         'profile_id',
@@ -28,8 +26,7 @@ class Project extends Model
         'category' => 'array'
     ];
 
-    protected function category() :Attribute
-    {
+    protected function category() :Attribute {
         return Attribute::make(
             get: fn ($value) => json_decode($value, true),
             set: fn ($value) => json_encode($value),
@@ -44,7 +41,5 @@ class Project extends Model
     public function profile(){
         return $this->belongsTo(Profile::class);
     }
-    //Accessor
     
- 
 }

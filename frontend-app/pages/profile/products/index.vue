@@ -4,40 +4,39 @@ import {toKeyAlias} from "@babel/types";
 import uid = toKeyAlias.uid;
 
 definePageMeta({
-  title: 'Profile - Profile Name',
+  title: 'ICT Products',
   layout: 'default',
   middleware:'auth',
 })
 
 const globalData = useGlobalDataStore()
-const projectStore = useProjectStore()
+const productStore = useProductStore()
 
 const currentPage = ref <number>(1)
 const per_page = ref <number>(10)
 const searchQuery = ref('')
 const pageSwitchValue = ref(1)
 const movePage = async (type:number) => {
-  console.log(type)
   if (type === 1){
     currentPage.value = currentPage.value + pageSwitchValue.value
   }else {
     currentPage.value = currentPage.value - pageSwitchValue.value
   }
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value)
+  await productStore.retrieveAllProducts(per_page.value,currentPage.value)
 }
 // change page number
 const  isEditing = ref(false)
 const toggleEditing =  () => isEditing.value = !isEditing.value
 const  updateData = async () => {
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value)
+  await productStore.retrieveAllProducts(per_page.value,currentPage.value)
 }
 const  searchUserData = async () => {
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
+  await productStore.retrieveAllProducts(per_page.value,currentPage.value, searchQuery.value)
 }
-const headers = ref(['Sn', 'Title', "Category" , "Year" , 'Approved', 'Registration Date', 'Actions'])
+const headers = ref(['Sn', 'Name', "Category" ,"Is Launched", "Launched Date" , 'Approved', 'Registration Date', 'Actions'])
 const OpenConfirmDialog = async (uid) => {
   await ElMessageBox.confirm(
-      'This project will be permanently deleted. Continue?',
+      'This product will be permanently deleted. Continue?',
       'Warning',
 
       {
@@ -47,7 +46,7 @@ const OpenConfirmDialog = async (uid) => {
         distinguishCancelAndClose:true
       }
   )
-      await globalData.deleteItemInDB( uid, 'project')
+  await globalData.deleteItemInDB( uid, 'product')
       .then(() => {
         ElMessage({
           type: 'success',
@@ -65,12 +64,12 @@ const OpenConfirmDialog = async (uid) => {
 const handleAction = async  (type, uid) => {
   switch (type){
     case 1: {
-      navigateTo(`/profile/projects/project/${uid}`)
+      navigateTo(`/profile/products/product/${uid}`)
       break;
     }
     case 2: {
-      await projectStore.retrieveSingleProfile(uid)
-      navigateTo(`/profile/projects/create`)
+      await productStore.retrieveSingleProduct(uid)
+      navigateTo(`/profile/products/create`)
       break;
     }
     case 3: {
@@ -82,9 +81,8 @@ const handleAction = async  (type, uid) => {
 }
 // initialize
 const init = async () =>  {
-  globalData.assignPageTitle('Registered Projects List')
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
-  console.log(projectStore.getAllProjects.length)
+  globalData.assignPageTitle('Products registered')
+  await productStore.retrieveAllProducts(per_page.value,currentPage.value, searchQuery.value)
 }
 onNuxtReady(()=> {
   init()
@@ -95,7 +93,7 @@ onNuxtReady(()=> {
 <template>
   <div class="mt-2">
     <div class="flex justify-end items-center gap-2 mb-2 mx-4">
-      <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/projects/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />
+      <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/products/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />
       <div class="">
         <input
             v-model="searchQuery"
@@ -122,21 +120,27 @@ onNuxtReady(()=> {
           </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-if="projectStore.getAllProjects?.length != 0"
-              v-for="(item, index) in projectStore.getAllProjects"
+          <tr v-if="productStore.getAllProducts?.length != 0"
+              v-for="(item, index) in productStore.getAllProducts"
               :key="item.uid"
               class="hover:bg-sky-100">
             <td class="table-data">{{ index + 1 }}</td>
-            <td class="table-data">{{ item?.title }}</td>
-            <td class="table-data">{{ item?.category }}</td>
-            <td class="table-data">{{ item?.year }}</td>
+            <td class="table-data">{{ item?.name }}</td>
+            <td class="table-data">{{ item?.category[0] }}</td>
+            <td class="table-data">
+              <span class="mx-2 text-lg">
+              <i v-if="item?.is_launched" class="fa-solid fa-circle-check text-green-500"></i>
+              <i v-else class="fa-regular fa-circle-xmark text-red-500"></i>
+            </span>
+            </td>
+            <td class="table-data">{{ item?.launched_date }}</td>
+            <td class="table-data">{{ item?.registrationDate }}</td>
             <td class="table-data">
               <span class="mx-2 text-lg">
               <i v-if="item?.status" class="fa-solid fa-circle-check text-green-500"></i>
               <i v-else class="fa-regular fa-circle-xmark text-red-500"></i>
             </span>
             </td>
-            <td class="table-data">{{ item?.registrationDate }}</td>
             <td class="table-data">
               <el-dropdown size="default" type="primary" placement="bottom-start">
                 <el-button><i class="fa-solid fa-prescription-bottle mr-1"></i> Action </el-button>
