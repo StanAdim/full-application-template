@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Resources\ICTProductResource;
 use App\Models\IctProduct;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -81,7 +82,12 @@ class IctProductController extends Controller
 
     public function count(){
         $user_id = Auth::id();
-        $Items = IctProduct::where('user_id', $user_id)->get();
+        $user = User::find($user_id);
+        if ($user->hasRole('admin')) {
+            $Items = IctProduct::all();
+        }else{
+            $Items = IctProduct::where('user_id', $user_id)->get();
+        }
         if ($Items) {
             return response()->json([
                 'message' => 'Products count',

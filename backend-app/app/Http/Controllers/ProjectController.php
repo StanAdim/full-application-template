@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
 use App\Exports\ProjectExport;
+use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Maatwebsite\Excel\Facades\Excel;
 
@@ -64,7 +65,12 @@ class ProjectController extends Controller
     }
     public function count(){
         $user_id = Auth::id();
-        $Items = Project::where('user_id', $user_id)->get();
+        $user = User::find($user_id);
+        if ($user->hasRole('admin')) {
+            $Items = Project::all();
+        }else{
+            $Items = Project::where('user_id', $user_id)->get();
+        }
         if ($Items) {
             return response()->json([
                 'message' => 'Projects count',

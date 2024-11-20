@@ -32,7 +32,9 @@ const init = async () => {
 }
 
 // Lifecycle hook to initialize the component
-onNuxtReady(init)
+onNuxtReady(()=>{
+  init()
+})
 </script>
 
 <template>
