@@ -15,7 +15,6 @@ export const useProjectStore = defineStore('projectStore', () => {
     async function retrieveAllProjects(per_page: number = 12, page : number = 1, search : string = '') : Promise <void>{
         globalStore.toggleContentLoaderState(true)
         const {data, error} = await useApiFetch(`/api/projects?per_page=${per_page}&page=${page}&search=${search}`);
-        const response = data.value as ApiResponse
         if(data.value){
             globalStore.toggleLoadingState(false)
             globalStore.toggleContentLoaderState(false)

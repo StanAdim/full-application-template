@@ -1,13 +1,15 @@
 <script setup lang="ts">
-import TheBtnLoader from "~/components/usable/TheBtnLoader.vue";
 definePageMeta({
-  title: 'Profile - Profile Name',
-  layout: 'default',
-  middleware:'auth',
+  title: 'Admin - Digital Accelerator',
+  layout: 'admin',
+  middleware:['auth', 'admin-role-checker'],
 })
-
 const globalData = useGlobalDataStore()
-const projectStore = useProjectStore()
+const adminStore = useAdminDataStore()
+
+onNuxtReady(()=> {
+  init()
+})
 const currentPage = ref <number>(1)
 const per_page = ref <number>(10)
 const searchQuery = ref('')
@@ -19,21 +21,21 @@ const movePage = async (type:number) => {
   }else {
     currentPage.value = currentPage.value - pageSwitchValue.value
   }
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value)
+  await adminStore.retrieveProfileList('accelerators', per_page.value,currentPage.value, searchQuery.value)
 }
 // change page number
 const  isEditing = ref(false)
 const toggleEditing =  () => isEditing.value = !isEditing.value
 const  updateData = async () => {
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value)
+  await adminStore.retrieveProfileList('accelerators', per_page.value,currentPage.value, searchQuery.value)
 }
 const  searchUserData = async () => {
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
+  await adminStore.retrieveProfileList('accelerators', per_page.value,currentPage.value, searchQuery.value)
 }
-const headers = ref(['Sn', 'Title', "Category" , "Year" , 'Approved', 'Registration Date', 'Actions'])
+const headers = ref(['Sn', 'Name', "Industry" , "Funding Stage" , 'Approved', 'Registration Date', 'Actions'])
 const OpenConfirmDialog = async (uid) => {
   await ElMessageBox.confirm(
-      'This project will be permanently deleted. Continue?',
+      'This startup will be permanently deleted. Continue?',
       'Warning',
 
       {
@@ -43,7 +45,7 @@ const OpenConfirmDialog = async (uid) => {
         distinguishCancelAndClose:true
       }
   )
-      await globalData.deleteItemInDB( uid, 'project')
+  await globalData.deleteItemInDB( uid, 'startup')
       .then(() => {
         ElMessage({
           type: 'success',
@@ -61,16 +63,17 @@ const OpenConfirmDialog = async (uid) => {
 const handleAction = async  (type, uid) => {
   switch (type){
     case 1: {
-      navigateTo(`/profile/projects/project/${uid}`)
+      navigateTo(`/admin/profiles/accelerators/${uid}`)
       break;
     }
     case 2: {
-      await projectStore.retrieveSingleProfile(uid)
-      navigateTo(`/profile/projects/create`)
+      // await projectStore.retrieveSingleProfile(uid)
+      console.log(`accelerator`)
       break;
     }
     case 3: {
-      await  OpenConfirmDialog(uid)
+      // await  OpenConfirmDialog(uid)
+      console.log('Delete')
       break;
     }
   }
@@ -78,20 +81,18 @@ const handleAction = async  (type, uid) => {
 }
 // initialize
 const init = async () =>  {
-  globalData.assignPageTitle('Projects registered')
-  await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
-  console.log(projectStore.getAllProjects.length)
+  globalData.assignPageTitle('Digital Accelerator Profiles')
+  await adminStore.retrieveProfileList('accelerators', per_page.value,currentPage.value, searchQuery.value)
 }
 onNuxtReady(()=> {
   init()
 })
-
 </script>
 
 <template>
-  <div class="mt-2">
+  <div class="mt-2 bg-sky-100 p-2">
     <div class="flex justify-end items-center gap-2 mb-2 mx-4">
-      <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/projects/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />
+<!--      <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/projects/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />-->
       <div class="">
         <input
             v-model="searchQuery"
@@ -118,14 +119,14 @@ onNuxtReady(()=> {
           </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-if="projectStore.getAllProjects?.length != 0"
-              v-for="(item, index) in projectStore.getAllProjects"
+          <tr v-if="adminStore.getAcceleratorList?.length != 0"
+              v-for="(item, index) in adminStore.getAcceleratorList"
               :key="item.uid"
               class="hover:bg-sky-100">
             <td class="table-data">{{ index + 1 }}</td>
-            <td class="table-data">{{ item?.title }}</td>
-            <td class="table-data">{{ item?.category }}</td>
-            <td class="table-data">{{ item?.year }}</td>
+            <td class="table-data">{{ item?.name }}</td>
+            <td class="table-data">{{ item?.industry }}</td>
+            <td class="table-data">{{ item?.fundingStage }}</td>
             <td class="table-data">
               <span class="mx-2 text-lg">
               <i v-if="item?.status" class="fa-solid fa-circle-check text-green-500"></i>
@@ -139,7 +140,7 @@ onNuxtReady(()=> {
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item  @click.prevent="handleAction(1, item.uid)" ><i class="fa-solid fa-eye"></i> View</el-dropdown-item>
-                    <el-dropdown-item @click.prevent="handleAction(2, item.uid)"  ><i class="fa-regular fa-pen-to-square"></i> Edit</el-dropdown-item>
+                    <el-dropdown-item @click.prevent="handleAction(2, item.uid)"  ><i class="fa-solid fa-hashtag"></i> Approve</el-dropdown-item>
                     <el-dropdown-item  @click.prevent="handleAction(3, item.uid)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
@@ -160,7 +161,7 @@ onNuxtReady(()=> {
                   @click="movePage(2)"
                   class="action-btn"
               >
-                Previous <TheBtnLoader />
+                Previous <UsableTheBtnLoader />
               </button>
             </li>
             <li>
@@ -182,15 +183,14 @@ onNuxtReady(()=> {
                   @click="movePage(1)"
                   class="action-btn"
               >
-                Next <TheBtnLoader />
+                Next <UsableTheBtnLoader />
               </button>
             </li>
           </ul>
         </nav>
       </div>    </div>
   </div>
+
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

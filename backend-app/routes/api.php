@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AdminUserController;
 use App\Http\Controllers\GeneralController;
 use App\Http\Controllers\IctProductController;
@@ -17,8 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/profile/{type}-count', [GeneralController::class, 'profileCount']);
-
-
 Route::post('/register-user-with-profile', [ProfileController::class, 'registerUserWithProfile']);
 
 //User auth Routes
@@ -80,10 +79,12 @@ Route::group(['prefix' => 'admin','middleware' => ['role:admin']], function () {
 
 });
 
-Route::middleware(['role:admin'])->group(function () {
+Route::group(['prefix' => 'admin', 'middleware' => ['role:admin'] ], function () {
     Route::get('/admin', function () { return view('admin.dashboard'); });
     Route::post('/project/verify-project/{project}',[ProjectController::class, 'verifyProject']);
     Route::post('/product/verify-product/{product}',[IctProductController::class, 'verifyproduct']);
+    Route::get('/profiles/{type}', [AdminProfileController::class, 'profilesOfType']);
+
 });
 
 Route::group(['middleware' => ['permission:edit post']], function () {
