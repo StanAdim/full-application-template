@@ -22,7 +22,7 @@ class ProjectResource extends JsonResource
             'year' => $this->year,
             'brief' => $this->brief,
             'status' => $this->verify,
-            'registrationDate'=> Carbon::parse($this->created_at)->format('M j, Y, H:i'),
+            'registrationDate'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),
 
         ];
     }

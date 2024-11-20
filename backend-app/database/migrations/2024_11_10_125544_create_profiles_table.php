@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('email')->nullable();
             $table->string('region')->nullable();
             $table->string('date_establishment')->nullable();
+            $table->string('logo_path')->nullable();
             $table->timestamps();
         });
     }

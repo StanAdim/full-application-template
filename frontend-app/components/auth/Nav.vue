@@ -1,60 +1,6 @@
-<template>
-  <nav
-      class="order-first bg-blue-50 p-2 overflow-y-auto transition-all duration-300 ease-in-out"
-      :class="{
-          'w-32 md:min-w-48 md:max-w-64': props.isSidebarOpen,
-          'w-0 md:w-0 opacity-0': !props.isSidebarOpen
-        }"
-  >
-    <ul class="text-xs whitespace-nowrap">
-      <li class="sidebar-link">
-        <i class="fa-solid fa-user icon"></i>
-        <nuxt-link to="/profile/dashboard">Dashboard</nuxt-link>
-      </li>
-      <!-- Projects with child links -->
-      <li class="sidebar-link" @click="toggleMenu('projects')">
-        <i class="fa-solid fa-diagram-project icon"></i>
-        <span>Projects</span>
-      </li>
-      <ul v-if="activeMenu === 'projects'" class="pl-6">
-        <li class="sidebar-sublink">
-          <nuxt-link to="/profile/projects">My Projects</nuxt-link>
-        </li>
-        <li class="sidebar-sublink">
-          <nuxt-link to="/profile/projects/create">New Project</nuxt-link>
-        </li>
-
-      </ul>
-      <!-- Products with child links -->
-      <li class="sidebar-link" @click="toggleMenu('products')">
-        <i class="fa-regular fa-star icon"></i>
-        <span>Products</span>
-      </li>
-      <ul v-if="activeMenu === 'products'" class="pl-6">
-        <li class="sidebar-sublink">
-          <nuxt-link to="/profile/products">My Products</nuxt-link>
-        </li>
-        <li class="sidebar-sublink">
-          <nuxt-link to="/profile/products/create">New Products</nuxt-link>
-        </li>
-      </ul>
-      <li class="sidebar-link">
-        <i class="fa-solid fa-circle-info icon"></i>
-        <nuxt-link to="/profile/1">Profile Info</nuxt-link>
-      </li>
-      <li class="sidebar-link">
-        <i class="fa-solid fa-gear icon"></i>
-        <nuxt-link to="/profile/1">Setting</nuxt-link>
-      </li>
-      <li class="sidebar-link">
-        <i class="fa-solid fa-file-contract icon"></i>
-        <nuxt-link to="/profile/documents/">Documents</nuxt-link>
-      </li>
-    </ul>
-  </nav>
-</template>
-
 <script setup>
+import * as child_process from "node:child_process";
+
 const props = defineProps({
   isSidebarOpen: {
     default: false,
@@ -65,7 +11,47 @@ const activeMenu = ref('')
 const toggleMenu = (menu) => {
   activeMenu.value = activeMenu.value === menu ? '' : menu
 }
+const link_options = [
+      {title: 'Dashboard', path: '/profile/dashboard', icon: 'fa-solid fa-house', childLink: []},
+      {
+        title: 'ICT Products', path: '/profile/products', icon: 'fa-regular fa-star', childLink: [
+          {title: 'Products List', path: '/profile/products', icon: 'fa-solid fa-list'},
+          {title: 'New Product', path: '/profile/products/create', icon: 'fa-solid fa-plus'},
+        ]
+      },
+      {
+        title: 'ICT Projects', path: '/profile/projects', icon: 'fa-solid fa-diagram-project', childLink: [
+          {title: 'Products List', path: '/profile/projects', icon: 'fa-solid fa-list'},
+          {title: 'New Product', path: '/profile/projects/create', icon: 'fa-solid fa-plus'},
+        ]
+      },
+      {title: 'Documents', path: '/profile/documents', icon: 'fa-regular fa-folder', childLink: []},
+      {title: 'Profile Info', path: '/profile/setting/my-account', icon: 'fa-solid fa-circle-info', childLink: []},
+
+    ]
 </script>
+<template>
+  <nav
+      class="order-first bg-blue-50 p-2 overflow-y-auto transition-all duration-300 ease-in-out"
+      :class="{
+          'w-32 md:min-w-48 md:max-w-64': props.isSidebarOpen,
+          'w-0 md:w-0 opacity-0': !props.isSidebarOpen
+        }"
+  >
+    <ul class="text-xs whitespace-nowrap">
+      <li v-for="item in link_options" :ref="item" @click="toggleMenu(item.title)">
+        <nuxt-link class="sidebar-link"
+                   :to="item.path"> <i class="icon" :class="`${item.icon}`"></i>
+          <span>{{ item.title }}</span></nuxt-link>
+        <ul v-if="activeMenu === item.title" class="pl-6">
+          <li class="py-0.5" v-for="sub_item in item.childLink" :ref="sub_item.title">
+            <nuxt-link  class="sidebar-sublink" :to="sub_item.path"> <i class="icon" :class="`${sub_item.icon}`"></i> {{ sub_item.title }}</nuxt-link>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </nav>
+</template>
 
 <style scoped>
 .transition-all {
@@ -74,15 +60,28 @@ const toggleMenu = (menu) => {
   transition-duration: 300ms;
 }
 
+.icon {
+  @apply px-2
+}
+
 .sidebar-link {
-  @apply block font-bold hover:bg-sky-200 py-2 px-2 mt-1 rounded bg-sky-100 cursor-pointer;
+  @apply block font-bold hover:bg-sky-200 py-2 px-2 mt-2 rounded bg-sky-100 cursor-pointer;
 }
 
 .sidebar-sublink {
-  @apply block pl-4 py-1 text-sky-700 hover:text-sky-800 hover:bg-sky-100 rounded;
+  @apply block pl-2 py-1.5 text-sky-700 hover:text-sky-800 hover:bg-sky-100 rounded;
 }
 
 .sidebar-link .icon {
   @apply pr-2 text-sky-700 hover:text-sky-800;
+}
+.router-link-active {
+  background: linear-gradient(45deg, #0ba9f9, #0996dd);
+  color: white;
+  border-radius: 10px;
+  &:hover {
+    background: linear-gradient(45deg, #0ba9f9, #0996dd) !important;
+    color: white !important;
+  }
 }
 </style>

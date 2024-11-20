@@ -8,12 +8,12 @@ definePageMeta({
 
 // Global state and reactive data setup
 const globalData = useGlobalDataStore()
-const projectsCount = ref(0)
-const productsCount = ref(0)
+const projectsCount = ref('...')
+const productsCount = ref('...')
 
 const dataItems = computed(() => [
   { title: 'All Products', path: '/profile/products', size: productsCount.value },
-  { title: 'All Projects', path: '/pro', size: projectsCount.value },
+  { title: 'All Projects', path: '/profile/projects', size: projectsCount.value },
 ])
 
 const dashCardItems = computed(() => [

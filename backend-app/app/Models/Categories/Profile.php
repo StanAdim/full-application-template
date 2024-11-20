@@ -18,7 +18,8 @@ class Profile extends Model
         'phone_number',
         'email',
         'region',
-        'date_establishment'
+        'date_establishment',
+        'logo_path'
     ];
     // Define polymorphic relationship
     public function profileable(): MorphTo

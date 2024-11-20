@@ -79,7 +79,6 @@ const profile = ref({
   </div>
 </template>
 
-
 <style scoped>
 .profile-view-container {
   background-color: #f9fafb; /* Light background */

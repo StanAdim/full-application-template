@@ -16,8 +16,8 @@ return new class extends Migration
             $table->string('uid');
             $table->string('accelerator_name');
             $table->json('focus_area');
-            $table->boolean('status')->default(false);
             $table->longText('brief_description')->nullable();
+            $table->boolean('status')->default(false);
             $table->softDeletes();
             $table->timestamps();
         });

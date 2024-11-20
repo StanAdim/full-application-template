@@ -14,12 +14,18 @@ class StartupResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
-        return [
-            'id' => $this->id,
-            'name' => $this->startup_name,
-            'industry' => $this->industry,
-            'uid' => $this->uid,
-            'phone_number' => $this->phone_number,
-        ];
+       return [
+        'type' => 'ICT Startup',
+        'founders' => $this->founders, // Include startup-specific data
+        'industry' => $this->industry,
+        'status' => $this->status,
+        'fundingStage' => $this->funding_stage,
+        'teamSize' => $this->team_size,
+        'website' => $this->website,
+        'website' => $this->website,
+        'uid' => $this->uid,
+        'name' => $this->startup_name,
+        'description' => $this->description,
+       ];
     }
 }

@@ -1,4 +1,4 @@
-import type {Credential, LoggedUser, User} from "~/types/interfaces";
+import type {Credential, LoggedUser, Product, User} from "~/types/interfaces";
 import {defineStore} from "pinia";
 import {useApiFetch} from "~/composables/useApiFetch";
 import type {ComputedRef} from "vue";
@@ -10,9 +10,10 @@ export const useAuthStore = defineStore('auth', ()=> {
 
     const getLoggedUser = computed(()=>{return user.value?.user})
     const getLoggedUserProfile = computed(()=>{return user.value?.profile})
-    const getUserProfileable = computed(()=>{return user.value?.profile?.profileable?.data})
+    const getUserProfileable = computed(()=>{return user.value?.profile?.profileable})
     const getUserRoles = computed(()=>{return user.value?.user?.roles})
     const getUserPermissions = computed(()=>{ return  user.value?.role?.permissions.map(obj => obj.code)})
+    const getProfileCategoryName : ComputedRef<string> = computed(()=> getLoggedUserProfile.value?.profileable?.type)
 
     //Register
     async function register(passed_data : RegistrationInfo) : Promise <void> {
@@ -85,34 +86,7 @@ export const useAuthStore = defineStore('auth', ()=> {
         }
         globalStore.toggleBtnLoadingState(false)
     }
-    // Return profile type
-    const getProfileCategoryName : ComputedRef<string> = computed(()=>{
-        const match = getLoggedUserProfile.value?.profileable?.type.match(/Categories\\(\w+)/);
-        let res = match ? match[1] : null
-        switch ( res) {
-            case 'StartupProfile':{
-                res = "ICT Startup"
-                break;
-            }
-            case 'AcceleratorProfile':{
-                res = "Digital Accelerator"
-                break;
-            }
-            case 'HubProfile':{
-                res = "Innovation Hub"
-                break;
-            }
-            case 'GrassrootProgramProfile':{
-                res = "Grassroot Program"
-                break;
-            }
-            default: {
-                res = null
-            }
 
-        }
-        return res;
-    })
     // resend Verification
     async function resendEmailVerification() : Promise{
         await useApiFetch("/sanctum/csrf-cookie");
@@ -199,11 +173,42 @@ export const useAuthStore = defineStore('auth', ()=> {
             globalStore.assignAlertMessage(error.value.data?.message, 'warning')
         }
     }
+
+    async function updateUserAccount(passed_data: User) : Promise <void>{
+        globalStore.toggleBtnLoadingState(true)
+        const {data, error} = await useApiFetch(`/update-user`,{
+            method: 'PATCH',
+            body : passed_data
+        });
+        if(data.value){
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage(data.value?.message,'success')
+            await fetchUser()
+        }
+        else {
+            globalStore.handleApiError(error.value);
+        }
+    }
+    async function changeUserPassword(passed_data: User) : Promise <void>{
+        globalStore.toggleBtnLoadingState(true)
+        const {data, error} = await useApiFetch(`/change-user-password`,{
+            method: 'PATCH',
+            body : passed_data
+        });
+        if(data.value){
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage(data.value?.message,'success')
+        }
+        else {
+            globalStore.handleApiError(error.value);
+        }
+    }
     return {
         user,login,isLoggedIn,
         logout,fetchUser,register,getLoggedUser,getUserRoles
         ,getUserPermissions,getLoggedUserProfile,
         getUserProfileable,
         getProfileCategoryName,
+        updateUserAccount,changeUserPassword,
     }
 })

@@ -44,4 +44,58 @@ class RegisteredUserController extends Controller
         Auth::login($user);
         return response()->noContent();
     }
+
+    public function updateUser(Request $request){
+        // Validate the request data
+        $validatedData = $request->validate([
+            'first_name' => 'min:3|max:255',
+            'middle_name' => 'min:3|max:255',
+            'last_name' => 'min:3|max:255',
+            'phone_number' => 'min:3|max:255',
+            'uid' => 'required|string|max:255',
+        ]);
+            // Find the user by ID
+        $user = User::where('uid', $validatedData['uid'])->first();
+
+        // Update the user's fields
+        $user->first_name = $validatedData['first_name'];
+        $user->middle_name = $validatedData['middle_name'];
+        $user->last_name = $validatedData['last_name'];
+        $user->phone_number = $validatedData['phone_number'];
+        // Save the changes
+        $user->save();
+        // Return a response
+        return response()->json([
+            'message' => 'User updated successfully!',
+        ]);
+    }
+
+    public function changePassword(Request $request){
+        // Validate the request data
+        $validatedData = $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|min:6',
+            'uid' => 'required|string|max:255',
+        ]);
+
+        // Get the currently authenticated user
+        $user = User::where('uid', $validatedData['uid'])->first();
+
+        // Check if the current password matches
+        if (!Hash::check($validatedData['current_password'], $user->password)) {
+            return response()->json([
+                'message' => 'The current password is incorrect.',
+            ], 422);
+        }
+        // Update the password
+        $user->password = bcrypt($validatedData['new_password']);
+        $user->save();
+
+        // Return a success response
+        return response()->json([
+            'message' => 'Password changed successfully!',
+        ]);
+    }
+
+
 }
