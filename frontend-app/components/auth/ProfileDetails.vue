@@ -23,10 +23,10 @@ const imagePath = computed(()=> `${config.public.apiBaseUlr}/${auth.getLoggedUse
       </div>
       <div>
 <!--        Unique Profile Info-->
-        <AuthTheStartupInfo v-if="auth.getProfileCategoryName  === 'ICT Startup'"  />
-        <AuthTheHubInfo v-if="auth.getProfileCategoryName  === 'Innovation Hub'" />
-        <AuthTheAcceleratorInfo v-if="auth.getProfileCategoryName  === 'Digital Accelerator'" />
-        <AuthTheGrassrootProgramInfo v-if="auth.getProfileCategoryName  === 'Grassroot Program'" />
+        <AuthTheStartupInfo :data="auth.getUserProfileable" v-if="auth.getProfileCategoryName  === 'ICT Startup'"  />
+        <AuthTheHubInfo :data="auth.getUserProfileable"  v-if="auth.getProfileCategoryName  === 'Innovation Hub'" />
+        <AuthTheAcceleratorInfo :data="auth.getUserProfileable"  v-if="auth.getProfileCategoryName  === 'Digital Accelerator'" />
+        <AuthTheGrassrootProgramInfo  :data="auth.getUserProfileable" v-if="auth.getProfileCategoryName  === 'Grassroot Program'" />
       </div>
       <div>
         <h2 class="text-lg font-semibold text-gray-800">Description</h2>

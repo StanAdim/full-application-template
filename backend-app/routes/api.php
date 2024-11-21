@@ -84,6 +84,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin'] ], function ()
     Route::post('/project/verify-project/{project}',[ProjectController::class, 'verifyProject']);
     Route::post('/product/verify-product/{product}',[IctProductController::class, 'verifyproduct']);
     Route::get('/profiles/{type}', [AdminProfileController::class, 'profilesOfType']);
+    Route::get('/profile-details/{type}/{uid}', [AdminProfileController::class, 'singleDetails']);
+    Route::get('/change-status/{item}/{uid}', [AdminProfileController::class, 'changeApprovalStatus']);
 
 });
 

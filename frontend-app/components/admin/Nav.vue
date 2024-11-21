@@ -12,7 +12,12 @@ const toggleMenu = (menu) => {
 }
 const link_options = [
   {title: 'Dashboard' ,path: '/admin/dashboard', icon: 'fa-solid fa-house'},
-  {title: 'Profiles' ,path: '/admin/profiles', icon: 'fa-solid fa-circle-info'},
+  {title: 'Profiles' ,path: '#', icon: 'fa-solid fa-circle-info', childLinks:[
+      {title: 'ICT Startups', path: '/admin/profiles/startups', icon: 'fa-solid fa-code'},
+      {title: 'Innovation Hubs', path: '/admin/profiles/hubs', icon: 'fa-solid fa-landmark'},
+      {title: 'Digital Accelerators', path: '/admin/profiles/accelerators', icon: 'fa-solid fa-chart-simple'},
+      {title: 'Grassroot Programs', path: '/admin/profiles/grassroots', icon: 'fa-solid fa-seedling'},
+    ]},
   {title: 'Projects' ,path: '/admin/projects', icon: 'fa-solid fa-diagram-project'},
   {title: 'Products' ,path: '/admin/products', icon: 'fa-regular fa-star'},
   {title: 'Programmes' ,path: '/admin/programmes', icon: 'fa-solid fa-circle-half-stroke'},
@@ -31,8 +36,13 @@ const link_options = [
         }"
   >
     <ul class="text-xs whitespace-nowrap">
-      <li class="" v-for="link in link_options" >
+      <li class="" v-for="link in link_options" @click="toggleMenu(link.title)">
         <nuxt-link :to="link.path" class="sidebar-link"> <i class="icon" :class="`${link.icon}`"></i>{{ link.title }}</nuxt-link>
+        <ul v-if="activeMenu === link.title" class="pl-4 mt-1">
+          <li class="py-0.5" v-for="sub_item in link.childLinks" :ref="sub_item.title">
+            <nuxt-link  class="sidebar-sublink" :to="sub_item.path"> <i class="icon" :class="`${sub_item.icon}`"></i> {{ sub_item.title }}</nuxt-link>
+          </li>
+        </ul>
       </li>
     </ul>
   </nav>
@@ -51,7 +61,7 @@ const link_options = [
 }
 
 .sidebar-sublink {
-  @apply block pl-4 py-1 text-sky-700 hover:text-sky-800 hover:bg-sky-100 rounded;
+  @apply block bg-sky-800 pl-1 py-1 text-white hover:text-sky-800 hover:bg-sky-100 rounded;
 }
 
 .sidebar-link .icon {

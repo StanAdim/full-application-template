@@ -1,47 +1,54 @@
 <script setup lang="ts">
+definePageMeta({
+  title: 'Admin - ICT Innovation Hub',
+  layout: 'admin',
+  middleware:['auth', 'admin-role-checker'],
+})
 const auth = useAuthStore()
+const globalData = useGlobalDataStore()
+const adminStore = useAdminDataStore()
+const route = useRoute()
+const config = useRuntimeConfig()
+
+
+const init = async () => {
+  globalData.assignPageTitle('ICT Innovation Hub Details')
+  await  adminStore.retrieveSingleProfile('hubs', route.params.uid)
+}
+onNuxtReady(() => {
+  init()
+})
+// const imagePath = computed(()=> `${config.public.apiBaseUlr}/${auth.getLoggedUserProfile?.logoPath || ''}`)
+const imagePath = computed(()=> `/images/Hubs.png`)
 </script>
 
 <template>
-  <div class="bg-white overflow-hidden shadow rounded-lg border">
-    <div class="px-4 py-5 sm:px-6">
-      <img src="/images/icons/user.png"  class="w-20 h-20" alt="">
+  <div class="profile-view-container p-4 max-w-full mx-auto bg-white rounded-lg shadow-md">
+    <div class="flex justify-between items-center flex-wrap-reverse gap-2">
+      <h1 class="text-2xl font-bold text-gray-900"> <small class="text-sm">Name: </small> {{adminStore.getSingleProfile?.name }}</h1>
+      <img :src="imagePath"  class="w-20 h-20 md:mr-/10" :alt="imagePath">
     </div>
-    <div class="border-t border-gray-200 px-4 py-5 sm:p-0">
-      <dl class="sm:divide-y sm:divide-gray-200">
-        <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">
-            Full name
-          </dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {{ auth.getLoggedUser?.name }}
-          </dd>
+    <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
+      <!-- Basic Information -->
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Basic Information</h2>
+        <div class="mt-2">
+          <p><strong>Email:</strong> {{ adminStore.getSingleProfile?.email }}</p>
+          <p><strong>Phone:</strong> {{ adminStore.getSingleProfile?.phone }}</p>
+          <p><strong>Region:</strong> {{ adminStore.getSingleProfile?.region }}</p>
+          <p><strong>Date of Establishment:</strong> {{ adminStore.getSingleProfile?.establishmentDate }}</p>
         </div>
-        <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">
-            Email address
-          </dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {{ auth.getLoggedUser?.email }}
-          </dd>
+      </div>
+      <div>
+        <!--        Unique Profile Info-->
+        <AuthTheHubInfo :data="adminStore.getSingleProfile" />
+      </div>
+      <div>
+        <h2 class="text-lg font-semibold text-gray-800">Description</h2>
+        <div class="mt-2">
+          <p class="">{{ adminStore.getSingleProfile?.description }}</p>
         </div>
-        <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">
-            Phone number
-          </dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {{ auth.getLoggedUser?.phone }}
-          </dd>
-        </div>
-        <div class="py-3 sm:py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-          <dt class="text-sm font-medium text-gray-500">
-            Address
-          </dt>
-          <dd class="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-            {{ auth.getLoggedUser?.address || '...' }}
-          </dd>
-        </div>
-      </dl>
+      </div>
     </div>
   </div>
 </template>

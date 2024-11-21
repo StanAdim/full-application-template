@@ -14,48 +14,61 @@ use Illuminate\Http\Request;
 
 class AdminProfileController extends Controller
 {
-    public function profilesOfType($type, Request $request)
-    {
-        // Define searchable models mapping
-        $typeModels = [
-            'startups' => [
+
+    // Global types
+    protected $typeModels = [
+       'startups' => [
                 'model' => StartupProfile::class,
+                'resource' => StartupResource::class,
                 'searchFields' => ['startup_name', 'industry', 'website', 'description']
             ],
             'hubs' => [
                 'model' => HubProfile::class,
+                'resource' => HubResource::class,
                 'searchFields' => ['hub_name', 'available_programs', 'brief'] // Add actual searchable fields
             ],
             'accelerators' => [
                 'model' => AcceleratorProfile::class,
+                'resource' => AcceleratorResource::class,
+
                 'searchFields' => ['accelerator_name', 'brief_description'] // Add actual searchable fields
             ],
             'grassroots' => [
                 'model' => GrassrootProgramProfile::class,
+                'resource' => GrassrootProgramResource::class,
                 'searchFields' => ['grassroot_name', 'brief_description', 'focus_area'] // Add actual searchable fields
             ]
-        ];
-    
+    ];
+
+    /**
+     * Get profile configuration for a specific type
+     */
+    protected function getProfileConfig($type){
+        return $this->typeModels[$type] ?? null;
+    }
+
+    public function profilesOfType($type, Request $request){
         // Validate type
-        if (!isset($typeModels[$type])) {
+        $profileConfig = $this->getProfileConfig($type);
+        if (!$profileConfig) {
             return response()->json([
                 'message' => 'Invalid profile type',
                 'data' => []
             ], 400);
         }
-    
-        // Get model and search fields for the type
-        $modelConfig = $typeModels[$type];
-        $modelClass = $modelConfig['model'];
-        $searchFields = $modelConfig['searchFields'];
-    
+
+        // Extract configuration
+        $modelClass = $profileConfig['model'];
+        $resourceClass = $profileConfig['resource'];
+        $searchFields = $profileConfig['searchFields'];
+
         // Retrieve query parameters
         $search = $request->input('search');
         $perPage = $request->input('per_page', 10);
-    
+
         // Build query
         $query = $modelClass::query()->orderBy('id', 'desc');
-    
+
         // Apply search if search term exists
         if ($search) {
             $query->where(function ($q) use ($search, $searchFields) {
@@ -64,14 +77,13 @@ class AdminProfileController extends Controller
                 }
             });
         }
-    
+
         // Paginate results
         $items = $query->paginate($perPage);
-    
-        // Transform results based on resource class
-        $resourceClass = $this->getResourceClass($type);
+
+        // Transform results
         $data = $resourceClass::collection($items);
-    
+
         // Return paginated response
         return response()->json([
             'message' => "Success! All {$type}",
@@ -86,22 +98,85 @@ class AdminProfileController extends Controller
             ],
         ], 200);
     }
+
+    public function singleDetails($type, $uid){
+        // Validate type
+        $profileConfig = $this->getProfileConfig($type);
+        if (!$profileConfig) {
+            return response()->json([
+                'message' => 'Invalid profile type',
+                'data' => []
+            ], 400);
+        }
     
+        // Extract configuration
+        $modelClass = $profileConfig['model'];
+        $resourceClass = $profileConfig['resource'];
+    
+        // Find the specific profile
+        $profile = $modelClass::where('uid', $uid)->first();
+    
+        // Check if profile exists
+        if (!$profile) {
+            return response()->json([
+                'message' => 'Profile not found',
+                'data' => null
+            ], 404);
+        }
+    
+        // Use resource for a single item, not collection
+        $data = new $resourceClass($profile);
+    
+        return response()->json([
+            'data' => $data,
+            'message' => 'Data found',
+        ], 200);
+    }
+
+    public function changeApprovalStatus($type, $uid){
+        // Validate type
+        $profileConfig = $this->getProfileConfig($type);
+        if (!$profileConfig) {
+            return response()->json([
+                'message' => 'Invalid profile type',
+                'data' => []
+            ], 400);
+        }
+        // Extract configuration
+        $modelClass = $profileConfig['model'];
+        // Find the specific profile
+        $profile = $modelClass::where('uid', $uid)->first();
+        // Check if profile exists
+        if (!$profile) {
+            return response()->json([
+                'message' => 'Profile not found',
+                'data' => null
+            ], 404);
+        }
+        // Update status
+        $modelClass::where('id', $profile->id)->update(['status' => !$profile->status]);
+        return response()->json([
+            'message' => 'Status updated successfully',
+        ], 200);
+    }
+     /**
+     * Get available profile types
+     * 
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getProfileTypes(){
+        return response()->json([
+            'message' => 'Available profile types',
+            'types' => array_keys($this->typeModels)
+        ]);
+    }
     /**
-     * Get the appropriate resource class for the profile type
+     * Add a new profile type dynamically (if needed)
      * 
      * @param string $type
-     * @return string
+     * @param array $config
      */
-    private function getResourceClass($type)
-    {
-        $resourceMap = [
-            'startups' => StartupResource::class,
-            'hubs' => HubResource::class,
-            'accelerators' => AcceleratorResource::class,
-            'grassroots' => GrassrootProgramResource::class
-        ];
-    
-        return $resourceMap[$type] ?? StartupResource::class; // default fallback
+    public function addProfileType($type, array $config){
+        $this->typeModels[$type] = $config;
     }
 }

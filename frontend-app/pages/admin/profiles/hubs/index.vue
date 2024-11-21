@@ -32,7 +32,7 @@ const  updateData = async () => {
 const  searchUserData = async () => {
   await adminStore.retrieveProfileList('hubs', per_page.value,currentPage.value, searchQuery.value)
 }
-const headers = ref(['Sn', 'Name', "Industry" , "Funding Stage" , 'Approved', 'Registration Date', 'Actions'])
+const headers = ref(['Sn', 'Name', "Members" , "Female Members" ,"Membership Option","Available Programs",'Approved', 'Registration Date', 'Actions'])
 const OpenConfirmDialog = async (uid) => {
   await ElMessageBox.confirm(
       'This innovation hub will be permanently deleted. Continue?',
@@ -67,8 +67,7 @@ const handleAction = async  (type, uid) => {
       break;
     }
     case 2: {
-      // await projectStore.retrieveSingleProfile(uid)
-      console.log(`/profile/projects/create`)
+      await adminStore.switchApprovalStatus('hubs',uid)
       break;
     }
     case 3: {
@@ -125,8 +124,12 @@ onNuxtReady(()=> {
               class="hover:bg-sky-100">
             <td class="table-data">{{ index + 1 }}</td>
             <td class="table-data">{{ item?.name }}</td>
-            <td class="table-data">{{ item?.industry }}</td>
-            <td class="table-data">{{ item?.fundingStage }}</td>
+            <td class="table-data">{{ item?.totalMembers }}</td>
+            <td class="table-data">{{ item?.femaleNumber }}</td>
+            <td class="table-data">{{ item?.membershipOption }}</td>
+            <td class="table-data">
+              <span class="text-sm" v-for="sub in item?.availablePrograms">{{sub}}, </span>
+            </td>
             <td class="table-data">
               <span class="mx-2 text-lg">
               <i v-if="item?.status" class="fa-solid fa-circle-check text-green-500"></i>

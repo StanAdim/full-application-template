@@ -76,25 +76,6 @@ export const useGlobalDataStore = defineStore('globalData', () => {
             globalStore.assignAlertMessage(error.value?.message,'error')
         }
     }
-    async function switchApprovalStatus (passId: string, item: string){
-        toggleContentLoaderState(true)
-        const {data, error} = await useApiFetch(`/api/${item}/change-status/${passId}`);
-        if(data.value){
-            assignAlertMessage(data.value?.message, 'success')
-            toggleContentLoaderState(false)
-            switch (item){
-                case  'project':{
-                    await projectStore.retrieveAllProjects()
-                    break;
-                }
-                case  'product':{
-                    await productStore.retrieveAllProducts()
-                    break;
-                }
-            }
-        }
-        else  handleApiError(error.value);
-    }
 
     // Extra functionalities
     const assignAlertMessage = (message,type)=> {
@@ -152,6 +133,5 @@ export const useGlobalDataStore = defineStore('globalData', () => {
         toggleLocalLoaderStatus, toggleBtnLoadingState,
         assignPageTitle,getPageTitle,getYearsArray,
         deleteItemInDB, handleApiError, statsOfItem,
-        switchApprovalStatus
     }
 })

@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,6 +26,7 @@ class HubResource extends JsonResource
             'status' => $this->status,
             'partnerships' => $this->partnerships,
             'description' => $this->brief,
+            'registrationDate'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),
            ];
     }
 }

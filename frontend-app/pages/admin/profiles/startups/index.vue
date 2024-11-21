@@ -67,8 +67,7 @@ const handleAction = async  (type, uid) => {
       break;
     }
     case 2: {
-      // await projectStore.retrieveSingleProfile(uid)
-      console.log(`/profile/projects/create`)
+      await adminStore.switchApprovalStatus('startups',uid)
       break;
     }
     case 3: {

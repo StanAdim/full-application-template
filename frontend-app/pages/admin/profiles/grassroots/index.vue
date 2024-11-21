@@ -32,7 +32,7 @@ const  updateData = async () => {
 const  searchUserData = async () => {
   await adminStore.retrieveProfileList('grassroots', per_page.value,currentPage.value, searchQuery.value)
 }
-const headers = ref(['Sn', 'Name', "Industry" , "Funding Stage" , 'Approved', 'Registration Date', 'Actions'])
+const headers = ref(['Sn', 'Name', "Focus Area", 'Approved', 'Registration Date', 'Actions'])
 const OpenConfirmDialog = async (uid) => {
   await ElMessageBox.confirm(
       'This grassroot program will be permanently deleted. Continue?',
@@ -67,8 +67,7 @@ const handleAction = async  (type, uid) => {
       break;
     }
     case 2: {
-      // await projectStore.retrieveSingleProfile(uid)
-      console.log(`accelerator`)
+      await adminStore.switchApprovalStatus('grassroots',uid)
       break;
     }
     case 3: {
@@ -119,14 +118,15 @@ onNuxtReady(()=> {
           </tr>
           </thead>
           <tbody class="bg-white divide-y divide-gray-200">
-          <tr v-if="adminStore.getAcceleratorList?.length != 0"
-              v-for="(item, index) in adminStore.getAcceleratorList"
+          <tr v-if="adminStore.getGrassrootList?.length != 0"
+              v-for="(item, index) in adminStore.getGrassrootList"
               :key="item.uid"
               class="hover:bg-sky-100">
             <td class="table-data">{{ index + 1 }}</td>
             <td class="table-data">{{ item?.name }}</td>
-            <td class="table-data">{{ item?.industry }}</td>
-            <td class="table-data">{{ item?.fundingStage }}</td>
+            <td class="table-data">
+              <span class="text-sm"  v-for="sub in item?.focusArea">{{ sub }}, </span>
+            </td>
             <td class="table-data">
               <span class="mx-2 text-lg">
               <i v-if="item?.status" class="fa-solid fa-circle-check text-green-500"></i>
