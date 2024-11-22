@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use App\Http\Resources\AcceleratorResource;
 use App\Http\Resources\GrassrootProgramResource;
 use App\Http\Resources\HubResource;
+use App\Http\Resources\ICTProductResource;
+use App\Http\Resources\ProjectResource;
 use App\Http\Resources\StartupResource;
 use App\Models\Categories\AcceleratorProfile;
 use App\Models\Categories\GrassrootProgramProfile;
 use App\Models\Categories\HubProfile;
 use App\Models\Categories\StartupProfile;
+use App\Models\IctProduct;
+use App\Models\Project;
 use Illuminate\Http\Request;
 
 class AdminProfileController extends Controller
@@ -37,6 +41,16 @@ class AdminProfileController extends Controller
                 'model' => GrassrootProgramProfile::class,
                 'resource' => GrassrootProgramResource::class,
                 'searchFields' => ['grassroot_name', 'brief_description', 'focus_area'] // Add actual searchable fields
+            ],
+            'projects' => [
+                'model' => Project::class,
+                'resource' => ProjectResource::class,
+                'searchFields' => ['title', 'year', 'brief','category'] // Add actual searchable fields
+            ],
+            'products' => [
+                'model' => IctProduct::class,
+                'resource' => ICTProductResource::class,
+                'searchFields' => ['name', 'category', 'description'] // Add actual searchable fields
             ]
     ];
 

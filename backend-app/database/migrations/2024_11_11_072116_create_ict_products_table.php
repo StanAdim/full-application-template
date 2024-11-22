@@ -29,7 +29,7 @@ return new class extends Migration
             $table->json('supportingMedia')->nullable();
 
             $table->string('users_impression');
-            $table->boolean('verify')->default(0);
+            $table->boolean('status')->default(0);
             $table->foreignId('user_id')->constrained();
             $table->foreignId('profile_id')->constrained()->onDelete('cascade');           
             $table->timestamps();

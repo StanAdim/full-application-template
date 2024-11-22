@@ -1,12 +1,14 @@
 <script setup lang="ts">
 definePageMeta({
-  title: 'Admin-Programmes',
+  title: 'Admin - ICT Startups',
   layout: 'admin',
   middleware:['auth', 'admin-role-checker'],
 })
 const globalData = useGlobalDataStore()
+const adminStore = useAdminDataStore()
+
 const init = () => {
-  globalData.assignPageTitle('Programmes')
+  globalData.assignPageTitle('Programme List')
 }
 onNuxtReady(()=> {
   init()
@@ -14,9 +16,9 @@ onNuxtReady(()=> {
 </script>
 
 <template>
-  <div class="">
-    Admin - Programmes
-  </div>
+
 </template>
 
-<style scoped></style>
+<style scoped>
+
+</style>

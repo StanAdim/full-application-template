@@ -16,7 +16,7 @@ class ProfileResource extends JsonResource
             'email' => $this->email,
             'region' => $this->region,
             'logoPath' => $this->logo_path,
-            'establishmentDate' =>  Carbon::parse($this->date_establishment)->format('j M, Y'),
+            'establishmentDate' =>  $this->date_establishment,
             'registrationDate'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),
 
         ];

@@ -72,7 +72,7 @@ const logout = async  ()=> {
                 <div class="text-xl font-semibold mb-4">{{ gData.getPageTitle }}</div>
                 <div class=""><UsableContentLoader  color=""/></div>
               </div>
-              <div class="text-gray-600">
+              <div class="text-gray-600 p-2 bg-sky-100 rounded-md">
                 <slot />
               </div>
             </div>

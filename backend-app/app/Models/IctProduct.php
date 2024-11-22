@@ -27,6 +27,7 @@ class IctProduct extends Model
         'supportingMedia',
         'users_impression',
         'compliance_details',
+        'status',
     ];
 
     protected   $casts = [

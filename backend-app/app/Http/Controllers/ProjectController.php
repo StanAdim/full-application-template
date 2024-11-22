@@ -23,7 +23,13 @@ class ProjectController extends Controller
         $perPage = $request->input('per_page', 10); // Default items per page is 12
         // Build the query for fetching users
         $user_id = Auth::id();
-        $query = Project::where('user_id', $user_id)->orderBy('id', 'desc');
+        $user = User::find($user_id);
+    
+        if ($user->hasRole('admin')) {
+            $query = Project::orderBy('id', 'desc'); // Remove ->get() to keep it as a query builder
+        } else {
+            $query = Project::where('user_id', $user_id)->orderBy('id', 'desc');
+        }
         // Apply search if there is a search term
         if ($search) {
             $query->where(function ($q) use ($search) {

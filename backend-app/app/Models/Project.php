@@ -20,7 +20,7 @@ class Project extends Model
         'uid',
         'brief',
         'comment',
-        'verify'
+        'status'
     ];
     protected   $casts = [
         'category' => 'array'

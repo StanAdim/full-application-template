@@ -18,9 +18,9 @@ class AdminUserController extends Controller
         // Apply search if there is a search term
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('firstName', 'like', "%{$search}%")
-                ->orWhere('lastName', 'like', "%{$search}%")
-                ->orWhere('middleName', 'like', "%{$search}%")
+                $q->where('first_name', 'like', "%{$search}%")
+                ->orWhere('middle_name', 'like', "%{$search}%")
+                ->orWhere('last_name', 'like', "%{$search}%")
                 ->orWhere('email', 'like', "%{$search}%");
                 // Add other fields for search if needed
             });

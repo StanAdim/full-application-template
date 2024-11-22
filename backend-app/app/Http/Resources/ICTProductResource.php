@@ -22,7 +22,7 @@ class ICTProductResource extends JsonResource
             'category' => $this->category,
             'launched_date' => Carbon::parse($this->launched_date)->format('j M, Y'),
             'brief' => $this->brief,
-            'status' => $this->verify,
+            'status' => $this->status,
             'registrationDate'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),
         ];
     }

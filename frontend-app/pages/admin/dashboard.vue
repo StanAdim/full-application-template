@@ -40,7 +40,7 @@ onNuxtReady(()=> {
 
 <template>
   <div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 my-2 py-2 bg-sky-50 px-2">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-2 my-2 p-2 rounded-lg bg-sky-50" >
       <AuthWildCard
           v-for="item in dataItems"
           :key="item.path"

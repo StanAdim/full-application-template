@@ -15,21 +15,30 @@ class IctProductController extends Controller
     public function index(Request $request){
         // Fetch the search term from the request (optional)
         $search = $request->input('search');
-        $perPage = $request->input('per_page', 10); // Default items per page is 12
-        // Build the query for fetching item
+        $perPage = $request->input('per_page', 10); // Default items per page is 10
+    
+        // Build the query for fetching items
         $user_id = Auth::id();
-        $query = IctProduct::where('user_id', $user_id)->orderBy('id', 'desc');
+        $user = User::find($user_id);
+    
+        if ($user->hasRole('admin')) {
+            $query = IctProduct::orderBy('id', 'desc'); // Remove ->get() to keep it as a query builder
+        } else {
+            $query = IctProduct::where('user_id', $user_id)->orderBy('id', 'desc');
+        }
+    
         // Apply search if there is a search term
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                ->orWhere('category', 'like', "%{$search}%")
-                ->orWhere('description', 'like', "%{$search}%");
-                // Add other fields for search if needed
+                  ->orWhere('category', 'like', "%{$search}%")
+                  ->orWhere('description', 'like', "%{$search}%");
             });
         }
+    
         // Paginate the results
         $items = $query->paginate($perPage);
+    
         if ($items->isNotEmpty()) {
             return response()->json([
                 'message' => "Registered projects",
@@ -45,16 +54,16 @@ class IctProductController extends Controller
                 'code' => 200,
             ]);
         }
+    
         return response()->json([
             'message' => "No project found",
             'code' => 300,
         ]);
     }
+    
 
     // Store a new ICT Product
-    public function store(Request $request)
-    {
-
+    public function store(Request $request){
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'category' => 'required|array',
