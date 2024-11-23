@@ -9,17 +9,13 @@ definePageMeta({
 
 const globalData = useGlobalDataStore();
 const productStore = useProductStore();
-
-const sectors = [
-  { label: 'Artificial Intelligence', value: '1' },
-  { label: 'WebDev', value: '2' },
-];
+const genStore = useGeneralStore();
 
 // Reactive form data with default values
 const form_data = reactive({
   id: null, // Added for editing purposes
   name: '',
-  category: '',
+  category: 1,
   is_launched: 1,
   launched_date: '',
   description: 'Provide a brief description of the Product',
@@ -59,11 +55,18 @@ const handleForm = async () => {
   await productStore.createUpdateProduct(form_data);
   // console.log(form_data)
 };
-
+const init = async () => {
+  await Promise.all(
+      [
+        genStore.retrieveSectors(),
+      ]
+  )
+}
 // Initialize the form when the page is ready
 onNuxtReady(() => {
   const existingProduct = productStore.getSingleProduct; // Example: Fetch project for editing
   initFormData(existingProduct);
+  init()
 });
 </script>
 
@@ -94,7 +97,7 @@ onNuxtReady(() => {
                     style="width: 300px"
                 >
                   <el-option
-                      v-for="item in sectors"
+                      v-for="item in genStore.getSectors"
                       :key="item.value"
                       :label="item.label"
                       :value="item.value"

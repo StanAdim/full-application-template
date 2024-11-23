@@ -7,9 +7,9 @@ definePageMeta({
 })
 const globalData = useGlobalDataStore()
 const regStore = useRegistrationStore()
+const genStore = useGeneralStore()
 
-const regionsOptions = [{  label : 'Arusha', value: '1'}, {  label : 'Mwanza', value: '2'}, ]
-const membership_options = [{  label : 'Paid', value: '1'}, {  label : 'Free', value: '2'}, ]
+const membership_options = [{  label : 'Paid', value: 'Paid'}, {  label : 'Free', value: 'Free'}, ]
 const program_options = [
     {  label : 'Incubation', value: 'Incubation'},
   {  label : 'Acceleration', value: 'Acceleration'},
@@ -18,12 +18,12 @@ const program_options = [
 ]
 const entity_data = reactive({
   hub_name: '',
-  total_members: '',
-  number_female: '',
-  membership_option: '',
+  total_members: 2,
+  number_female: 1,
+  membership_option: 'Free',
   date_establishment: '',
-  region_location: '',
-  phone_number: '',
+  region_location: 1,
+  phone_number: '+255',
   email: '',
   available_programs: '',
   brief: '',
@@ -32,13 +32,23 @@ const entity_data = reactive({
 const captureValue = () => {
   regStore.assignHubData(entity_data)
 }
+const init = async () => {
+  await Promise.all(
+      [
+        genStore.retrieveRegions(),
+      ]
+  )
+}
+onNuxtReady(()=> {
+  init()
+})
 </script>
 
 <template>
     <RegistrationFrame header-title="Innovation Hub">
       <template #form>
         <div class="form-groups">
-          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.hub_name" label="Hub Name" />
+          <UsableBaseInput @change="captureValue" placeholder="Innovation hub|Center name" v-model="entity_data.hub_name" label="Hub Name" />
           <UsableBaseInput @change="captureValue" placeholder="1"  type="number" v-model="entity_data.total_members"  label="Members Size"  />
         </div>
         <div class="form-groups">
@@ -47,11 +57,11 @@ const captureValue = () => {
         </div>
         <div class="form-groups">
           <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.phone_number" label="Hub Phone Number" />
-          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.email" label=" Hub Email" />
+          <UsableBaseInput @change="captureValue" placeholder="email@domain.com" v-model="entity_data.email" label=" Hub Email" />
         </div>
         <div class="form-groups">
           <UsableBaseInput @change="captureValue" type="date" placeholder="..." v-model="entity_data.date_establishment" label="Date Of Establishment" />
-          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.region_location"  label="Region" :options="regionsOptions" />
+          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.region_location"  label="Region" :options="genStore.getRegions" />
         </div>
         <div class="form-groups my-2">
             <p class="block text-gray-600 text-sm font-semibold mb-1" >Available Programmes</p>
@@ -71,7 +81,7 @@ const captureValue = () => {
               />
             </el-select>
         </div>
-        <UsableBaseTextArea @change="captureValue" placeholder="..." v-model="entity_data.brief"  label="Hub Brief Description"  />
+        <UsableBaseTextArea @change="captureValue" placeholder="Describe the vision and mission of Hub - less than 200 words" v-model="entity_data.brief"  label="Hub Brief Description"  />
 
       </template>
     </RegistrationFrame>

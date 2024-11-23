@@ -24,7 +24,12 @@ const IsNotFilled = computed(() => !(form_data.email.length > 0 && form_data.pas
 </script>
 
 <template>
-  <div class="md:mt-[10vh] ">
+  <div class="md:py-[8vh] bg-fade-1">
+    <div class="flex flex-row justify-center items-center w-full my-2">
+        <img src="/images/icons/secure-folder.png" class="py-2 w-20 h-20 md:w-32 md:h-32" alt="">
+        <img src="/images/icons/hand.png" class="py-2 w-20 h-20 md:w-32 md:h-32" alt="">
+        <img src="/images/icons/vr.png" class="py-2 w-20 h-20 md:w-32 md:h-32" alt="">
+    </div>
     <form @submit.prevent="handleLogin" class="max-w-md mx-auto p-6  bg-fade-1 rounded-lg shadow-md">
       <h2 class="text-2xl appColor font-bold text-center mb-6">Login to Your Account</h2>
       <UsableBaseInput :is-full="false" v-model="form_data.email" type="email" label="Email Address" placeholder="Enter your email" />

@@ -1,14 +1,16 @@
 <script setup lang="ts">
 const auth = useAuthStore()
 const config = useRuntimeConfig()
-const imagePath = computed(()=> `${config.public.apiBaseUlr}/${auth.getLoggedUserProfile?.logoPath || ''}`)
+// const imagePath = computed(()=> `${config.public.apiBaseUlr}/${auth.getLoggedUserProfile?.logoPath || ''}`)
+const imagePath = computed(()=> `/images/Hubs.png`)
+
 </script>
 
 <template>
   <div class="profile-view-container p-4 max-w-full mx-auto bg-white rounded-lg shadow-md">
     <div class="flex justify-between items-center flex-wrap-reverse gap-2">
       <h1 class="text-2xl font-bold text-gray-900">{{auth.getUserProfileable?.name }}</h1>
-      <img :src="imagePath"  class="w-20 h-20" alt="">
+      <img :src="imagePath"  class="w-20 h-20 md:mr-/10" :alt="imagePath">
     </div>
     <div class="mt-4 grid grid-cols-1 md:grid-cols-3 gap-6">
       <!-- Basic Information -->

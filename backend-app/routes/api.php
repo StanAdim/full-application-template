@@ -18,6 +18,9 @@ use Illuminate\Support\Facades\Route;
 
 // Public routes
 Route::get('/profile/{type}-count', [GeneralController::class, 'profileCount']);
+Route::get('/ict-sectors', [GeneralController::class, 'sectors']);
+Route::get('/funding-stages', [GeneralController::class, 'fundingStages']);
+Route::get('/tanzania-regions', [GeneralController::class, 'getRegions']);
 Route::post('/register-user-with-profile', [ProfileController::class, 'registerUserWithProfile']);
 
 //User auth Routes
@@ -28,8 +31,7 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function () {
         return [
         'message' => 'Login Success.',
         'user' => $user,
-        'profile' => $profile
-    ];});
+        'profile' => $profile ];});
 
     //Users endpoints
 Route::group(['prefix' => 'user', 'middleware' => ['auth:sanctum'] ], function () {

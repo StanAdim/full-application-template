@@ -19,7 +19,7 @@ const user_data = reactive({
   middle_name: '',
   last_name: '',
   user_email: '',
-  user_phone: '',
+  user_phone: '+255',
   password: '',
 })
 
@@ -92,12 +92,12 @@ const handleSubmit = async () =>  {
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-2" v-if="activeTab === 2">
           <!-- Input Fields -->
-          <UsableBaseInput v-model="user_data.first_name"  placeholder="first name" label="First Name" />
-          <UsableBaseInput v-model="user_data.middle_name"  placeholder="middle name" label="Middle Name" />
-          <UsableBaseInput v-model="user_data.last_name"  placeholder="last name" label="Last Name" />
+          <UsableBaseInput v-model="user_data.first_name"  placeholder="First name" label="First Name" />
+          <UsableBaseInput v-model="user_data.middle_name"  placeholder="Middle name" label="Middle Name" />
+          <UsableBaseInput v-model="user_data.last_name"  placeholder="Last name" label="Last Name" />
           <UsableBaseInput v-model="user_data.user_email" type="email"  placeholder="youremail@domain" label="Email" />
           <UsableBaseInput v-model="user_data.user_phone" label="Phone Number" placeholder="+255.." />
-          <UsableBaseInput v-model="user_data.password" type="password"  placeholder="*************" label="Password" />
+          <UsableBaseInput v-model="user_data.password" type="password"  placeholder="********" label="Password" />
         </div>
 
         <!-- Navigation Buttons -->

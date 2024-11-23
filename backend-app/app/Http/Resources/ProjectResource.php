@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\ICTSector;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
@@ -18,7 +19,7 @@ class ProjectResource extends JsonResource
         return [
             'uid' => $this->uid,
             'title' => $this->title,
-            'category' => $this->category,
+            'category' => ICTSector::where('id',$this->category)->first()->name,
             'year' => $this->year,
             'brief' => $this->brief,
             'status' => $this->status,

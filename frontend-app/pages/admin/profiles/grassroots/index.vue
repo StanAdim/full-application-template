@@ -32,7 +32,7 @@ const  updateData = async () => {
 const  searchUserData = async () => {
   await adminStore.retrieveProfileList('grassroots', per_page.value,currentPage.value, searchQuery.value)
 }
-const headers = ref(['Sn', 'Name', "Focus Area", 'Approved', 'Registration Date', 'Actions'])
+const headers = ref(['Sn', 'Name', 'Approved', 'Registration Date', 'Actions'])
 const OpenConfirmDialog = async (uid) => {
   await ElMessageBox.confirm(
       'This grassroot program will be permanently deleted. Continue?',
@@ -124,9 +124,6 @@ onNuxtReady(()=> {
               class="hover:bg-sky-100">
             <td class="table-data">{{ index + 1 }}</td>
             <td class="table-data">{{ item?.name }}</td>
-            <td class="table-data">
-              <span class="text-sm"  v-for="sub in item?.focusArea">{{ sub }}, </span>
-            </td>
             <td class="table-data">
               <span class="mx-2 text-lg">
               <i v-if="item?.status" class="fa-solid fa-circle-check text-green-500"></i>

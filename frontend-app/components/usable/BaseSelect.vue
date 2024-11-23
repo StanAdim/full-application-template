@@ -5,7 +5,7 @@
         :value="modelValue"
         @input="$emit('update:modelValue', $event.target.value)"
         :class="{'md:w-72 w-full':props.isFull, 'w-full': !props.isFull}"
-        class=" border border-gray-300 rounded-lg px-4 py-4 focus:outline-none focus:border-blue-500">
+        class=" border border-gray-300 rounded-lg px-4 h-10 focus:outline-none focus:border-blue-500">
       <option selected value="0" disabled>Select {{props.label}}</option>
       <option v-for="option in options" :key="option.value" :value="option.value">{{ option.label }}</option>
     </select>

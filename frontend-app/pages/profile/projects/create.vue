@@ -9,6 +9,8 @@ definePageMeta({
 
 const globalData = useGlobalDataStore();
 const projectStore = useProjectStore();
+const genStore = useGeneralStore();
+
 
 const sectors = [
   { label: 'Artificial Intelligence', value: '1' },
@@ -19,9 +21,9 @@ const sectors = [
 const form_data = reactive({
   id: null, // Added for editing purposes
   title: '',
-  year: '',
+  year: 2020,
   brief: '',
-  category: '',
+  category: 1,
   action: 'create', // Defaults to "create"
 });
 
@@ -45,11 +47,18 @@ const initFormData = (existingData = null) => {
 const handleForm = async () => {
   await projectStore.createUpdateProject(form_data);
 };
-
+const init = async () => {
+  await Promise.all(
+      [
+        genStore.retrieveSectors(),
+      ]
+  )
+}
 // Initialize the form when the page is ready
 onNuxtReady(() => {
   const existingProject = projectStore.getSingleProject; // Example: Fetch project for editing
   initFormData(existingProject);
+  init()
 });
 </script>
 
@@ -81,7 +90,7 @@ onNuxtReady(() => {
                 placeholder="Select category..."
                 v-model="form_data.category"
                 label="Category"
-                :options="sectors"
+                :options="genStore.getSectors"
             />
             <UsableBaseTextArea
                 placeholder="Provide a brief description..."

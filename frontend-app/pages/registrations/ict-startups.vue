@@ -5,27 +5,22 @@ definePageMeta({
       layout: 'guest',
 })
 const regStore = useRegistrationStore()
-const regionsOptions = [{  label : 'Arusha', value: 'Arusha'}, {  label : 'Dar es salaam', value: 'Dar es salaam'} ]
-const femaleFounders = [{  label : 'Yes', value: '1'}, {  label : 'No', value: '0'} ]
-const funding_stages = [{  label : 'Seed Stage', value: 'Seed Stage'}, {  label : 'Minimum Viable Product', value: 'Minimum Viable Product'} ]
+const genStore = useGeneralStore()
+const femaleFounders = [{  label : 'Yes', value: 'Yes'}, {  label : 'No', value: 'No'} ]
 
-const sectors = [
-  {label: 'Artificial Intelligence', value : '1'},
-  {label: 'WebDev', value : '2'},
-]
 const founderList = ref([{ founderName: '' , founderPhone: '+255..'}])
 const entity_data = reactive({
     startup_name: '',
     founders: founderList.value,
-    region_location: '',
+    region_location: 1,
     email: '',
     phone_number: '+255',
     website: '',
-    industry: '',
+    industry: 1,
     description: '',
-    hasFemaleFounder: '',
+    hasFemaleFounder: 'No',
     date_establishment: '',
-    funding_stage: '',
+    funding_stage: 1,
     team_size: 1,
 })
 const captureValue = () => {
@@ -45,6 +40,18 @@ const removeInput = (index) => {
     founderList.value.push({ founderName: '' })
   }
 }
+const init = async () => {
+  await Promise.all(
+      [
+        genStore.retrieveSectors(),
+        genStore.retrieveFundingStages(),
+        genStore.retrieveRegions(),
+      ]
+  )
+}
+onNuxtReady(()=> {
+  init()
+})
 </script>
 
 <template>
@@ -52,19 +59,19 @@ const removeInput = (index) => {
       <template #form>
          <!-- Form Section -->
         <div class="form-groups">
-          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.startup_name" label="Startup Name" />
-          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.email" label=" Startup Email" />
+          <UsableBaseInput @change="captureValue" placeholder="Startup Company Name" v-model="entity_data.startup_name" label="Startup Name" />
+          <UsableBaseInput @change="captureValue" placeholder="Startup Company Email" v-model="entity_data.email" label=" Startup Email" />
         </div>
         <div class="form-groups">
-          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.phone_number" label="Startup Phone Number" />
-          <UsableBaseInput @change="captureValue" placeholder="..." v-model="entity_data.website" label="Website" />
+          <UsableBaseInput @change="captureValue" placeholder="+255" v-model="entity_data.phone_number" label="Startup Phone Number" />
+          <UsableBaseInput @change="captureValue" placeholder="www.domain.com" v-model="entity_data.website" label="Website" />
         </div>
         <div class="form-groups">
-          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.region_location"  label="Region" :options="regionsOptions" />
-          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.industry"  label="Industry | Sector" :options="sectors" />
+          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.region_location"  label="Region" :options="genStore.getRegions" />
+          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.industry"  label="Industry | Sector" :options="genStore.getSectors" />
         </div>
         <div class="form-groups">
-          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.funding_stage"  label="Funding Stage" :options="funding_stages" />
+          <UsableBaseSelect @change="captureValue" placeholder="..." v-model="entity_data.funding_stage"  label="Funding Stage" :options="genStore.getFundingStage" />
           <UsableBaseInput @change="captureValue" placeholder="1"  type="number" v-model="entity_data.team_size"  label="Team Size"  />
         </div>
         <div class="form-groups">
@@ -75,8 +82,8 @@ const removeInput = (index) => {
           <span @click="addInput"  class="text-xs font-bold hover:cursor-pointer text-sky-600 px-1 py-0.5 rounded-md">Add <i class="fa-solid fa-plus"></i></span>
         </div>
         <div class="flex gap-2" v-for="(input, index) in founderList" :key="index">
-          <UsableBaseInput  @change="captureValue"  placeholder="..." v-model="input.founderName" label="Founder Full Name" />
-          <UsableBaseInput  @change="captureValue"  placeholder="..." v-model="input.founderPhone" label="Phone Number" />
+          <UsableBaseInput  @change="captureValue"  placeholder="Founder full name" v-model="input.founderName" label="Founder Full Name" />
+          <UsableBaseInput  @change="captureValue"  placeholder="..." v-model="input.founderPhone" label="Founder Phone Number" />
           <button
               @click="removeInput(index)"
               class="mx-4 text-red-600 pt-2 text-lg"
@@ -84,7 +91,7 @@ const removeInput = (index) => {
             <i class="fa-solid fa-trash-can"></i>
           </button>
         </div>
-        <UsableBaseTextArea @change="captureValue" placeholder="..." v-model="entity_data.description"  label="Startup Brief Description"  />
+        <UsableBaseTextArea @change="captureValue" placeholder="Brief on vision and mission of the Startup toward problem solving and service delivering - Less than 200 words " v-model="entity_data.description"  label="Startup Brief Description"  />
       </template>
     </UsableRegistrationFrame>
 </template>
