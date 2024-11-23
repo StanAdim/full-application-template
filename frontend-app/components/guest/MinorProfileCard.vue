@@ -22,7 +22,8 @@ const props = defineProps({
       {{ props.title }}
     </dt>
     <dd class="order-1 text-5xl font-extrabold text-sky-700">{{ props.count }}+</dd>
-    <NuxtLink :to="props.path">
+<!--    <NuxtLink :to="props.path">-->
+    <NuxtLink to="#">
       <p class="bg-sky-500 rounded-lg text-white py-0.5 cursor-pointer my-4">View</p>
     </NuxtLink>
   </div>
