@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('name');
             $table->json('category');
             $table->boolean('is_launched');
-            $table->string('launched_date');
+            $table->string('launched_date')->nullable();
             $table->longText('description');
             $table->longText('compliance_details');
             
@@ -28,7 +28,7 @@ return new class extends Migration
             $table->json('intellectualProp')->nullable();
             $table->json('supportingMedia')->nullable();
 
-            $table->string('users_impression');
+            $table->string('users_impression')->nullable();
             $table->boolean('status')->default(0);
             $table->foreignId('user_id')->constrained();
             $table->foreignId('profile_id')->constrained()->onDelete('cascade');           
