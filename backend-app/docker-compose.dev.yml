@@ -6,38 +6,45 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.dev
-    working_dir: /var/www/html
     container_name: tzstartups-dev-api
+    working_dir: /var/www/html
     ports:
-      - 1704:80
+      - "1704:80"
     volumes:
       - .:/var/www/html/
     environment:
-      - DB_CONNECTION=pgsql
-      - DB_HOST=db
-      - DB_PORT=5432
-      - DB_DATABASE=tzstartups-dev_api
-      - DB_USERNAME=tzstartups-dev_api
-      - DB_PASSWORD=tzstartups-dev_api
+      - DB_CONNECTION=${DB_CONNECTION}
+      - DB_HOST=${DB_HOST}
+      - DB_PORT=${DB_PORT}
+      - DB_DATABASE=${DB_DATABASE}
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+    env_file:
+      - .env
     networks:
       - tzstartups-dev-api-network
     depends_on:
       - db
 
-  db: #psql -U tzstartups-dev_api -d tzstartups-dev_api
+  db:
     image: postgres:13.4
     container_name: startupstz-db-dev
     restart: unless-stopped
     ports:
-      - 1740:5432
+      - "1740:5432"
     environment:
-      POSTGRES_DB: tzstartups-dev_api
-      POSTGRES_USER: tzstartups-dev_api
-      POSTGRES_PASSWORD: tzstartups-dev_api
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
     networks:
       - tzstartups-dev-api-network
     volumes:
-      - pgdata:/var/lib/postgresql/data   # Persisting data
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_DATABASE}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   pgdata:
