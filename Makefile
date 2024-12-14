@@ -35,8 +35,8 @@ boost.dev:
 	docker exec  tzstartups-dev-api bash -c "php artisan optimize"
 	docker exec  tzstartups-dev-api bash -c "composer update"
 	docker exec  tzstartups-dev-api bash -c "composer dump-autoload"
-	docker exec  tzstartups-dev-api bash -c "chown -R www-data:www-data /var/www/html/api/storage /var/www/html/api/public /var/www/html/api/bootstrap/cache"
-	docker exec  tzstartups-dev-api bash -c "chmod -R 775 /var/www/html/api/storage /var/www/html/api/bootstrap/cache"
+	docker exec  tzstartups-dev-api bash -c "chown -R www-data:www-data /var/www/html/storage /var/www/html/public /var/www/html/bootstrap/cache"
+	docker exec  tzstartups-dev-api bash -c "chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache"
 rmi.dev:
 	docker image rm -f tzstartups-dev-api-tzstartups-dev-api
 logs.dev:
