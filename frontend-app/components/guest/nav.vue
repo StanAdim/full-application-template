@@ -13,16 +13,16 @@ const toggleMobileMenu = () => {
   <div class="container mx-auto md:py-4 py-2">
     <div class="flex flex-col">
       <!-- Logos -->
-      <div class="my-4">
-        <div class="flex flex-row md:justify-center justify-between mx-4">
-          <div class="logo">
-            <img src="/images/nembo_ya_taifa-opt.png" alt="logo dark" />
-          </div>
-          <div class="logo">
-            <img src="/images/ictc-logo-white-opt.png" alt="logo dark" />
-          </div>
-        </div>
-      </div>
+<!--      <div class="my-4">-->
+<!--        <div class="flex flex-row md:justify-center justify-between mx-4">-->
+<!--          <div class="logo">-->
+<!--            <img src="/images/nembo_ya_taifa-opt.png" alt="logo dark" />-->
+<!--          </div>-->
+<!--          <div class="logo">-->
+<!--            <img src="/images/ictc-logo-white-opt.png" alt="logo dark" />-->
+<!--          </div>-->
+<!--        </div>-->
+<!--      </div>-->
 
       <!-- Navigation -->
       <div class="nav flex flex-row justify-between items-center">
@@ -45,6 +45,10 @@ const toggleMobileMenu = () => {
               <nuxt-link to="/profiles/">Approved Registrations</nuxt-link>
             </li>
           </ul>
+        </div>
+
+        <div class="logo">
+          <img src="/images/ictc-logo-white-opt.png" alt="logo dark" />
         </div>
 
         <!-- Accounts -->
