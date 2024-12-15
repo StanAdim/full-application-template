@@ -80,7 +80,7 @@ const handleAction = async  (type, uid) => {
 const init = async () =>  {
   globalData.assignPageTitle('Projects registered')
   await projectStore.retrieveAllProjects(per_page.value,currentPage.value, searchQuery.value)
-  console.log(projectStore.getAllProjects.length)
+  console.log(projectStore.getAllProjects)
 }
 onNuxtReady(()=> {
   init()

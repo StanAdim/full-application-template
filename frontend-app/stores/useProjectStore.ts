@@ -8,7 +8,7 @@ export const useProjectStore = defineStore('projectStore', () => {
     const singleProject = ref< Project>(null)
 
     //Computed
-    const getAllProjects = computed(() => {return projects.value?.data})
+    const getAllProjects = computed(() => {return projects.value})
     const getSingleProject = computed(() => {return singleProject.value})
 
     // Mutations
@@ -18,7 +18,7 @@ export const useProjectStore = defineStore('projectStore', () => {
         if(data.value){
             globalStore.toggleLoadingState(false)
             globalStore.toggleContentLoaderState(false)
-            projects.value = data.value
+            projects.value = data.value?.data
         }
         else{
             globalStore.handleApiError(error.value);

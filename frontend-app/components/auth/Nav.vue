@@ -1,6 +1,4 @@
 <script setup>
-import * as child_process from "node:child_process";
-
 const props = defineProps({
   isSidebarOpen: {
     default: false,
@@ -15,14 +13,14 @@ const link_options = [
       {title: 'Dashboard', path: '/profile/dashboard', icon: 'fa-solid fa-house', childLink: []},
       {
         title: 'ICT Products', path: '/profile/products', icon: 'fa-regular fa-star', childLink: [
-          {title: 'Products List', path: '/profile/products', icon: 'fa-solid fa-list'},
+          {title: 'All Products', path: '/profile/products', icon: 'fa-solid fa-list'},
           {title: 'New Product', path: '/profile/products/create', icon: 'fa-solid fa-plus'},
         ]
       },
       {
         title: 'ICT Projects', path: '/profile/projects', icon: 'fa-solid fa-diagram-project', childLink: [
-          {title: 'Products List', path: '/profile/projects', icon: 'fa-solid fa-list'},
-          {title: 'New Product', path: '/profile/projects/create', icon: 'fa-solid fa-plus'},
+          {title: 'All Projects', path: '/profile/projects', icon: 'fa-solid fa-list'},
+          {title: 'New Project', path: '/profile/projects/create', icon: 'fa-solid fa-plus'},
         ]
       },
       {title: 'Documents', path: '/profile/documents', icon: 'fa-regular fa-folder', childLink: []},

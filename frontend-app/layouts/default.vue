@@ -1,10 +1,4 @@
 <script setup lang="ts">
-import { ClickOutside as vClickOutside } from 'element-plus'
-
-const popoverRef = ref()
-const onClickOutside = () => {
-  unref(popoverRef).popperRef?.delayHide?.()
-}
 const config = useRuntimeConfig()
 const gData = useGlobalDataStore()
 const auth = useAuthStore()

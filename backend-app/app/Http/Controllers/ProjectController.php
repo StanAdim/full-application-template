@@ -59,6 +59,7 @@ class ProjectController extends Controller
         }
         return response()->json([
             'message' => "No project found",
+            'data' => [],
             'code' => 300,
         ]);
     }
