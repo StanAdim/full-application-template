@@ -58,13 +58,13 @@ const handleSubmit = async () =>  {
 
 <template>
   <div class="">
-    <div class="flex flex-col items-center justify-center p-6">
+    <div class="flex flex-col items-center justify-center p-6 ">
       <!-- Header Section -->
       <div class="text-center mb-6">
         <p class="appColor font font-bold text-xl md:text-3xl">{{ props.headerTitle }} Registration</p>
       </div>
       <!-- Tabs Section -->
-      <div class="flex justify-center mb-4 border-b-2 border-sky-400 w-full max-w-2xl">
+      <div class="flex justify-center px-2 border-b-2 border-sky-400 w-full max-w-2xl bg-sky-100 rounded-md" >
         <button
             class="flex-1 py-2 font-semibold"
             :class="[activeTab === 2 ? 'active-tab' : 'text-sky-400']"
@@ -84,7 +84,7 @@ const handleSubmit = async () =>  {
       </div>
 
       <!-- Form Section -->
-      <div class="w-full max-w-2xl bg-fade rounded-lg shadow-md p-6">
+      <div class="w-full max-w-2xl bg-fade-1 rounded-lg shadow-md p-6 ">
         <div class="grid grid-cols-1 md:grid-cols-1 gap-0" v-if="activeTab === 1">
           <!-- Input Fields -->
           <slot name="form" />

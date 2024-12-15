@@ -6,7 +6,7 @@
     <div class="">
       <LandingTopHeader />
       <!--      Nav-->
-      <div class="bg-fade">
+      <div class="bg-sky-100">
         <GuestNav />
       </div>
 <!--      Content-->
