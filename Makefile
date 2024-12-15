@@ -2,6 +2,12 @@
 #-------------------------------------------------
 #Starting container - Dev
 #-------------------------------------------------
+update.dev: 
+	git pull origin -ff
+	@make setup.dev
+	cd ./frontend-app && yarn build && pm2 restart ecosystem.config.cjs
+	cd ..
+	@make boost.dev
 
 setup.dev:
 	@make build.dev
