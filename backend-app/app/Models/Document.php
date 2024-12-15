@@ -26,7 +26,7 @@ class Document extends Model
     public function profile(){
         return $this->belongsTo(Profile::class);
     }
-    public function document_type(){
-        return $this->belongsTo(DocumentType::class);
+    public function user(){
+        return $this->belongsTo(User::class);
     }
 }

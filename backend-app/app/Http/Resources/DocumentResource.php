@@ -19,6 +19,8 @@ class DocumentResource extends JsonResource
         return[
             'name' => $this->file_name,
             'uid' => $this->uid,
+            'user' => (new UserResource($this->user))->name,
+//            'profile' => (new ProfileResource($this->profile))->type,
             'type' => DocumentType::where('id', $this->document_type_id)->first()->name,
             'path' => $this->path,
             'registration_date'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),

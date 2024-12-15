@@ -18,7 +18,6 @@ class ProfileResource extends JsonResource
             'logoPath' => $this->logo_path,
             'establishmentDate' =>  $this->date_establishment,
             'registrationDate'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),
-
         ];
 
         // Customize the response based on the `profileable` type

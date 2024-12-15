@@ -30,7 +30,7 @@ const  updateData = async () => {
 const  searchUserData = async () => {
   await docStore.retrieveDocuments(per_page.value,currentPage.value, searchQuery.value)
 }
-const headers = ref(['Sn', 'Type', "Name" , 'Approved', 'Uploaded Date', 'Actions'])
+const headers = ref(['Sn','Uploaded By', 'Type', "Name" , 'Approved', 'Uploaded Date', 'Actions'])
 const OpenConfirmDialog = async (uid) => {
   await ElMessageBox.confirm(
       'This document will be permanently deleted. Continue?',
@@ -94,7 +94,7 @@ onNuxtReady(()=> {
     <UsableDocPreviewerModal :mode="docStore.getPreviewModalState" />
 
     <div class="flex justify-end items-center gap-2 mb-2 mx-4">
-      <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/documents/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />
+<!--      <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/documents/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />-->
       <div class="">
         <input
             v-model="searchQuery"
@@ -126,6 +126,7 @@ onNuxtReady(()=> {
               :key="item.uid"
               class="hover:bg-sky-100">
             <td class="table-data">{{ index + 1 }}</td>
+            <td class="table-data">{{ item?.user }}</td>
             <td class="table-data">{{ item?.type }}</td>
             <td class="table-data">{{ item?.name }}</td>
             <td class="table-data">
