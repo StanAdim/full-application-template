@@ -13,12 +13,14 @@ use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DocumentController;
 
 
 
 // Public routes
 Route::get('/profile/{type}-count', [GeneralController::class, 'profileCount']);
 Route::get('/ict-sectors', [GeneralController::class, 'sectors']);
+Route::get('/document-types', [GeneralController::class, 'document_types']);
 Route::get('/funding-stages', [GeneralController::class, 'fundingStages']);
 Route::get('/tanzania-regions', [GeneralController::class, 'getRegions']);
 Route::post('/register-user-with-profile', [ProfileController::class, 'registerUserWithProfile']);
@@ -72,6 +74,14 @@ Route::group(['prefix' => '', 'middleware' => ['auth:sanctum'] ], function () {
         Route::patch('/update-programme/{programme}', [ProgrammeController::class, 'update']);    //get all programmes
         Route::delete('/delete-programme/{programme}', [ProgrammeController::class, 'destroy']);    //get all programmes
         // Route::get('/programmes/applicant-groups',[GeneralController::class, 'get_applicantsGroup']); //programme groups
+
+        // ================================ Documents =================================
+        Route::post('/upload-document', [DocumentController::class, 'docUpload']);
+        Route::get('/documents', [DocumentController::class, 'index']);
+        Route::delete('/document-delete-{id}', [DocumentController::class, 'destroy']);
+        Route::put('/document-update-{id}', [DocumentController::class, 'updateStatus']);
+        Route::get('/preview-document', [DocumentController::class, 'previewDocument']);
+
 });
 
 // Admin routes

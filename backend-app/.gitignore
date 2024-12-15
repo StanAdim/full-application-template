@@ -6,3 +6,4 @@ vendor/
 /http-requests/
 .vscode/
 .data/
+storage/app/documents
