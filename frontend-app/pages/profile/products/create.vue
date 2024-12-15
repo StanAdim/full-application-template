@@ -52,8 +52,9 @@ const supportingMedia = ref([{ mediaLink: '' }]);
 
 // Handle form submission for both creation and editing
 const handleForm = async () => {
+  if(!form_data.is_launched) form_data.launched_date = null
   await productStore.createUpdateProduct(form_data);
-  // console.log(form_data)
+  // console.log(form_data.is_launched, form_data.launched_date)
 };
 const init = async () => {
   await Promise.all(

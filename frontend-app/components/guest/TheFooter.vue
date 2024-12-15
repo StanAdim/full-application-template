@@ -9,7 +9,7 @@
       <!-- Contact Information -->
       <div class="text-center sm:text-left space-y-1">
         <h3 class="text-blue-300 font-semibold">Contact Us</h3>
-        <p>14 Jamhuri St, Dar es Salaam</p>
+        <p>27 Ali Hassan Mwinyi Road, </p>
         <p>+255 7368 48444</p>
         <p><a href="mailto:info@ictc.go.tz" class="hover:underline">info@ictc.go.tz</a></p>
         <p><a href="mailto:dg@ictc.go.tz" class="hover:underline">dg@ictc.go.tz</a></p>
@@ -22,11 +22,10 @@
         <div>
           <h3 class="text-blue-300 font-semibold">Useful Links</h3>
           <ul class="space-y-1">
-            <li><a href="#" class="hover:underline">Mawasiliano</a></li>
-            <li><a href="#" class="hover:underline">TCRA</a></li>
-            <li><a href="#" class="hover:underline">Softcenter</a></li>
-            <li><a href="#" class="hover:underline">TAIC</a></li>
-            <li><a href="#" class="hover:underline">IPRS</a></li>
+            <li><a target="_blank" href="https://mawasiliano.go.tz/" class="hover:underline">Mawasiliano</a></li>
+            <li><a target="_blank" href="https://tcra.go.tz/" class="hover:underline">TCRA</a></li>
+            <li><a target="_blank" href="https://taic.ictc.go.tz/" class="hover:underline">TAIC</a></li>
+            <li><a target="_blank" href="https://iprs.ictc.go.tz/" class="hover:underline">IPRS</a></li>
           </ul>
         </div>
         <div>

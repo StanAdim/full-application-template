@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('path');
             $table->integer('document_type_id');
             $table->string('file_name');
-            $table->integer('status')->default(1); #0 #1 #2
+            $table->integer('status')->default(0); #0 #1 #2
             $table->foreignId('user_id')->constrained();
             $table->foreignId('profile_id')->constrained()->onDelete('cascade');
             $table->timestamps();

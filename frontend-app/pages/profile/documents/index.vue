@@ -1,9 +1,4 @@
 <script setup lang="ts">
-import TheBtnLoader from "~/components/usable/TheBtnLoader.vue";
-import {toKeyAlias} from "@babel/types";
-import uid = toKeyAlias.uid;
-import {useDocumentStore} from "~/stores/useDocumentStore";
-
 definePageMeta({
   title: 'Documents',
   layout: 'default',
@@ -12,6 +7,7 @@ definePageMeta({
 
 const globalData = useGlobalDataStore()
 const docStore = useDocumentStore()
+const generalStore = useGeneralStore()
 
 const currentPage = ref <number>(1)
 const per_page = ref <number>(10)
@@ -47,7 +43,7 @@ const OpenConfirmDialog = async (uid) => {
         distinguishCancelAndClose:true
       }
   )
-  await globalData.deleteItemInDB( uid, 'product')
+  await docStore.deleteDoc( uid, 'product')
       .then(() => {
         ElMessage({
           type: 'success',
@@ -62,19 +58,21 @@ const OpenConfirmDialog = async (uid) => {
         })
       })
 }
-const handleAction = async  (type, uid) => {
+const handleAction = async  (type, item) => {
   switch (type){
     case 1: {
-      navigateTo(`/profile/products/product/${uid}`)
+      // navigateTo(`/profile/products/product/${item}`)
+      console.log(item?.uid)
+      await generalStore.previewFile(item)
       break;
     }
     case 2: {
-      await docStore.retrieveSingleDoc(uid)
+      await docStore.retrieveSingleDoc(item?.uid)
       navigateTo(`/profile/products/create`)
       break;
     }
     case 3: {
-      await  OpenConfirmDialog(uid)
+      await  OpenConfirmDialog(item?.uid)
       break;
     }
   }
@@ -93,6 +91,8 @@ onNuxtReady(()=> {
 
 <template>
   <div class="mt-2">
+    <UsableDocPreviewerModal :mode="docStore.getPreviewModalState" />
+
     <div class="flex justify-end items-center gap-2 mb-2 mx-4">
       <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/documents/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />
       <div class="">
@@ -140,9 +140,9 @@ onNuxtReady(()=> {
                 <el-button><i class="fa-solid fa-prescription-bottle mr-1"></i> Action </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item  @click.prevent="handleAction(1, item.uid)" ><i class="fa-solid fa-eye"></i> View</el-dropdown-item>
-                    <el-dropdown-item @click.prevent="handleAction(2, item.uid)"  ><i class="fa-regular fa-pen-to-square"></i> Edit</el-dropdown-item>
-                    <el-dropdown-item  @click.prevent="handleAction(3, item.uid)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
+                    <el-dropdown-item  @click.prevent="handleAction(1, item)" ><i class="fa-solid fa-eye"></i> View</el-dropdown-item>
+<!--                    <el-dropdown-item @click.prevent="handleAction(2, item.uid)"  ><i class="fa-regular fa-pen-to-square"></i> Edit</el-dropdown-item>-->
+                    <el-dropdown-item  @click.prevent="handleAction(3, item)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -162,7 +162,7 @@ onNuxtReady(()=> {
                   @click="movePage(2)"
                   class="action-btn"
               >
-                Previous <TheBtnLoader />
+                Previous <UsableTheBtnLoader />
               </button>
             </li>
             <li>

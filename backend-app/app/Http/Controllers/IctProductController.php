@@ -26,7 +26,7 @@ class IctProductController extends Controller
         } else {
             $query = IctProduct::where('user_id', $user_id)->orderBy('id', 'desc');
         }
-    
+
         // Apply search if there is a search term
         if ($search) {
             $query->where(function ($q) use ($search) {
@@ -60,7 +60,6 @@ class IctProductController extends Controller
             'code' => 300,
         ]);
     }
-    
 
     // Store a new ICT Product
     public function store(Request $request){

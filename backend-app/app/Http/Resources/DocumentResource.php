@@ -17,8 +17,8 @@ class DocumentResource extends JsonResource
     public function toArray(Request $request): array
     {
         return[
-            'id' => $this->id,
             'name' => $this->file_name,
+            'uid' => $this->uid,
             'type' => DocumentType::where('id', $this->document_type_id)->first()->name,
             'path' => $this->path,
             'registration_date'=> Carbon::parse($this->created_at)->format('j M, Y, H:i'),

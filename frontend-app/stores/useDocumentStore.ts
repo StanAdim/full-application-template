@@ -7,15 +7,15 @@ export const useDocumentStore = defineStore('documentStore', () => {
     // states
     const docList = ref(null)
     const documentCategories = ref([])
+    const previewModalStatus = ref(false)
 
     // Getters
     const getDocumentList : ComputedRef<[]> = computed(() => {return docList.value})
+    const getPreviewModalState : ComputedRef<[]> = computed(() => {return previewModalStatus.value})
     const getDocTypes : ComputedRef<[]> = computed(() => {return documentCategories.value?.data})
 
     // Actions
-    async function retrieveSingleDoc (uid:string) : Promise<void>{
-        console.log(uid);
-    }
+    const togglePreviewModalStatus  = (state:boolean) : Boolean =>  previewModalStatus.value = state
     async function retrieveDocuments(per_page: number = 12, page : number = 1, search : string = '') : Promise<[]>{
         globalStore.toggleContentLoaderState(true)
         const {data,error} = await useApiFetch(`/api/documents?per_page=${per_page}&page=${page}&search=${search}`);
@@ -36,7 +36,8 @@ export const useDocumentStore = defineStore('documentStore', () => {
             globalStore.handleApiError(error.value)
         }
     }
-    const uploadNewDocument = async (passedData) : Promise => {try {
+    const uploadNewDocument = async (passedData) : Promise => {
+        try {
             const { data, error } = await useApiFetch('/api/upload-document', {
                 method: 'POST',
                 body: passedData,
@@ -105,8 +106,8 @@ export const useDocumentStore = defineStore('documentStore', () => {
     }
     return {
         getDocumentList,getDocTypes,
+        togglePreviewModalStatus, getPreviewModalState,
         retrieveDocuments,
-        retrieveSingleDoc,
         retrieveDocByName,deleteDoc,
         updateDocStatus,uploadNewDocument, retrieveDocumentTypes
 

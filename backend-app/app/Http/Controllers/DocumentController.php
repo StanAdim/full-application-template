@@ -122,7 +122,7 @@ class DocumentController extends Controller
     }
     // Delete
     public function destroy($id){
-        $supportRequest = Document::findOrFail($id);
+        $supportRequest = Document::where('uid', $id)->first();
         Storage::disk('local')->delete($supportRequest->path);
         // Delete the record from the database
         $supportRequest->delete();
