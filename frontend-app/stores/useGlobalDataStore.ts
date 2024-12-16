@@ -34,7 +34,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
     const toggleLocalLoaderStatus = (state : boolean) : boolean =>  localLoader.value = state
     const assignPageTitle = (title : string) : string =>  pageTitle.value = title
     function handleApiError(error: any, alertType: "error" | "success" = "error") {
-        console.error(error);
+        // console.error(error);
         toggleBtnLoadingState(false)
         toggleLoadingState(false)
         toggleContentLoaderState(false)
