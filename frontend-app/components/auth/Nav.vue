@@ -18,16 +18,13 @@ const toggleMenu = (menu) => {
 const link_options = [
   {title: 'Dashboard', path: '/profile/dashboard', icon: 'fa-solid fa-house', childLink: []},
   {
-    title: 'ICT Products', path: '/profile/products', icon: 'fa-regular fa-star', childLink: [
-      {title: 'All Products', path: '/profile/products', icon: 'fa-solid fa-list'},
-      {title: 'New Product', path: '/profile/products/create', icon: 'fa-solid fa-plus'},
-    ]
+    title: 'ICT Products', path: '/profile/products', icon: 'fa-regular fa-star'
   },
   {
-    title: 'ICT Projects', path: '/profile/projects', icon: 'fa-solid fa-diagram-project', childLink: [
-      {title: 'All Projects', path: '/profile/projects', icon: 'fa-solid fa-list'},
-      {title: 'New Project', path: '/profile/projects/create', icon: 'fa-solid fa-plus'},
-    ]
+    title: 'ICT Projects', path: '/profile/projects', icon: 'fa-solid fa-diagram-project'
+  },
+  {
+    title: 'Acc Programmes', path: '/profile/programmes', icon: 'fa-solid fa-gauge-high'
   },
   {title: 'Documents', path: '/profile/documents', icon: 'fa-regular fa-folder', childLink: []},
   {title: 'Profile Info', path: '/profile/setting/my-account', icon: 'fa-solid fa-circle-info', childLink: []},

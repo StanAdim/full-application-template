@@ -19,7 +19,6 @@ class Programme extends Model
         'eligibility',
         'applicantGroups',
     ];
-    
     public function user(){
         return $this->belongsTo(User::class);
     }
