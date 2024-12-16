@@ -17,7 +17,7 @@ import { defineProps, defineEmits } from 'vue';
 
 const props = defineProps({
   label: { type: String, default: 'Select' },
-  isFull: { type: String, default: true },
+  isFull: { type: Boolean, default: true },
   modelValue: { type: [String, Number], required: true },
   options: { type: Array, default: () => [] },
 });

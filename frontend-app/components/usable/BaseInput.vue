@@ -20,7 +20,7 @@ const props = defineProps({
   isFull: { type: Boolean, default: true },
   type: { type: String, default: 'text' },
   placeholder: { type: String, default: '' },
-  modelValue: { type: String, default: '' },
+  modelValue: { type: [String, Number], default: '' },
 });
 const emit = defineEmits(['update:modelValue']);
 </script>
