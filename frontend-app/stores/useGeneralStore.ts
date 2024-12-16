@@ -43,7 +43,7 @@ export const useGeneralStore = defineStore('generalStore', () => {
         if(data.value){
             profileCounts.value[type] = data.value?.count;
             globalStore.toggleContentLoaderState(false)
-        }if(error.value) {
+        }if(error) {
             console.log(error.value)
             globalStore.toggleContentLoaderState(false)
         }
@@ -52,15 +52,16 @@ export const useGeneralStore = defineStore('generalStore', () => {
         const {data,error} = await useApiFetch(`/api/ict-sectors`);
         if(data.value){
             sectors.value = data.value;
-        }if(error.value) {
+        }if(error) {
             globalStore.handleApiError(error.value)
         }
     }
     async function retrieveFundingStages() : Promise<[]>{
         const {data,error} = await useApiFetch(`/api/funding-stages`);
+        // console.log(data,error)
         if(data.value){
             fundingStages.value = data.value;
-        }if(error.value) {
+        }if(error) {
             globalStore.handleApiError(error.value)
         }
     }
@@ -68,7 +69,7 @@ export const useGeneralStore = defineStore('generalStore', () => {
         const {data,error} = await useApiFetch(`/api/tanzania-regions`);
         if(data.value){
             regions.value = data.value;
-        }if(error.value) {
+        }if(error) {
             globalStore.handleApiError(error.value)
         }
     }
@@ -86,8 +87,8 @@ export const useGeneralStore = defineStore('generalStore', () => {
         const blob = URL.createObjectURL(data.value as Blob);
         blobDataFile.value = blob;
         globalStore.toggleContentLoaderState(false);
-        if(error.value){
-            console.log(error.value)
+        if(error){
+            globalStore.handleApiError(error.value)
         }
     };
     return {

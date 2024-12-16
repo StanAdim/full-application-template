@@ -58,6 +58,7 @@ export const useAuthStore = defineStore('auth', ()=> {
             method: 'POST',
             body : credentials
         });
+        console.log(loginResponse)
         if (loginResponse.status.value === 'success'){
             await fetchUser();
             globalStore.toggleBtnLoadingState(false)

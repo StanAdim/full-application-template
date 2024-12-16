@@ -6,7 +6,7 @@ const props = defineProps({
   },
   size : {
     default: 'Title',
-    type: Number
+    type: [Number, String]
   },
   path : {
     default: '/',
