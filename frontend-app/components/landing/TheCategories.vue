@@ -40,6 +40,7 @@ const categories = [
   <div class="container mx-auto mt-4">
     <div class="grid gap-6 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       <GuestCardCategory v-for="item in categories"
+                         :key="item.title"
                     :title="item.title"
                     :style="item.style" :icon="item.icon"
                     :description="item.description"
