@@ -1,10 +1,12 @@
 import {useProductStore} from "~/stores/useProductStore";
 import type {Integer} from "type-fest";
+import {useProgrammeStore} from "~/stores/useProgrammeStore";
 
 export const useGlobalDataStore = defineStore('globalData', () => {
     const authStore = useAuthStore()
     const projectStore = useProjectStore()
     const productStore = useProductStore()
+    const programmeStore = useProgrammeStore()
     const localLoader = ref<boolean>(false);
     const alertMessage = ref<string>('');
     const pageTitle = ref<string>('');
@@ -53,6 +55,10 @@ export const useGlobalDataStore = defineStore('globalData', () => {
                }
                case  'product':{
                    await productStore.retrieveAllProducts()
+                   break;
+               }
+               case  'programme':{
+                   await programmeStore.retrieveAllProgrammes()
                    break;
                }
            }
@@ -104,7 +110,7 @@ export const useGlobalDataStore = defineStore('globalData', () => {
         numStr = numStr.replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         return numStr;
     }
-    const hasPermission = (permissionCode)=> {   return authStore.getUserPermissions.includes(permissionCode)}
+    const hasPermission = (permissionCode)=> {   return authStore.getUserPermissions?.includes(permissionCode)}
     function shortenText(text, wordLimit) {
         const words = text.split(' ');
         if (words.length > wordLimit) {

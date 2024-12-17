@@ -26,7 +26,7 @@ export const useProgrammeStore = defineStore('programmeStore', () => {
     async function retrieveSingleProgramme(uid:string) : Promise <void>{
         globalStore.toggleContentLoaderState(true)
         const {data, error} = await useApiFetch(`/api/programmes/programme/${uid}`);
-        if(data.value){
+        if(data.value?.success){
             globalStore.toggleLoadingState(false)
             globalStore.toggleContentLoaderState(false)
             singleProgramme.value = data.value?.data
@@ -51,11 +51,28 @@ export const useProgrammeStore = defineStore('programmeStore', () => {
             globalStore.handleApiError(error.value);
         }
     }
+    async function approveProgramme(passed_data:object) : Promise <void>{
+        globalStore.toggleBtnLoadingState(true)
+        const {data, error} = await useApiFetch(`/api/programme/approve`,{
+            method: 'PATCH',
+            body : passed_data
+        });
+        if(data.value?.success){
+            globalStore.toggleBtnLoadingState(false)
+            await retrieveAllProgrammes()
+            globalStore.assignAlertMessage(data.value?.message,'success')
+            navigateTo('/admin/programmes')
+        }
+        else {
+            globalStore.handleApiError(error.value);
+        }
+    }
 
     return {
         retrieveAllProgrammes,
         getAllProgramme,
         createUpdateProgramme,
+        approveProgramme,
         getSingleProgramme,
         retrieveSingleProgramme,
     }

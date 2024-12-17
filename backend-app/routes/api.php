@@ -33,8 +33,8 @@ Route::group(['prefix' => 'v1', 'middleware' => ['auth:sanctum']], function () {
         return [
         'message' => 'Login Success.',
         'user' => $user,
-        'profile' => $profile ];});
-
+        'profile' => $profile ];}
+    );
     //Users endpoints
 Route::group(['prefix' => 'user', 'middleware' => ['auth:sanctum'] ], function () {
         Route::get('/{user:uid}', [UserController::class, 'getUserById'])->can("index-user");
@@ -69,11 +69,12 @@ Route::group(['prefix' => '', 'middleware' => ['auth:sanctum'] ], function () {
 
         // ================================ Programmes =================================
         Route::get('/programmes', [ProgrammeController::class, 'index']);    //get all programmes
-        Route::post('/show-programme', [ProgrammeController::class, 'show']);    //get all programmes
+//        Route::post('/show-programme', [ProgrammeController::class, 'show']);    //get all programmes
         Route::post('/programme/create', [ProgrammeController::class, 'store']);    //get all programmes
         Route::patch('/programme/update', [ProgrammeController::class, 'update']);    //get all programmes
-        Route::delete('/delete-programme/{programme}', [ProgrammeController::class, 'destroy']);    //get all programmes
-        // Route::get('/programmes/applicant-groups',[GeneralController::class, 'get_applicantsGroup']); //programme groups
+        Route::patch('/programme/approve', [ProgrammeController::class, 'approve']);    //get all programmes
+        Route::delete('/programme-delete/{programme}', [ProgrammeController::class, 'destroy']);    //get all programmes
+         Route::get('/programmes/programme/{uid}',[ProgrammeController::class, 'show']); //programme show
 
         // ================================ Documents =================================
         Route::post('/upload-document', [DocumentController::class, 'docUpload']);

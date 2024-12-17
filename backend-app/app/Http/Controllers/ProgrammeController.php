@@ -22,7 +22,11 @@ class ProgrammeController extends Controller
         if ($user->hasRole('admin')) {
             $query = Programme::orderBy('id', 'desc'); // Remove ->get() to keep it as a query builder
         } else {
-            $query = Programme::where('user_id', $user_id)->orderBy('id', 'desc');
+            if($user->hasRole('promotor')) {
+                $query = Programme::where('user_id', $user_id)->orderBy('id', 'desc');
+            }else{
+                $query = Programme::where('status', true)->orderBy('id', 'desc'); // Remove ->get() to keep it as a query builder
+            }
         }
         // Apply search if there is a search term
         if ($search) {
@@ -81,15 +85,20 @@ class ProgrammeController extends Controller
             'data' => $newProgramme
         ],200);
     }
-    public function showProgramme($uuid){
-            $programme = Programme::where('id', $uuid)->first();
+    public function show($uid){
+        $product = Programme::where('id',$uid)->first();
+        if (!$product) {
             return response()->json([
-                'message' => 'Programme Fetch Success',
-                'data' => $programme
-            ],200);
+                'success' => false,
+                'message' => 'Programme not found!',
+            ], 404);
+        }
+        return response()->json([
+            'success' => true,
+            'data' => new ProgrammeResource($product),
+        ]);
     }
-    public function update(Request $request, $uuid)
-    {
+    public function update(Request $request, $uuid){
         $programme = Programme::where('id', $uuid);
         $validator = Validator::make($request->all(), [
             'title' => ['required','min:3', 'max:255','string'],
@@ -123,22 +132,33 @@ class ProgrammeController extends Controller
             ], 422);
         }
     }
-
-
-    public function destroy(Programme $programme)
-    {
-        $accessPermissions = ['can_delete_programme'];
-        if($this->hasUserAccess($accessPermissions)){
-            $save = $programme->delete();
+    public function approve(Request $request){
+        $item = Programme::where( 'id', $request->uid)->first();
+        if (!$item) {
             return response()->json([
-                'data' => $save,
-                'message' => 'Programme Deleted Successful',
-            ], 200);
+                'success' => false,
+                'message' => 'Programme  not found!',
+            ], 404);
         }
-        else{
+        $item->status = !$item->status ;
+        $item->save();
+        return response()->json([
+            'success' => true,
+            'message' => 'Programme Approved successfully!',
+        ]);
+    }
+    public function destroy($uid){
+        $item = Programme::where( 'id', $uid)->first();
+        if (!$item) {
             return response()->json([
-                'message' => 'Access Denied',
-            ], 422);
+                'success' => false,
+                'message' => 'Programme  not found!',
+            ], 404);
         }
+        $item->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Programme deleted successfully!',
+        ]);
     }
 }

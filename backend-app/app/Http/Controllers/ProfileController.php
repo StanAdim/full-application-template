@@ -79,7 +79,6 @@ class ProfileController extends Controller{
             'password' => bcrypt($validated['password']),
         ]);
         // $user->assignRole(['user', '']);
-        $user->assignRole(['user']);
         // Create the specific profile type
         switch ($validated['profile_type']){
             case 'startup':
@@ -92,6 +91,7 @@ class ProfileController extends Controller{
                     'founders' => $validated['founders'],
                     'website' => $validated['website'],
                 ]);
+                $user->assignRole(['user', 'entity']);
                 break;
 
             case 'hub':
@@ -104,6 +104,7 @@ class ProfileController extends Controller{
                     'available_programs' => $validated['available_programs'],
                     'brief' => $request->input('brief', ''),
                 ]);
+                $user->assignRole(['user', 'entity']);
                 break;
 
             case 'accelerator':
@@ -112,6 +113,8 @@ class ProfileController extends Controller{
                     'focus_area' => $validated['focus_area'],
                     'brief_description' => $validated['brief_description'],
                 ]);
+                $user->assignRole(['user', 'promotor']);
+
                 break;
 
             case 'grassroot':
@@ -120,9 +123,10 @@ class ProfileController extends Controller{
                     'focus_area' => $validated['focus_area'],
                     'brief_description' => $validated['brief_description'],
                 ]);
+                $user->assignRole(['user', 'entity']);
                 break;
         }
-        Log::info(['User: '=> $user->id]);
+//        Log::info(['User: '=> $user->id]);
         // Create the profile and associate it with the user and the profileCategory model
         $profile = new Profile();
         $profile->user_id = $user->id;

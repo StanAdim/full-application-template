@@ -59,19 +59,20 @@ const OpenConfirmDialog = async (uid) => {
         })
       })
 }
-const handleAction = async  (type, uid) => {
+const handleAction = async  (type, item) => {
   switch (type){
     case 1: {
-      navigateTo(`/profile/programmes/programme/${uid}`)
+      navigateTo(`/admin/programmes/programme/${item.uid}`)
       break;
     }
     case 2: {
-      await progStore.retrieveSingleProgramme(uid)
-      navigateTo(`/profile/programmes/create`)
+      await progStore.approveProgramme({
+        uid:item.uid
+      })
       break;
     }
     case 3: {
-      await  OpenConfirmDialog(uid)
+      await  OpenConfirmDialog(item.uid)
       break;
     }
   }
@@ -140,9 +141,9 @@ onNuxtReady(()=> {
                 <el-button><i class="fa-solid fa-prescription-bottle mr-1"></i> Action </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item  @click.prevent="handleAction(1, item.uid)" ><i class="fa-solid fa-eye"></i> View</el-dropdown-item>
-                    <el-dropdown-item  @click.prevent="handleAction(1, item.uid)" ><i class="fa-solid fa-hashtag"></i> Approve</el-dropdown-item>
-                    <el-dropdown-item  @click.prevent="handleAction(3, item.uid)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
+                    <el-dropdown-item  @click.prevent="handleAction(1, item)" ><i class="fa-solid fa-eye"></i> View</el-dropdown-item>
+                    <el-dropdown-item  @click.prevent="handleAction(2, item)" ><i class="fa-solid fa-hashtag"></i> Approve</el-dropdown-item>
+                    <el-dropdown-item  @click.prevent="handleAction(3, item)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>

@@ -17,6 +17,7 @@ class ProgrammeResource extends JsonResource
     {
         return  [
             'title' => $this->title,
+            'uid' => $this->id,
             'user' => (new UserResource($this->user))->name,
             'description' => $this->description,
             'funding' => $this->funding,

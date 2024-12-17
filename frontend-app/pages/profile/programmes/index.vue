@@ -12,6 +12,7 @@ definePageMeta({
 
 const globalData = useGlobalDataStore()
 const progStore = useProgrammeStore()
+const auth = useAuthStore()
 
 const currentPage = ref <number>(1)
 const per_page = ref <number>(10)
@@ -91,7 +92,9 @@ onNuxtReady(()=> {
 <template>
   <div class="mt-2">
     <div class="flex justify-end items-center gap-2 mb-2 mx-4">
-      <UsableNewFeatureBtn @click.prevent="navigateTo('/profile/programmes/create')" :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />
+      <UsableNewFeatureBtn v-if="globalData.hasPermission('create_programme')"
+                           @click.prevent="navigateTo('/profile/programmes/create')"
+                           :is-normal="true" name="Add New" iconClass="fa-solid fa-plus" />
       <div class="">
         <input
             v-model="searchQuery"
@@ -141,9 +144,9 @@ onNuxtReady(()=> {
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item  @click.prevent="handleAction(1, item.uid)" ><i class="fa-solid fa-eye"></i> View</el-dropdown-item>
-                    <el-dropdown-item  @click.prevent="handleAction(1, item.uid)" ><i class="fa-regular fa-bookmark"></i> Apply</el-dropdown-item>
-                    <el-dropdown-item @click.prevent="handleAction(2, item.uid)"  ><i class="fa-regular fa-pen-to-square"></i> Edit</el-dropdown-item>
-                    <el-dropdown-item  @click.prevent="handleAction(3, item.uid)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
+                    <el-dropdown-item  v-if="globalData.hasPermission('apply_programme')"  @click.prevent="handleAction(1, item.uid)" ><i class="fa-regular fa-bookmark"></i> Apply</el-dropdown-item>
+                    <el-dropdown-item v-if="globalData.hasPermission('edit_programme')" @click.prevent="handleAction(2, item.uid)"  ><i class="fa-regular fa-pen-to-square"></i> Edit</el-dropdown-item>
+                    <el-dropdown-item v-if="globalData.hasPermission('delete_programme')"  @click.prevent="handleAction(3, item.uid)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
@@ -158,14 +161,7 @@ onNuxtReady(()=> {
       <div class="flex justify-center mt-4">
         <nav aria-label="Page navigation">
           <ul class="inline-flex space-x-2">
-            <li>
-              <button
-                  @click="movePage(2)"
-                  class="action-btn"
-              >
-                Previous <TheBtnLoader />
-              </button>
-            </li>
+            <li><button @click="movePage(2)"  class="action-btn" > Previous <TheBtnLoader /></button></li>
             <li>
               <div class="flex justify-center flex-row gap-2">
                 <div class="">Per page</div>
@@ -181,12 +177,7 @@ onNuxtReady(()=> {
 
             </li>
             <li>
-              <button
-                  @click="movePage(1)"
-                  class="action-btn"
-              >
-                Next <TheBtnLoader />
-              </button>
+              <button @click="movePage(1)" class="action-btn" >Next <TheBtnLoader /></button>
             </li>
           </ul>
         </nav>

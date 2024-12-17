@@ -14,9 +14,14 @@ class UserResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        // Collect all permissions from the user's roles
+        $permissions = $this->roles->flatMap(function ($role) {
+            return $role->permissions->pluck('name');
+        })->unique()->values();
+
         return [
             'uid' => $this->uid,
-            'name' => $this->first_name. ' '. $this->middle_name. ' '. $this->last_name,
+            'name' => $this->first_name . ' ' . $this->middle_name . ' ' . $this->last_name,
             'phone' => $this->phone_number,
             'email' => $this->email,
             'rank' => $this->rank,
@@ -24,7 +29,7 @@ class UserResource extends JsonResource
             'middleName' => $this->middle_name,
             'lastName' => $this->last_name,
             'roles' => $this->roles,
-            // Add any other fields you want to include
+            'permissions' => $permissions,  // Add permissions here
         ];
     }
 }

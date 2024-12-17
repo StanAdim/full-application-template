@@ -12,7 +12,7 @@ export const useAuthStore = defineStore('auth', ()=> {
     const getLoggedUserProfile = computed(()=>{return user.value?.profile})
     const getUserProfileable = computed(()=>{return user.value?.profile?.profileable})
     const getUserRoles = computed(()=>{return user.value?.user?.roles})
-    const getUserPermissions = computed(()=>{ return  user.value?.role?.permissions.map(obj => obj.code)})
+    const getUserPermissions = computed(()=>{ return  user.value?.user?.permissions})
     const getProfileCategoryName : ComputedRef<string> = computed(()=> getLoggedUserProfile.value?.profileable?.type)
 
     //Register
