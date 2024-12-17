@@ -15,9 +15,11 @@ class Programme extends Model
         'user_id',
         'description',
         'funding',
+        'closing_date',
         'owner',
         'eligibility',
-        'applicantGroups',
+//        'applicantGroups',
+        'status',
     ];
     public function user(){
         return $this->belongsTo(User::class);

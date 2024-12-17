@@ -20,8 +20,10 @@ return new class extends Migration
             $table->string('funding');
             $table->string('owner');
             $table->json('eligibility');
-            $table->json('applicantGroups');
+            $table->date('closing_date');
+            $table->boolean('status')->default(false);
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+//            $table->json('applicantGroups');
             $table->timestamps();
         });
     }

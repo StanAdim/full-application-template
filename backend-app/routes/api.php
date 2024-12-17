@@ -70,8 +70,8 @@ Route::group(['prefix' => '', 'middleware' => ['auth:sanctum'] ], function () {
         // ================================ Programmes =================================
         Route::get('/programmes', [ProgrammeController::class, 'index']);    //get all programmes
         Route::post('/show-programme', [ProgrammeController::class, 'show']);    //get all programmes
-        Route::post('/create-programme', [ProgrammeController::class, 'store']);    //get all programmes
-        Route::patch('/update-programme/{programme}', [ProgrammeController::class, 'update']);    //get all programmes
+        Route::post('/programme/create', [ProgrammeController::class, 'store']);    //get all programmes
+        Route::patch('/programme/update', [ProgrammeController::class, 'update']);    //get all programmes
         Route::delete('/delete-programme/{programme}', [ProgrammeController::class, 'destroy']);    //get all programmes
         // Route::get('/programmes/applicant-groups',[GeneralController::class, 'get_applicantsGroup']); //programme groups
 
