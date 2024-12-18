@@ -77,6 +77,7 @@ class RoleAndPermissionSeeder extends Seeder
                 'delete_profile',
                 'delete_user',
                 'disable_user',
+                'view_programme_applicants',
             ]
         );
         $promotor->givePermissionTo([

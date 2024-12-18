@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\ProgrammeResource;
+use App\Http\Resources\ProgrammeWithApplicantsResource;
+use App\Models\Categories\Profile;
 use App\Models\Programme;
+use App\Models\ProgrammeApplication;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -95,7 +98,7 @@ class ProgrammeController extends Controller
         }
         return response()->json([
             'success' => true,
-            'data' => new ProgrammeResource($product),
+            'data' => new ProgrammeWithApplicantsResource($product),
         ]);
     }
     public function update(Request $request, $uuid){
@@ -160,5 +163,44 @@ class ProgrammeController extends Controller
             'success' => true,
             'message' => 'Programme deleted successfully!',
         ]);
+    }
+    public function apply(Request $request) {
+        $request->validate([
+            'profile_id' => 'required|exists:profiles,uid',
+            'program_id' => 'required|exists:programmes,id',
+        ]);
+        $profile_id = $request->input('profile_id');
+        $programId = $request->input('program_id');
+
+//        $startup = Profile::where('uid', $profile_id);
+//        $program = Programme::findOrFail($programId);
+
+        // 3. Check if startup already applied to this program
+        $existingApplication = ProgrammeApplication::where('profile_id', $profile_id)
+            ->where('programme_id', $programId)
+            ->first();
+        if ($existingApplication) {
+            return response()->json([
+                'message' => 'You have already applied to this program.',
+            ], 400);
+        }
+
+        // 4. Store the application in the database
+        $application = new ProgrammeApplication();
+        $application->profile_id = $profile_id;
+        $application->programme_id = $programId;
+        $application->status = 'pending'; // Default status
+        $application->save();
+
+        // 5. Notify the admin or startup (optional)
+        // You can dispatch a notification or event here
+        // Example: Notification::send($admin, new ProgramAppliedNotification($application));
+
+        // 6. Return a success response
+        return response()->json([
+            'success' => true,
+            'message' => 'Application submitted successfully.',
+//            'application' => $application,
+        ], 201);
     }
 }

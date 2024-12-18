@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('programme_applications', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('profile_id')->constrained('profiles')->cascadeOnDelete();
-            $table->foreignId('programme_id')->constrained('programmes')->cascadeOnDelete();
+            $table->string('profile_id');
+            $table->string('programme_id');
             $table->string('status')->default('pending'); // "pending", "approved", "rejected"
             $table->timestamps();
         });

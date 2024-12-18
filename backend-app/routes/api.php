@@ -74,7 +74,8 @@ Route::group(['prefix' => '', 'middleware' => ['auth:sanctum'] ], function () {
         Route::patch('/programme/update', [ProgrammeController::class, 'update']);    //get all programmes
         Route::patch('/programme/approve', [ProgrammeController::class, 'approve']);    //get all programmes
         Route::delete('/programme-delete/{programme}', [ProgrammeController::class, 'destroy']);    //get all programmes
-         Route::get('/programmes/programme/{uid}',[ProgrammeController::class, 'show']); //programme show
+        Route::get('/programmes/programme/{uid}',[ProgrammeController::class, 'show']); //programme show
+        Route::post('/programme/apply',[ProgrammeController::class, 'apply']); //programme apply
 
         // ================================ Documents =================================
         Route::post('/upload-document', [DocumentController::class, 'docUpload']);

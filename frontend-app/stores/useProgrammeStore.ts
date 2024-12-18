@@ -67,12 +67,27 @@ export const useProgrammeStore = defineStore('programmeStore', () => {
             globalStore.handleApiError(error.value);
         }
     }
+    async function applyProgramme(passed_data:object) : Promise <void>{
+        globalStore.toggleBtnLoadingState(true)
+        const {data, error} = await useApiFetch(`/api/programme/apply`,{
+            method: 'POST',
+            body : passed_data
+        });
+        if(data.value?.success){
+            globalStore.toggleBtnLoadingState(false)
+                await retrieveAllProgrammes()
+            globalStore.assignAlertMessage(data.value?.message,'success')
+        }
+        else {
+            globalStore.handleApiError(error.value);
+        }
+    }
 
     return {
         retrieveAllProgrammes,
         getAllProgramme,
         createUpdateProgramme,
-        approveProgramme,
+        approveProgramme, applyProgramme,
         getSingleProgramme,
         retrieveSingleProgramme,
     }

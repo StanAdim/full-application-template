@@ -23,8 +23,6 @@ onNuxtReady(()=> {
 
 <template>
   <div class="profile-view-container p-4 max-w-full mx-auto bg-white rounded-lg shadow-md">
-    <h1 class="text-2xl font-bold text-gray-900">{{'' }}</h1>
-
     <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-6">
       <!-- Basic Information -->
       <div>
@@ -59,6 +57,11 @@ onNuxtReady(()=> {
         </ul>
       </div>
 
+
+    </div>
+    <div class="" v-if="globalData.hasPermission('view_programme_applicants')">
+      <h2 class="text-lg font-semibold text-gray-800">Applications</h2>
+      <AuthProgrammeApplicationsTable :table-data="progStore.getSingleProgramme?.applications " />
 
     </div>
   </div>

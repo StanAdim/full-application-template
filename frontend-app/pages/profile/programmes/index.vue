@@ -75,6 +75,10 @@ const handleAction = async  (type, uid) => {
       await  OpenConfirmDialog(uid)
       break;
     }
+    case 4: {
+      await progStore.applyProgramme({profile_id: auth.getLoggedUserProfile?.uid, program_id: uid})
+      break;
+    }
   }
 
 }
@@ -144,7 +148,7 @@ onNuxtReady(()=> {
                 <template #dropdown>
                   <el-dropdown-menu>
                     <el-dropdown-item  @click.prevent="handleAction(1, item.uid)" ><i class="fa-solid fa-eye"></i> View</el-dropdown-item>
-                    <el-dropdown-item  v-if="globalData.hasPermission('apply_programme')"  @click.prevent="handleAction(1, item.uid)" ><i class="fa-regular fa-bookmark"></i> Apply</el-dropdown-item>
+                    <el-dropdown-item  v-if="globalData.hasPermission('apply_programme')"  @click.prevent="handleAction(4, item.uid)" ><i class="fa-regular fa-bookmark"></i> Apply</el-dropdown-item>
                     <el-dropdown-item v-if="globalData.hasPermission('edit_programme')" @click.prevent="handleAction(2, item.uid)"  ><i class="fa-regular fa-pen-to-square"></i> Edit</el-dropdown-item>
                     <el-dropdown-item v-if="globalData.hasPermission('delete_programme')"  @click.prevent="handleAction(3, item.uid)" ><i class="fa-solid fa-trash-can"></i> Delete</el-dropdown-item>
                   </el-dropdown-menu>
@@ -186,14 +190,5 @@ onNuxtReady(()=> {
 </template>
 
 <style scoped>
-.table-data {
-  @apply px-4 py-1.5 whitespace-nowrap text-sm text-gray-700
-}
 
-.search-input{
-  @apply border border-gray-300 rounded-md px-4 h-8 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500;
-}
-.action-btn {
-  @apply px-3 py-2 border border-sky-300 rounded-md text-sm font-medium text-gray-500 hover:bg-sky-100
-}
 </style>
