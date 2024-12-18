@@ -85,13 +85,15 @@ onNuxtReady(() => {
             </div>
             <div class="mb-4">
               <label for="documentFile" class="block text-sm font-medium text-gray-700 mb-2">Document File</label>
-              <input type="file" @change="handleFileChange" id="documentFile" class="input-form">
+              <input type="file"
+                     accept="application/pdf"
+                     @change="handleFileChange" id="documentFile"
+                     class="w-full bg-gray-300 rounded-r-md border-none">
             </div>
 
             <button
                 class="bg-sky-500 text-white font-semibold py-1 px-4 rounded-md flex items-center space-x-2 hover:bg-sky-600">
-              <span>Upload<TheBtnLoader /></span>
-              <i class="fa-solid fa-floppy-disk"></i>
+              <span class="px-1">Upload</span> <TheBtnLoader /> <i class="fa-solid fa-floppy-disk px-1"></i>
             </button>
           </div>
         </form>
@@ -102,5 +104,4 @@ onNuxtReady(() => {
 
 
 <style scoped>
-
 </style>
