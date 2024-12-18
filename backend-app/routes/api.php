@@ -84,6 +84,7 @@ Route::group(['prefix' => '', 'middleware' => ['auth:sanctum'] ], function () {
         Route::put('/document-update-{id}', [DocumentController::class, 'updateStatus']);
         Route::get('/preview-document', [DocumentController::class, 'previewDocument']);
 
+
 });
 
 // Admin routes
@@ -100,6 +101,9 @@ Route::group(['prefix' => 'admin', 'middleware' => ['role:admin'] ], function ()
     Route::get('/profiles/{type}', [AdminProfileController::class, 'profilesOfType']);
     Route::get('/profile-details/{type}/{uid}', [AdminProfileController::class, 'singleDetails']);
     Route::get('/change-status/{item}/{uid}', [AdminProfileController::class, 'changeApprovalStatus']);
+
+    Route::post('/create-document-type', [DocumentController::class, 'create_document_type']);
+    Route::delete('/delete-document-type/{doc_type_uid}', [DocumentController::class, 'delete_document_type']);
 
 });
 

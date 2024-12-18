@@ -6,14 +6,16 @@ definePageMeta({
 })
 const globalData = useGlobalDataStore()
 const adminStore = useAdminDataStore()
+const documentStore = useDocumentStore()
 
 
-const init = () => {
+const init = async () => {
   globalData.assignPageTitle('Settings')
+  await  documentStore.retrieveDocumentTypes()
 }
 const activeName = ref('first')
 const handleClick = (tab: TabsPaneContext, event: Event) => {
-  console.log(tab, event)
+  // console.log(tab, event)
 }
 onNuxtReady(()=> {
   init()
@@ -28,11 +30,12 @@ onNuxtReady(()=> {
         <el-tab-pane label="User" name="first">User</el-tab-pane>
         <el-tab-pane label="Config" name="second">Config</el-tab-pane>
         <el-tab-pane label="Roles" name="third">Roles</el-tab-pane>
-        <el-tab-pane label="Task" name="fourth">Task</el-tab-pane>
+        <el-tab-pane label="Document Types" name="fourth">
+            <AdminDocumentTypes :data="documentStore.getDocTypes" />
+        </el-tab-pane>
       </el-tabs>
     </div>
   </div>
 </template>
 
 <style scoped></style>
-v

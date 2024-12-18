@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Resources\DocumentResource;
 use App\Models\Categories\Profile;
 use App\Models\Document;
+use App\Models\DocumentType;
 use http\Client\Curl\User;
 use Illuminate\Http\Request;
 use Exception;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Storage;
 
@@ -128,6 +130,7 @@ class DocumentController extends Controller
         $supportRequest->delete();
         return response()->json(['message' => 'Event Doc deleted successfully'], 200);
     }
+
     public function previewDocument(Request $request)
     {
         $file_name = $request->name;
@@ -141,4 +144,34 @@ class DocumentController extends Controller
         $pdfPath = storage_path('app/'. $file_name);
         return response()->file($pdfPath);
     }
+
+    /// Handling Document Types
+    public function create_document_type(Request $request) {
+        $validator = Validator::make($request->all(),[
+            'name' => ['required','min:3', 'max:255','string'],
+        ]);
+        #Failure response of Validation
+        if ($validator->fails()) {
+            return response()->json([
+                'message' => 'Validation fails',
+                'errors' => $validator->errors()
+            ],422);
+        }
+        $data = $validator->validated();
+        DocumentType::create($data);
+        return response()->json([
+            'success' => true,
+            'message' => 'New type added successful',
+        ],200);
+    }
+    public function delete_document_type($doc_type_uid){
+        $item = DocumentType::where('id', $doc_type_uid)->first();
+        // Delete the record from the database
+        $item->delete();
+        return response()->json([
+            'success' => true,
+            'message' => 'Doc type deleted successfully'],
+            200);
+    }
+
 }

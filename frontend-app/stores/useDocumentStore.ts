@@ -28,14 +28,6 @@ export const useDocumentStore = defineStore('documentStore', () => {
             globalStore.toggleContentLoaderState(false)
         }
     }
-    async function retrieveDocumentTypes() : Promise<[]>{
-        const {data,error} = await useApiFetch(`/api/document-types`);
-        if(data.value){
-            documentCategories.value = data.value;
-        }if(error.value) {
-            globalStore.handleApiError(error.value)
-        }
-    }
     const uploadNewDocument = async (passedData) : Promise => {
         try {
             const { data, error } = await useApiFetch('/api/upload-document', {
@@ -104,12 +96,58 @@ export const useDocumentStore = defineStore('documentStore', () => {
             globalStore.assignAlertMessage(error.value?.data?.message, 'error')
         }
     }
+
+    // Document types Functions
+    async function retrieveDocumentTypes() : Promise<[]>{
+        const {data,error} = await useApiFetch(`/api/document-types`);
+        if(data.value){
+            documentCategories.value = data.value;
+        }if(error.value) {
+            globalStore.handleApiError(error.value)
+        }
+    }
+    async function createUpdateDocumentType(passed_data: object) : Promise <void>{
+        globalStore.toggleBtnLoadingState(true)
+        const action = passed_data?.action
+        const {data, error} = await useApiFetch(`/api/admin/${action}-document-type`,{
+            method: action === 'create' ? 'POST': 'PATCH',
+            body : passed_data
+        });
+        if(data.value?.success){
+            globalStore.toggleBtnLoadingState(false)
+            globalStore.assignAlertMessage(data.value?.message,'success')
+            await retrieveDocumentTypes()
+        }
+        else {
+            globalStore.handleApiError(error.value);
+        }
+    }
+    async function deleteDocType(docTypeId : string) : Promise {
+        globalStore.toggleContentLoaderState(true)
+        const { data, error } = await useApiFetch(`/api/admin/delete-document-type/${docTypeId}`, {
+            method: 'DELETE'
+        });
+        if(data.value?.success){
+            await  retrieveDocumentTypes()
+            globalStore.toggleContentLoaderState(false);
+            globalStore.assignAlertMessage(data.value?.message, 'success')
+        }
+        else {
+            globalStore.toggleContentLoaderState(false);
+            globalStore.assignAlertMessage(error.value?.data?.message, 'error')
+        }
+    }
+
+
+
+
     return {
         getDocumentList,getDocTypes,
         togglePreviewModalStatus, getPreviewModalState,
         retrieveDocuments,
         retrieveDocByName,deleteDoc,
-        updateDocStatus,uploadNewDocument, retrieveDocumentTypes
-
+        updateDocStatus,uploadNewDocument,
+        retrieveDocumentTypes, createUpdateDocumentType,
+        deleteDocType,
     }
 })
